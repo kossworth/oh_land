@@ -5,11 +5,14 @@ $params = require(__DIR__ . '/params.php');
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
+    'homeUrl' => '/',
     'bootstrap' => ['log'],
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => '',
+            'cookieValidationKey' => 'kossworthcookievalidation_sdf5df56sad5ds555',
+            'baseUrl'             => '/',    // for multiLang
+//            'class'               => 'app\components\LangRequest' // for multiLang
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -37,15 +40,47 @@ $config = [
                 ],
             ],
         ],
-        'db' => require(__DIR__ . '/db.php'),
-        /*
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
+        'view' => [
+            'class' => 'yii\web\View',
+            'renderers' => [
+                'twig' => [
+                    'class' => 'yii\twig\ViewRenderer',
+                    'cachePath' => '@runtime/Twig/cache',
+                    // Array of twig options:
+                    'options' => [
+                        'auto_reload' => true,
+                    ],
+                    'filters'    => [
+                        'dump' => 'var_dump'
+                    ],
+                    'globals' =>
+                        [
+                            'Url'   => '\yii\helpers\Url',
+                            'html'  => '\yii\helpers\Html',
+                            'asset' => '\app\assets\AppAsset',
+                            'Yii'   => 'Yii',
+                            'Pages' => '\app\models\Pages',
+                            'Seo'   => '\app\components\Seo'
+                        ],
+                    'uses' => ['yii\bootstrap'],
+                ],
+                // ...
             ],
         ],
-        */
+        'db' => require(__DIR__ . '/db.php'),
+        'urlManager' => [
+            'enablePrettyUrl'     => true,
+            'showScriptName'      => false,
+            'enableStrictParsing' => false,
+            'rules' => [
+                [
+                    'pattern' => '<_c>/<_a>',
+                    'route' => '<_c>/<_a>',
+                    'suffix' => '',
+                ],
+            ],
+        ],
+
     ],
     'params' => $params,
 ];
