@@ -86,97 +86,97 @@ class BaseController extends \yii\web\Controller
         
         
         // редирект из таблицы редиректов. если находим в базе совпадение - редиректим
-        $absolute_url = $this->full_url();
-        $need_redirect = Redirect::find()->where(['redirect.redirect_from' => $absolute_url])->limit(1)->one();
-
-        if(!is_null($need_redirect)) {
-            return $this->redirect($need_redirect->redirect_to, 301)->send();
-        }
+//        $absolute_url = $this->full_url();
+//        $need_redirect = Redirect::find()->where(['redirect.redirect_from' => $absolute_url])->limit(1)->one();
+//
+//        if(!is_null($need_redirect)) {
+//            return $this->redirect($need_redirect->redirect_to, 301)->send();
+//        }
 
         $this->layout = 'main.twig';
 
         Yii::$app->session->open();
         $session = Yii::$app->session;
 
-        $cart_count = 0;
-        if($session->isActive && $session->has('cart') && !empty($session['cart']))
-        {
-            $cart_count = count($session['cart']);
-        }
+//        $cart_count = 0;
+//        if($session->isActive && $session->has('cart') && !empty($session['cart']))
+//        {
+//            $cart_count = count($session['cart']);
+//        }
+//
+//        $this->view->params['cart_count'] = $cart_count;
+//
+//        // Обработка корзины
+//        $this->view->params['cart'] = Orders::getCartInfo();
+//
+//        $lang = Lang::getCurrent();
+//        $this->view->params['lang'] = $lang;
+//        $this->view->params['lang_sh'] = mb_substr(($lang->name),0,3, 'utf-8');
+//        $langs = Lang::find()->all();
+//        $this->view->params['langs'] = $langs;
+//        $current_url=Yii::$app->request->pathinfo;
+//        // request url
+//        $this->view->params['current_url']=$current_url;
+//
+//
+//        $slovar = Slovar::getDb()->cache(function ($db){
+//            return Slovar::find()
+//                ->leftJoin('`slovar_info`', '`slovar_info`.`record_id` = `slovar`.`id`')
+//                ->select(['`slovar`.`alias`', '`slovar_info`.`value`'])
+//                ->where(['`slovar_info`.`lang`' => Lang::getCurrentId()])
+//                ->asArray()
+//                ->all();
+//        });
+//        $slovar = ArrayHelper::map($slovar, 'alias', 'value');
+//
+//        $this->view->params = array_merge($this->view->params, $slovar);
+//
+//        if($lang->by_default)
+//        {
+//            $this->view->params['lang_url'] = '';
+//            Yii::$app->homeUrl = $this->view->params['home_url']='/';
+//            $this->view->params['current_url'] = $current_url ? "/{$current_url}": '/';
+//        }
+//        else
+//        {
+//            $this->view->params['lang_url']="/{$lang->url}";
+//            Yii::$app->homeUrl = $this->view->params['home_url']="/{$lang->url}/";
+//            $this->view->params['current_url']="/{$lang->url}/{$current_url}";
+//        }
+//
+//        $main_menu_pages = [];
+//        $top_menu_pages = [];
+//
+//        $menu_pages = Pages::getDb()->cache(function ($db){
+//            return Pages::find()->inMenu()->joinWith(['info'], true)->orderBy('sort')->all();
+//        });
+//
+//        foreach($menu_pages as $menu_page){
+//            if($menu_page->parent_id == 3){
+//                $top_menu_pages[] = $menu_page;
+//            }elseif ($menu_page->parent_id == 4){
+//                $main_menu_pages[] = $menu_page;
+//            }
+//        }
+//
+//        $this->view->params['main_menu_pages'] = $main_menu_pages;
+//        $this->view->params['top_menu_pages'] = $top_menu_pages;
+//        $this->view->params['menu_pages'] = $menu_pages;
+//        $this->view->params['menu_pages_count'] = count($menu_pages);
 
-        $this->view->params['cart_count'] = $cart_count;
+        Yii::$app->view->registerMetaTag([
+            'name'    => 'robots',
+            'content' => 'NOINDEX, NOFOLLOW'
+        ]);
 
-        // Обработка корзины
-        $this->view->params['cart'] = Orders::getCartInfo();
-
-        $lang = Lang::getCurrent();
-        $this->view->params['lang'] = $lang;
-        $this->view->params['lang_sh'] = mb_substr(($lang->name),0,3, 'utf-8');
-        $langs = Lang::find()->all();
-        $this->view->params['langs'] = $langs;
-        $current_url=Yii::$app->request->pathinfo;
-        // request url
-        $this->view->params['current_url']=$current_url;
-
-
-        $slovar = Slovar::getDb()->cache(function ($db){
-            return Slovar::find()
-                ->leftJoin('`slovar_info`', '`slovar_info`.`record_id` = `slovar`.`id`')
-                ->select(['`slovar`.`alias`', '`slovar_info`.`value`'])
-                ->where(['`slovar_info`.`lang`' => Lang::getCurrentId()])
-                ->asArray()
-                ->all();
-        });
-        $slovar = ArrayHelper::map($slovar, 'alias', 'value');
-
-        $this->view->params = array_merge($this->view->params, $slovar);
-
-        if($lang->by_default)
-        {
-            $this->view->params['lang_url'] = '';
-            Yii::$app->homeUrl = $this->view->params['home_url']='/';
-            $this->view->params['current_url'] = $current_url ? "/{$current_url}": '/';
-        }
-        else
-        {
-            $this->view->params['lang_url']="/{$lang->url}";
-            Yii::$app->homeUrl = $this->view->params['home_url']="/{$lang->url}/";
-            $this->view->params['current_url']="/{$lang->url}/{$current_url}";
-        }
-
-        $main_menu_pages = [];
-        $top_menu_pages = [];
-
-        $menu_pages = Pages::getDb()->cache(function ($db){
-            return Pages::find()->inMenu()->joinWith(['info'], true)->orderBy('sort')->all();
-        });
-
-        foreach($menu_pages as $menu_page){
-            if($menu_page->parent_id == 3){
-                $top_menu_pages[] = $menu_page;
-            }elseif ($menu_page->parent_id == 4){
-                $main_menu_pages[] = $menu_page;
-            }
-        }
-
-        $this->view->params['main_menu_pages'] = $main_menu_pages;
-        $this->view->params['top_menu_pages'] = $top_menu_pages;
-        $this->view->params['menu_pages'] = $menu_pages;
-        $this->view->params['menu_pages_count'] = count($menu_pages);
-
-//        Yii::$app->view->registerMetaTag([
-//            'name'    => 'robots',
-//            'content' => 'NOINDEX, NOFOLLOW'
-//        ]);
-
-        if(isset($_GET['page']) && !empty($_GET['page']) && (int)$_GET['page'] > 1)
-        {
-            Yii::$app->view->registerMetaTag([
-                'name'    => 'robots',
-                'content' => 'NOINDEX, FOLLOW'
-            ]);
-        }
-
+//        if(isset($_GET['page']) && !empty($_GET['page']) && (int)$_GET['page'] > 1)
+//        {
+//            Yii::$app->view->registerMetaTag([
+//                'name'    => 'robots',
+//                'content' => 'NOINDEX, FOLLOW'
+//            ]);
+//        }
+ 
     }
 
     /**
@@ -187,7 +187,7 @@ class BaseController extends \yii\web\Controller
         return [
             'error' => [
                 'class' => 'yii\web\ErrorAction',
-                'view' => '@app/views/content/404.twig',
+                'view' => '@app/views/main/404.twig',
             ],
         ];
     }

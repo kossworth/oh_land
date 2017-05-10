@@ -6,13 +6,13 @@ use yii\db\ActiveRecord;
 
 class transport_categories extends ActiveRecord
 {
-	public $name, $kind;
+    public $name, $kind;
 
-	/**
-	 * @inheritdoc
-	 */
-	public static function tableName()
-	{
-		return 'transport_categories';
-	}
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return 'transport_categories';
+    }
 }

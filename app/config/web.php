@@ -75,7 +75,7 @@ $config = [
             'rules' => [
                 [
                     'pattern' => '',
-                    'route' => 'site/index',
+                    'route' => 'main/index',
                     'suffix' => '',
                 ],
                 [
@@ -85,7 +85,17 @@ $config = [
                 ],
             ],
         ],
-
+        // выключаем bootstap
+        'assetManager' => [
+            'bundles' => [
+                'yii\bootstrap\BootstrapAsset' => [
+                    'css' => [],
+                ],
+                'yii\bootstrap\BootstrapPluginAsset' => [
+                    'js'=>[]
+                ],
+            ],
+        ],
     ],
     'params' => $params,
 ];
