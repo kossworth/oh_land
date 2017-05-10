@@ -5,13 +5,13 @@ $params = require(__DIR__ . '/params.php');
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
-    'homeUrl' => '/',
+    'homeUrl' => '/ohproject',
     'bootstrap' => ['log'],
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'kossworthcookievalidation_sdf5df56sad5ds555',
-            'baseUrl'             => '/',    // for multiLang
+            'baseUrl'             => '/ohproject',    // for multiLang
 //            'class'               => 'app\components\LangRequest' // for multiLang
         ],
         'cache' => [
@@ -59,8 +59,8 @@ $config = [
                             'html'  => '\yii\helpers\Html',
                             'asset' => '\app\assets\AppAsset',
                             'Yii'   => 'Yii',
-                            'Pages' => '\app\models\Pages',
-                            'Seo'   => '\app\components\Seo'
+//                            'Pages' => '\app\models\Pages',
+//                            'Seo'   => '\app\components\Seo'
                         ],
                     'uses' => ['yii\bootstrap'],
                 ],
@@ -73,6 +73,11 @@ $config = [
             'showScriptName'      => false,
             'enableStrictParsing' => false,
             'rules' => [
+                [
+                    'pattern' => '',
+                    'route' => 'site/index',
+                    'suffix' => '',
+                ],
                 [
                     'pattern' => '<_c>/<_a>',
                     'route' => '<_c>/<_a>',
