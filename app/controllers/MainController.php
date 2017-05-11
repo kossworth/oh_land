@@ -3,7 +3,6 @@
 namespace app\controllers;
 
 use Yii;
-use yii\filters\VerbFilter;
 use app\components\ewa;
 /**
  * Description of MainController
@@ -16,7 +15,7 @@ class MainController extends \app\components\BaseController
     public function behaviors() {
         return [
             'verbs' => [
-                'class'   => VerbFilter::className(),
+                'class'   => \yii\filters\VerbFilter::className(),
                 'actions' => [
                     'index'             => ['get'],
                 ]
@@ -38,8 +37,8 @@ class MainController extends \app\components\BaseController
             'driveExp' => false
         ];
         
-        $test = ewa\find::osago($tariff_options);
-        var_dump($test); die();
+//        $test = ewa\find::osago($tariff_options);
+//        var_dump($test); die();
         return $this->render('index.twig', [
             'test' => 'MY TEST'
         ]);

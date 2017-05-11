@@ -37,10 +37,10 @@ class find
      */
     public static function transport_categories($id = NULL)
     {
-        $lang = (\Yii::$app->language == 'uk') ? 2 : 1;
-        $categories = transport_categories::find()
-                ->leftJoin('transport_categories_info', '`record_id`=`id` AND `lang`='.$lang)
-                ->select('`id`, `name`, `kind`, `code`, `engine_volume_max`, `engine_volume_min`')
+//        $lang = (\Yii::$app->language == 'uk') ? 2 : 1;
+        $categories = \app\models\AutoCategories::find()
+//                ->leftJoin('transport_categories_info', '`record_id`=`id` AND `lang`='.$lang)
+                ->select('`id`, `name`, `id_auto_kind`, auto_codecode`, `engine_volume_max`, `engine_volume_min`')
                 ->orderBy('`sort` DESC')
                 ->asArray();
 

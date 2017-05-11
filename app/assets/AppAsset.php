@@ -19,6 +19,7 @@ class AppAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'app/web/css/normalize.css',
+        'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
         'app/web/css/selectric.css',
         'app/web/css/default.css',
         'app/web/css/default.date.css',
@@ -33,6 +34,7 @@ class AppAsset extends AssetBundle
         'app/web/js/picker.date.js',
         'app/web/js/pickaday_rus.js',
         'app/web/js/app.js',
+        'app/web/js/script.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

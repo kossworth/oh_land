@@ -46,7 +46,7 @@
                     <form action="" class="b-form_calculator b-form_vehicle" id="vehicleForm">
                         <span class="b-calculator__heading">Выберите страховку на свое авто</span>
                         <div class="b-vehicles">
-                            <input type="radio" class="sr-only" id="car" value="car" name="vehicle" checked>
+                            <input type="radio" class="sr-only" id="car" value="car" checked>
                             <label class="b-vehicle b-vehicle_active js-vehicle_active" for="car">
                                 <span class="b-vehicle__back">
                                     <svg viewBox="0 0 409.9 246.5" class="svg-vehicle svg-vehicle_car">
@@ -60,7 +60,7 @@
                                     <span class="b-vehicle__title">Легковой автомобиль</span>
                                 </span>
                             </label>
-                            <input type="radio" class="sr-only" id="truck" value="truck" name="vehicle">
+                            <input type="radio" class="sr-only" id="truck" value="truck">
                             <label class="b-vehicle" for="truck">
                                 <span class="b-vehicle__back">
                                     <svg viewBox="0 0 409.9 328.6" class="svg-vehicle svg-vehicle_cargo">
@@ -72,7 +72,7 @@
                                     <span class="b-vehicle__title">Грузовой автомобиль</span>
                                 </span>
                             </label>
-                            <input type="radio" class="sr-only" id="bus" value="bus" name="vehicle">
+                            <input type="radio" class="sr-only" id="bus" value="bus">
                             <label class="b-vehicle" for="bus">
                                 <span class="b-vehicle__back">
                                     <svg viewBox="0 0 409.6 273.1" class="svg-vehicle svg-vehicle_bus">
@@ -85,7 +85,7 @@
                                     <span class="b-vehicle__title">Пассажирский автобус</span>
                                 </span>
                             </label>
-                            <input type="radio" class="sr-only" id="moto" value="moto" name="vehicle">
+                            <input type="radio" class="sr-only" id="moto" value="moto">
                             <label class="b-vehicle" for="moto">
                                 <span class="b-vehicle__back">
                                     <svg viewBox="0 0 409.9 287.6" class="svg-vehicle svg-vehicle_moto">
@@ -103,31 +103,31 @@
                         </div>
                         <div class="b-vehicle__params">
                             <div class="b-params b-params_car js-params_active">
-                                <input type="radio" class="radio sr-only" id="small" value="small" name="engine">
+                                <input type="radio" class="radio sr-only" id="small" value="3" name="type">
                                 <label for="small">до 1600 см<sup>3</sup></label>
-                                <input type="radio" class="radio sr-only" id="middle" value="middle" name="engine" checked>
+                                <input type="radio" class="radio sr-only" id="middle" value="4" name="type">
                                 <label for="middle">1601 - 2000 см<sup>3</sup></label>
-                                <input type="radio" class="radio sr-only" id="large" value="large" name="engine">
+                                <input type="radio" class="radio sr-only" id="large" value="5" name="type">
                                 <label for="large">до 2001 - 3000 см<sup>3</sup></label>
-                                <input type="radio" class="radio sr-only" id="xlarge" value="xlarge" name="engine" >
+                                <input type="radio" class="radio sr-only" id="xlarge" value="6" name="type" >
                                 <label for="xlarge">от 3001 см<sup>3</sup></label>
                             </div>
                             <div class="b-params b-params_truck hidden">
-                                <input type="radio" class="radio sr-only" id="light" value="light" name="tonnage">
+                                <input type="radio" class="radio sr-only" id="light" value="7" name="type">
                                 <label for="light">до 2т</label>
-                                <input type="radio" class="radio sr-only" id="heavy" value="heavy" name="tonnage" checked>
+                                <input type="radio" class="radio sr-only" id="heavy" value="8" name="type">
                                 <label for="heavy">более 2т</label>
                             </div>
                             <div class="b-params b-params_bus hidden">
-                                <input type="radio" class="radio sr-only" id="few" value="few" name="seatings">
+                                <input type="radio" class="radio sr-only" id="few" value="9" name="type">
                                 <label for="few">до 20 человек</label>
-                                <input type="radio" class="radio sr-only" id="many" value="many" name="seatings" checked>
+                                <input type="radio" class="radio sr-only" id="many" value="10" name="type">
                                 <label for="many">более 20 человек</label>
                             </div>
                             <div class="b-params b-params_moto hidden">
-                                <input type="radio" class="radio sr-only" id="motorbike" value="motorbike" name="motoType">
+                                <input type="radio" class="radio sr-only" id="motorbike" value="1" name="type">
                                 <label for="motorbike">до 300 см<sup>3</sup></label>
-                                <input type="radio" class="radio sr-only" id="motorcycle" value="motorcycle" name="motoType" checked>
+                                <input type="radio" class="radio sr-only" id="motorcycle" value="2" name="engine">
                                 <label for="motorcycle">более 300 см<sup>3</sup></label>
                             </div>
                         </div>
@@ -135,9 +135,9 @@
                         <div class="b-block_select b-selectBlock_registration">
                             <label for="regCity" class="b-label_registration">Место регистрации транспортного средства</label>
                             <select name="regCity" class="js-selectric" id="regCity">
-                                <option value="Kyiv" selected>Киев</option>
-                                <option value="Zhytomyr">Житомир</option>
-                                <option value="Hmelnytsky">Хмельницкий</option>
+                                <option selected value="1" selected>Киев</option>
+                                {#<option value="9" selected>Харьков</option>
+                                <option value="10" selected>Одесса</option>#}
                             </select>
                         </div>
                         <div class="b-block_select b-selectBlock_franshiza">
@@ -150,7 +150,7 @@
                             </select>
                         </div>
                         <label class="b-block_checkbox">
-                           <input type="checkbox" class="sr-only" id="notTaxi" value="true" name="notTaxi" required checked>
+                           <input type="checkbox" class="sr-only" id="notTaxi" value="true" name="notTaxi" checked="">
                            <span class="fa fa-check-square-o" aria-hidden="true"></span> 
                            <span class="fa fa-square-o" aria-hidden="true"></span> 
                            Не используется как такси

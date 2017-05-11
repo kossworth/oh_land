@@ -37,10 +37,28 @@ $(document).ready(function(){
 	// OSAGO propositions
 	var showPropositions = function($containerAjax){	// ф-я для підвантаження пропозицій
 		hideContainerAjax($containerAjax);
-
+                var type = $("#vehicleForm [name='type']").val();
+                var notTaxi = $("#vehicleForm [name='notTaxi']").val();
+                var franshiza = $("#vehicleForm [name='franshiza']").val();
+                var city = $("#vehicleForm [name='regCity']").val();
+                
 		$containerAjax.queue("ajax", function(){
+                    $.ajax({
+                        type: "get",
+                        url : "/ohproject/osago/send-request",
+                        data: { type : type, notTaxi : notTaxi, franshiza : franshiza, city : city },
+                        error : function(){
+                            alert('error');
+                        },
+                        success: function(response){
+                            $containerAjax.html(response);
+                            propositionsInit($containerAjax);
+                        }
+                    });
 			// place for Ajax sending
-			$(this).load("./ajax/__propositions.html", function(){propositionsInit($containerAjax)});	// підвантажуємо пропозиції та ініціалізуємо на них js-функціонал
+//			$(this).load("./ajax/__propositions.html", function(){
+//                            propositionsInit($containerAjax)
+//                        });	// підвантажуємо пропозиції та ініціалізуємо на них js-функціонал
 			
 			$(this).dequeue("ajax");
 			// showBcrumbs($bCrumbs);	// show breadcrumbs
