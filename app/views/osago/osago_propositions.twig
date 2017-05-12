@@ -46,7 +46,7 @@
             <div class="b-propositions">
                 <div class="b-propositions__string">
                     {% for prop in propositions %}
-{#                        {{ prop.discountDescription | dump }}#}
+{#                        {{ prop | dump }}#}
                         <div class="b-proposition__wrap">
                             <div class="b-proposition b-gradient_bg">
                                 <div class="b-proposition__tab">
@@ -80,7 +80,7 @@
                                     <span class="b-discont__num">15%</span>
                                      скидка от Oh.ua
                                 </div>
-                                <button type="button" class="b-form__submit_vehicle b-proposition__buy" data-proposition="1">
+                                <button type="button" class="b-form__submit_vehicle b-proposition__buy" data-proposition="{{ loop.index0 }}">
                                     <span class="b-text_btn">Купить за {{ prop.payment | round }} грн </span><span class="fa fa-angle-right" aria-hidden="true"></span>
                                 </button>
                                 <span class="b-proposition__gain">Экономия 155 грн</span>

@@ -126,10 +126,24 @@ $(document).ready(function(){
 
 		$containerAjax.queue("ajax", function(){
 			// place for Ajax sending
-			$(this).load("./ajax/__orderBlock.html", function(){orderBlockInit($containerAjax)});	// підвантажуємо пропозиції та ініціалізуємо на них js-функціонал
-			 
-			$(this).dequeue("ajax");
-			// hideBcrumbs($bCrumbs);	// show breadcrumbs
+                      
+                    $.ajax({
+                        type: "get",
+                        url : "/ohproject/osago/",
+                        data: { type : type, notTaxi : notTaxi, franshiza : franshiza, city : city },
+                        error : function(){
+                            alert('error');
+                        },
+                        success: function(response){
+                            $containerAjax.html(response);
+                            orderBlockInit($containerAjax)
+                        }
+                    });
+                        
+//                    $(this).load("./ajax/__orderBlock.html", function(){orderBlockInit($containerAjax)});	// підвантажуємо пропозиції та ініціалізуємо на них js-функціонал
+
+                    $(this).dequeue("ajax");
+                    // hideBcrumbs($bCrumbs);	// show breadcrumbs
 		});
 
 		showContainerAjax($containerAjax);

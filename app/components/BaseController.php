@@ -39,76 +39,14 @@ class BaseController extends \yii\web\Controller
     {
         parent::init();
 
-//        $content = file_get_contents('301.csv');
-//        $content = explode('http', $content);
-//        array_shift($content);
-//        $count = count($content);
-//        $string = '';
-//        for($i = 0; $i < $count; $i++)
-//        {
-//            if($i%2 == 0)
-//            {
-//                $string .= trim('http'.$content[$i]);
-//            }
-//            else
-//            {
-//                $string .= trim('http'.$content[$i]).';';
-//            }
-//        }
-//
-//        $transaction = \Yii::$app->getDb()->beginTransaction();
-//        $string = explode(';', $string);
-//        array_pop($string);
-//        $status = [];
-//        foreach ($string as $con)
-//        {
-//            $row = explode(',', $con);
-//            if(!isset($row[1]))
-//            {
-//                continue;
-//            }
-//            $redirect = new Redirect();
-//            $redirect->redirect_from = trim($row[0]);
-//            $redirect->redirect_to = trim($row[1]);
-//            $redirect->comment = '';
-//            $redirect->creation_time = date('U');
-//            $status[] = $redirect->save();
-//        }
-//        if(in_array(false, $status))
-//        {
-//            $transaction->rollBack();
-//            var_dump($status); die();
-//        }
-//        else
-//        {
-//            $transaction->commit();
-//        }
-        
-        
-        // редирект из таблицы редиректов. если находим в базе совпадение - редиректим
-//        $absolute_url = $this->full_url();
-//        $need_redirect = Redirect::find()->where(['redirect.redirect_from' => $absolute_url])->limit(1)->one();
-//
-//        if(!is_null($need_redirect)) {
-//            return $this->redirect($need_redirect->redirect_to, 301)->send();
-//        }
-
         $this->layout = 'main.twig';
 
-        Yii::$app->session->open();
         $session = Yii::$app->session;
+        if(!$session->isActive) 
+        {
+            $session->open();
+        }
 
-//        $cart_count = 0;
-//        if($session->isActive && $session->has('cart') && !empty($session['cart']))
-//        {
-//            $cart_count = count($session['cart']);
-//        }
-//
-//        $this->view->params['cart_count'] = $cart_count;
-//
-//        // Обработка корзины
-//        $this->view->params['cart'] = Orders::getCartInfo();
-//
 //        $lang = Lang::getCurrent();
 //        $this->view->params['lang'] = $lang;
 //        $this->view->params['lang_sh'] = mb_substr(($lang->name),0,3, 'utf-8');
@@ -143,39 +81,11 @@ class BaseController extends \yii\web\Controller
 //            Yii::$app->homeUrl = $this->view->params['home_url']="/{$lang->url}/";
 //            $this->view->params['current_url']="/{$lang->url}/{$current_url}";
 //        }
-//
-//        $main_menu_pages = [];
-//        $top_menu_pages = [];
-//
-//        $menu_pages = Pages::getDb()->cache(function ($db){
-//            return Pages::find()->inMenu()->joinWith(['info'], true)->orderBy('sort')->all();
-//        });
-//
-//        foreach($menu_pages as $menu_page){
-//            if($menu_page->parent_id == 3){
-//                $top_menu_pages[] = $menu_page;
-//            }elseif ($menu_page->parent_id == 4){
-//                $main_menu_pages[] = $menu_page;
-//            }
-//        }
-//
-//        $this->view->params['main_menu_pages'] = $main_menu_pages;
-//        $this->view->params['top_menu_pages'] = $top_menu_pages;
-//        $this->view->params['menu_pages'] = $menu_pages;
-//        $this->view->params['menu_pages_count'] = count($menu_pages);
 
         Yii::$app->view->registerMetaTag([
             'name'    => 'robots',
             'content' => 'NOINDEX, NOFOLLOW'
         ]);
-
-//        if(isset($_GET['page']) && !empty($_GET['page']) && (int)$_GET['page'] > 1)
-//        {
-//            Yii::$app->view->registerMetaTag([
-//                'name'    => 'robots',
-//                'content' => 'NOINDEX, FOLLOW'
-//            ]);
-//        }
  
     }
 
