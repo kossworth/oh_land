@@ -46,13 +46,21 @@
             <div class="b-propositions">
                 <div class="b-propositions__string">
                     {% for prop in propositions %}
-{#                        {{ prop | dump }}#}
+{#                        {{ prop.company.name_1 | dump }}#}
                         <div class="b-proposition__wrap">
                             <div class="b-proposition b-gradient_bg">
-                                <div class="b-proposition__tab">
-                                    Топ продаж
-                                </div>
-                                <img src="{{ Url.to('app/web/img/unica.png') }}" alt="" class="b-proposition__logo">
+                                {% if prop.company.osago.landing_top %}
+                                    <div class="b-proposition__tab">
+                                        Топ продаж
+                                    </div>
+                                {% endif %}
+                                {% if prop.company.osago.landing_recommend %}
+                                    <div class="b-proposition__tab">
+                                        Рекомендуем
+                                    </div>
+                                {% endif %}
+{#                                <img src="{{ Url.to('app/web/img/unica.png') }}" alt="" class="b-proposition__logo">#}
+                                <img src="{{ prop.company.logo | raw }}" alt="{{ prop.tariff.insurer.namePrint }}" class="b-proposition__logo">
                                 <span class="b-company__name">{{ prop.tariff.insurer.namePrint }}</span>
                                 <span class="b-company__rating b-company__rating_propos">
                                     <span class="fa fa-star-o" aria-hidden="true"></span>
@@ -63,18 +71,40 @@
                                 </span>
                                 <div class="b-propos__details">
                                     <ul class="b-details__list">
-                                        <li class="b-propos__detail">Франшиза {{ prop.tariff.franchise }}</li>
-                                        <li class="b-propos__detail">Карта Assistance</li>
-                                        <li class="b-propos__detail">Прямое урегулирование</li>
-                                    </ul>
-                                    <div class="b-details_hidden js-content_readmore">
-                                        <ul class="b-details__list">
-                                            <li class="b-propos__detail">Франшиза {{ prop.tariff.franchise }}</li>
+                                        {% set bonuses = prop.company.osago.landing_bonuses | split('\n') %}
+                                        {% if not bonuses[0] is empty %}
+                                            {% for bonus in bonuses %}
+
+                                                {% if loop.index == 4 %}
+                                                </ul>
+                                                <div class="b-details_hidden js-content_readmore">
+                                                    <ul class="b-details__list">
+                                                {% endif %}
+
+                                                <li class="b-propos__detail">{{ bonus }}</li>
+
+                                                {% if loop.last %}
+                                                    </ul>
+                                                    {% if loop.length > 3 %}
+                                                        </div>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {#<li class="b-propos__detail">Франшиза {{ prop.tariff.franchise }}</li>
                                             <li class="b-propos__detail">Карта Assistance</li>
                                             <li class="b-propos__detail">Прямое урегулирование</li>
                                         </ul>
-                                    </div>
-                                    <button class="b-details__btn_readmore js-btn_readmore">Подробнее</button>
+                                        <div class="b-details_hidden js-content_readmore">
+                                            <ul class="b-details__list">
+                                                <li class="b-propos__detail">Франшиза {{ prop.tariff.franchise }}</li>
+                                                <li class="b-propos__detail">Карта Assistance</li>
+                                                <li class="b-propos__detail">Прямое урегулирование</li>
+                                            </ul>
+                                        </div>#}
+                                        {% if bonuses|length > 3 %}
+                                            <button class="b-details__btn_readmore js-btn_readmore">Подробнее</button>
+                                        {% endif %}
+                                    {% endif %}
                                 </div>
                                 <div class="b-discont">
                                     <span class="b-discont__num">15%</span>

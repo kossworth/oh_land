@@ -122,33 +122,32 @@ $(document).ready(function(){
 	
 	// order block
 	var showOrderBlock = function(proposNum, $containerAjax){
-		hideContainerAjax($containerAjax);
+            hideContainerAjax($containerAjax);
 
-		$containerAjax.queue("ajax", function(){
-			// place for Ajax sending
-                      
-                    $.ajax({
-                        type: "get",
-                        url : "/ohproject/osago/",
-                        data: { type : type, notTaxi : notTaxi, franshiza : franshiza, city : city },
-                        error : function(){
-                            alert('error');
-                        },
-                        success: function(response){
-                            $containerAjax.html(response);
-                            orderBlockInit($containerAjax)
-                        }
-                    });
-                        
+            $containerAjax.queue("ajax", function(){
+
+                $.ajax({
+                    type: "post",
+                    url : "/ohproject/osago/create-osago-order",
+                    data: { counter : proposNum },
+                    error : function(){
+                        alert('error');
+                    },
+                    success: function(response){
+                        $containerAjax.html(response);
+                        orderBlockInit($containerAjax)
+                    }
+                });
+
 //                    $(this).load("./ajax/__orderBlock.html", function(){orderBlockInit($containerAjax)});	// підвантажуємо пропозиції та ініціалізуємо на них js-функціонал
 
-                    $(this).dequeue("ajax");
-                    // hideBcrumbs($bCrumbs);	// show breadcrumbs
-		});
+                $(this).dequeue("ajax");
+                // hideBcrumbs($bCrumbs);	// show breadcrumbs
+            });
 
-		showContainerAjax($containerAjax);
-		
-		$containerAjax.dequeue("ajax");
+            showContainerAjax($containerAjax);
+
+            $containerAjax.dequeue("ajax");
 	}
 	var orderBlockInit = function($containerAjax){		
 		var  $orderBlock = $("#finalize")

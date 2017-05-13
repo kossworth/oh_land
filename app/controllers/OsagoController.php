@@ -6,6 +6,7 @@ use Yii;
 use app\components\ewa;
 use app\models\AutoCategories;
 use app\models\Orders;
+use app\models\Company;
 
 class OsagoController extends \app\components\BaseController
 {
@@ -21,6 +22,14 @@ class OsagoController extends \app\components\BaseController
                 ]
             ],
         ];
+    }
+    
+    public function beforeAction($action)
+    {
+//        if (in_array($action->id, ['create-osago-order'])) {
+            $this->enableCsrfValidation = false; 
+//        }
+        return parent::beforeAction($action);
     }
     
     public function actionIndex()
@@ -66,24 +75,44 @@ class OsagoController extends \app\components\BaseController
         
         $propositions = ewa\find::osago($tariff_options);
         $session->set('osago_search_data', json_encode($tariff_options));
+        
+        $companies = Company::find()
+                ->joinWith(['osago'], true)
+//                ->where([Company::tableName().'.active_osago' => 1])
+//                ->asArray()
+                ->all();
+        
+        $result_propositions = [];
+        
+        foreach ($propositions as $prop)
+        {
+            $prop['company'] = null;
+            foreach ($companies as $key => $comp)
+            {
+                if($comp->ewa_id == $prop['tariff']['insurer']['id'])
+                {
+                    $prop['company'] = $comp;
+                    array_push($result_propositions, $prop);
+                    unset($companies[$key]); // удаляем из массива компанию, которую добавили в массив предложений
+                    break;
+                }
+            }
+        }
+
 //        if(empty($propositions)) { 
 //            return null; 
 //        }
-//        
-//        $b = json_decode($session->get('osago_search_data'));
-//        $c = yii\helpers\ArrayHelper::toArray($b);
-//        var_dump($c);
-//        
-//        var_dump($propositions);
-//        die('yeah');
+//        var_dump($companies);
+//        var_dump('_________');
+//        die();
         return $this->renderPartial('osago_propositions.twig', [
-            'propositions' => $propositions
+            'propositions' => $result_propositions
         ]);
     }
     
     public function actionCreateOsagoOrder()
     {
-        if(Yii::$app->request->isAjax)
+        if(!Yii::$app->request->isAjax)
         {
             throw new \yii\web\BadRequestHttpException('Wrong request!', 400);
         }
@@ -94,10 +123,11 @@ class OsagoController extends \app\components\BaseController
         {
             throw new \yii\base\Exception('Havent order!');
         }
-        $search_data = $session->get('osago_search_data') ? $session->get('osago_search_data') : null;
-        $propositions = ewa\find::osago(\yii\helpers\ArrayHelper::toArray(json_decode($search_data)));
-        $order->search = $search_data;
-        var_dump($propositions); die('ggggg');
+        $search_data = $session->get('osago_search_data') ? $session->get('osago_search_data') : [];
+        $propositions = ewa\find::osago(json_decode($search_data, true));
+        
+        $order->search  = $search_data;
+        $order->offer   = $propositions[$counter] ? json_encode($propositions[$counter], JSON_UNESCAPED_UNICODE) : null;
         if($order->save(false))
         {
             return $this->renderAjax('form_order.twig', []);
