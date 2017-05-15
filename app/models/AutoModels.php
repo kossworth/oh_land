@@ -106,4 +106,26 @@ class AutoModels extends \yii\db\ActiveRecord
     {
         return new \app\models\Queries\AutoModelsQuery(get_called_class());
     }
+    
+    public static function getAutocompleteModelsArray($criteria, $brand_id = null)
+    {
+        $search_result = self::find()->where(['LIKE', self::tableName().'.name_auto_model', $criteria.'%', false])
+                ->andFilterWhere([self::tableName().'.id_auto_maker' => $brand_id])
+                ->limit(10)
+                ->orderBy(self::tableName().'.name_auto_model ASC')
+                ->asArray()
+                ->all();
+        
+        if(is_null($search_result))
+        {
+            return false;
+        }
+        
+        $items = [];
+        foreach ($search_result as $res)
+        {
+            $items['items'][] = ['name' => $res['name_auto_model'], 'id' => $res['id_auto_models']];
+        }
+        return $items;
+    }
 }

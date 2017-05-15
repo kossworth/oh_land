@@ -509,9 +509,9 @@ $(document).ready(function(){
 
 		// autocomplete для полів:
 		// "модель"
-		fieldAutocomplete("model", "./ajax/model.json");
+		fieldAutocomplete("model", "/vehicles/ewa-model");
 		// "марка"
-		fieldAutocomplete("brand", "./ajax/brand.json");
+		fieldAutocomplete("brand", "/vehicles/ewa-brand");
 		// місто доставки (із областю для кур’єра)
 		fieldAutocomplete("delivCitySelf", "./ajax/cityRegion.json");
 		// НП область

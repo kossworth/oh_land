@@ -3,7 +3,8 @@
 namespace app\controllers;
 
 use Yii;
-use app\components\ewa;
+use app\models\AutoMakers;
+use app\models\AutoModels;
 
 class VehiclesController extends \app\components\BaseController
 {
@@ -25,29 +26,25 @@ class VehiclesController extends \app\components\BaseController
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $request = Yii::$app->request;
-//        if(!$request->isAjax)
-//        {
-//            throw new BadRequestHttpException("Wrong request", 400);
-//        }
-//        $get = $request->get();
-
-        if(isset($get['brand']))
+        if(!$request->isAjax)
         {
-            $criteria =  strip_tags(trim($get['brand']));   
+            throw new BadRequestHttpException("Wrong request", 400);
         }
-        else
+        $criteria = strip_tags(trim($request->get('brand')));
+        return AutoMakers::getAutocompleteMakersArray($criteria);
+    }
+    
+    public function actionEwaModel()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $request = Yii::$app->request;
+        if(!$request->isAjax)
         {
-            $criteria = '';
+            throw new BadRequestHttpException("Wrong request", 400);
         }
-        
-        var_dump($brands); die();
-        
-        $result = [];
-        foreach ($cities as $city)
-        {
-            $result['items'][] = ['name' => $city['name_full'], 'id' => $city['zone']];
-        }
-        return $result;
+        $criteria = strip_tags(trim($request->get('model')));
+        $brand_id = (int)$request->get('brand');
+        return AutoModels::getAutocompleteModelsArray($criteria, $brand_id);
     }
     
 }

@@ -64,4 +64,25 @@ class AutoMakers extends \yii\db\ActiveRecord
     {
         return new \app\models\Queries\AutoMakersQuery(get_called_class());
     }
+    
+    public static function getAutocompleteMakersArray($criteria)
+    {
+        $search_result = self::find()->where(['LIKE', self::tableName().'.name_auto_maker', $criteria.'%', false])
+                ->limit(10)
+                ->orderBy(self::tableName().'.name_auto_maker ASC')
+                ->asArray()
+                ->all();
+        
+        if(is_null($search_result))
+        {
+            return false;
+        }
+        
+        $items = [];
+        foreach ($search_result as $res)
+        {
+            $items['items'][] = ['name' => $res['name_auto_maker'], 'id' => $res['id_auto_maker']];
+        }
+        return $items;
+    }
 }

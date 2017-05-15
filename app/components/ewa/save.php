@@ -72,14 +72,14 @@ class save
                     'zone' => ArrayHelper::getValue($search, 'city.zone'),	//	1
                 ],
                 'year'              => ArrayHelper::getValue($info, 'transport.year'),	//	2008
-                'registrationType'	=> 'PERMANENT_WITHOUT_OTK',
-                'otkDate' 			=> '',
+                'registrationType'  => 'PERMANENT_WITHOUT_OTK',
+                'otkDate'           => '',
             ],
             'state'           => 'DRAFT',
             'bonusMalus'      => 0.8,	//	0.8
-            'notes' => ArrayHelper::getValue($info, 'contract.comment'),
-            'number' => "АВ ".substr(time(), -7, 7),
-            'stickerNumber' => "АВ ".substr(time(), -7, 7),
+            'notes'           => ArrayHelper::getValue($info, 'contract.comment'),
+            'number'          => "АВ ".substr(time(), -7, 7),
+            'stickerNumber'   => "АВ ".substr(time(), -7, 7),
         ];
 
         //	Преобразование дат
@@ -222,7 +222,7 @@ class save
                     'id' => ArrayHelper::getValue($auth, 'user.id'),	//	815
                 ],
                 'tariff'          => [
-                    'type' => 'custom',
+                    'type' => 'custom', 
                     'id'   => ArrayHelper::getValue($offer, 'auto.tariff.id'),	//	1556
                 ],
                 'date'            => date('Y-m-d'),	//	2016-10-03
