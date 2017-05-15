@@ -18,15 +18,15 @@
             <div class="b-calculator__heading b-data__heading">Ваши данные:</div>
             <div class="b-data__part">
                 <div>Обьект страхования</div>
-                <div class="bold">Легковой автомобиль</div>
+                <div class="bold">{{ auto_category.name_object_rus | raw }}</div>
             </div>
             <div class="b-data__part">
-                <div>Обьм двигателя</div>
-                <div class="bold">До 1600 см3</div>
+                <div>{{ auto_category.name_param_rus | raw }}</div>
+{#                <div class="bold">{{ auto_category.name_param_rus }}</div>#}
             </div>
             <div class="b-data__part">
                 <div>Место регистрации транспортного средства</div>
-                <div class="bold">Киев</div>
+                <div class="bold">{{ city_name }}</div>
             </div>
             <button type="button" class="b-form__submit_vehicle" id="vehicleEdit">
                 <span class="b-text_btn">Изменить данные</span><span class="fa fa-angle-left" aria-hidden="true"></span>
@@ -46,7 +46,7 @@
             <div class="b-propositions">
                 <div class="b-propositions__string">
                     {% for prop in propositions %}
-{#                        {{ prop.company.name_1 | dump }}#}
+{#                        {{ prop.tariff.brokerDiscount | dump }}#}
                         <div class="b-proposition__wrap">
                             <div class="b-proposition b-gradient_bg">
                                 {% if prop.company.osago.landing_top %}
@@ -90,30 +90,24 @@
                                                     {% endif %}
                                                 {% endif %}
                                             {% endfor %}
-                                            {#<li class="b-propos__detail">Франшиза {{ prop.tariff.franchise }}</li>
-                                            <li class="b-propos__detail">Карта Assistance</li>
-                                            <li class="b-propos__detail">Прямое урегулирование</li>
-                                        </ul>
-                                        <div class="b-details_hidden js-content_readmore">
-                                            <ul class="b-details__list">
-                                                <li class="b-propos__detail">Франшиза {{ prop.tariff.franchise }}</li>
-                                                <li class="b-propos__detail">Карта Assistance</li>
-                                                <li class="b-propos__detail">Прямое урегулирование</li>
-                                            </ul>
-                                        </div>#}
                                         {% if bonuses|length > 3 %}
                                             <button class="b-details__btn_readmore js-btn_readmore">Подробнее</button>
                                         {% endif %}
                                     {% endif %}
                                 </div>
                                 <div class="b-discont">
-                                    <span class="b-discont__num">15%</span>
+                                    {% if prop.tariff.brokerDiscount > 0%}
+                                    <span class="b-discont__num">{{ prop.tariff.brokerDiscount * 100 | raw }}%</span>
                                      скидка от Oh.ua
+                                    {% endif %}
                                 </div>
                                 <button type="button" class="b-form__submit_vehicle b-proposition__buy" data-proposition="{{ loop.index0 }}">
                                     <span class="b-text_btn">Купить за {{ prop.payment | round }} грн </span><span class="fa fa-angle-right" aria-hidden="true"></span>
                                 </button>
-                                <span class="b-proposition__gain">Экономия 155 грн</span>
+                                {% if prop.tariff.brokerDiscount > 0 %}
+                                    <span class="b-proposition__gain">Экономия {{ prop.discount_sum }} грн</span>
+                                {% endif %}
+                                
                             </div>
                         </div>
                     {% endfor %}

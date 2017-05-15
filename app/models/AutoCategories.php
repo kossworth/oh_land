@@ -35,6 +35,7 @@ class AutoCategories extends \yii\db\ActiveRecord
             [['id', 'name_auto_category_rus'], 'required'],
             [['id', 'id_auto_kind', 'order'], 'integer'],
             [['engine_volume_min', 'engine_volume_max'], 'number'],
+            [['name_object', 'name_object_rus', 'name_param', 'name_param_rus'], 'string', 'max' => 255],
             [['name_auto_category', 'name_auto_category_rus'], 'string', 'max' => 60],
             [['auto_code'], 'string', 'max' => 2],
         ];
@@ -53,6 +54,10 @@ class AutoCategories extends \yii\db\ActiveRecord
             'auto_code' => Yii::t('app', 'Auto Code'),
             'engine_volume_min' => Yii::t('app', 'Engine Volume Min'),
             'engine_volume_max' => Yii::t('app', 'Engine Volume Max'),
+            'name_object' => Yii::t('app', 'Object Name'),
+            'name_object_rus' => Yii::t('app', 'Object Name Rus'),
+            'name_param' => Yii::t('app', 'Param Name'),
+            'name_param_rus' => Yii::t('app', 'Param Name Rus'),
             'order' => Yii::t('app', 'Порядок сортировки'),
         ];
     }

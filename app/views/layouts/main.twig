@@ -112,19 +112,19 @@
                                 <input type="radio" class="radio sr-only" id="xlarge" value="6" name="type" >
                                 <label for="xlarge">от 3001 см<sup>3</sup></label>
                             </div>
-                            <div class="b-params b-params_truck hidden">
+                            <div class="b-params b-params_truck">
                                 <input type="radio" class="radio sr-only" id="light" value="7" name="type">
                                 <label for="light">до 2т</label>
                                 <input type="radio" class="radio sr-only" id="heavy" value="8" name="type">
                                 <label for="heavy">более 2т</label>
                             </div>
-                            <div class="b-params b-params_bus hidden">
+                            <div class="b-params b-params_bus">
                                 <input type="radio" class="radio sr-only" id="few" value="9" name="type">
                                 <label for="few">до 20 человек</label>
                                 <input type="radio" class="radio sr-only" id="many" value="10" name="type">
                                 <label for="many">более 20 человек</label>
                             </div>
-                            <div class="b-params b-params_moto hidden">
+                            <div class="b-params b-params_moto">
                                 <input type="radio" class="radio sr-only" id="motorbike" value="1" name="type">
                                 <label for="motorbike">до 300 см<sup>3</sup></label>
                                 <input type="radio" class="radio sr-only" id="motorcycle" value="2" name="engine">
@@ -134,12 +134,19 @@
                         <span class="b-calculator__heading b-calculator__heading_registration">Регистрация и эксплуатация</span>
                         <div class="b-block_select b-selectBlock_registration">
                             <label for="regCity" class="b-label_registration">Место регистрации транспортного средства</label>
+                            <input type="text" class="b-autocomplete b-autocomplete_vehicle selectric" id="regCity" title="Введите и выберите город">
+                            <input type="hidden" class="hidden" name="regCityId" id="cityId">
+                        </div>
+                        
+                        {#<span class="b-calculator__heading b-calculator__heading_registration">Регистрация и эксплуатация</span>
+                        <div class="b-block_select b-selectBlock_registration">
+                            <label for="regCity" class="b-label_registration">Место регистрации транспортного средства</label>
                             <select name="regCity" class="js-selectric" id="regCity">
                                 <option selected value="1" selected>Киев</option>
-                                {#<option value="9" selected>Харьков</option>
-                                <option value="10" selected>Одесса</option>#}
+                                <option value="9" selected>Харьков</option>
+                                <option value="10" selected>Одесса</option>
                             </select>
-                        </div>
+                        </div>#}
                         <div class="b-block_select b-selectBlock_franshiza">
                             <label for="franshiza" class="b-label_registration">Франшиза</label>
                             <select name="franshiza" class="js-selectric" id="franshiza">
@@ -151,7 +158,7 @@
                             </select>
                         </div>
                         <label class="b-block_checkbox">
-                           <input type="checkbox" class="sr-only" id="notTaxi" value="true" name="notTaxi" checked="">
+                           <input type="checkbox" class="sr-only" id="notTaxi" value="true" name="notTaxi" checked>
                            <span class="fa fa-check-square-o" aria-hidden="true"></span> 
                            <span class="fa fa-square-o" aria-hidden="true"></span> 
                            Не используется как такси

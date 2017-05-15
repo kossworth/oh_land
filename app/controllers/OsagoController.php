@@ -39,7 +39,6 @@ class OsagoController extends \app\components\BaseController
 
     public function actionSendRequest()
     {
-//        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $request = Yii::$app->request;
         if(!$request->isAjax)
         {
@@ -47,12 +46,13 @@ class OsagoController extends \app\components\BaseController
         }
         $session = Yii::$app->session;
         $get = $request->get();
-        
-//        $test = ewa\find::city('Одесса');
-        
+       
         $category_id = $get['type'] ? (int)$get['type'] : 1;
-        $auto_category = AutoCategories::find()->select(AutoCategories::tableName().'.auto_code')
-                ->andFilterWhere([AutoCategories::tableName().'.id' => $category_id])->limit(1)->one();
+        $auto_category = AutoCategories::find()->select([
+                AutoCategories::tableName().'.auto_code',
+                AutoCategories::tableName().'.name_object_rus',
+                AutoCategories::tableName().'.name_param_rus',
+            ])->andFilterWhere([AutoCategories::tableName().'.id' => $category_id])->limit(1)->one();
         
         if(is_null($auto_category))
         {
@@ -67,14 +67,14 @@ class OsagoController extends \app\components\BaseController
             'dateFrom' => date('Y-m-d', strtotime('+1 day')),
             'dateTo' => date('Y-m-d', strtotime('+1 year')),
             'zone' => $get['city'] ? (int)$get['city'] : 1,
-//            'taxi' => $get['notTaxi'] ? (bool)$get['notTaxi'] : false,
-            'taxi' => false,
+            'taxi' => $get['notTaxi'] ? (bool)$get['notTaxi'] : false,
             'usageMonths' => 0,
             'driveExp' => false,
         ];
         
         $propositions = ewa\find::osago($tariff_options);
         $session->set('osago_search_data', json_encode($tariff_options));
+        $session->set('search_city', $get['cityName']);
         
         $companies = Company::find()
                 ->joinWith(['osago'], true)
@@ -92,6 +92,7 @@ class OsagoController extends \app\components\BaseController
                 if($comp->ewa_id == $prop['tariff']['insurer']['id'])
                 {
                     $prop['company'] = $comp;
+                    $prop['discount_sum'] = round($prop['tariff']['brokerDiscount'] * $prop['payment']);
                     array_push($result_propositions, $prop);
                     unset($companies[$key]); // удаляем из массива компанию, которую добавили в массив предложений
                     break;
@@ -106,7 +107,9 @@ class OsagoController extends \app\components\BaseController
 //        var_dump('_________');
 //        die();
         return $this->renderPartial('osago_propositions.twig', [
-            'propositions' => $result_propositions
+            'propositions'  => $result_propositions,
+            'auto_category' => $auto_category,
+            'city_name'     => $get['cityName'],
         ]);
     }
     

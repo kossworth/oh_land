@@ -1,0 +1,6 @@
+[10-May-2017 14:49:34 Europe/Helsinki] PHP Fatal error:  Class 'Twig_NodeVisitor_Escaper' not found in /home/ohdev/public_html/ohproject/app/vendor/twig/twig/lib/Twig/Extension/Escaper.php on line 36
+[10-May-2017 14:49:54 Europe/Helsinki] PHP Fatal error:  Class 'Twig_NodeVisitor_Escaper' not found in /home/ohdev/public_html/ohproject/app/vendor/twig/twig/lib/Twig/Extension/Escaper.php on line 36
+[10-May-2017 14:49:57 Europe/Helsinki] PHP Fatal error:  Class 'Twig_NodeVisitor_Escaper' not found in /home/ohdev/public_html/ohproject/app/vendor/twig/twig/lib/Twig/Extension/Escaper.php on line 36
+[10-May-2017 14:50:06 Europe/Helsinki] PHP Fatal error:  Class 'Twig_NodeVisitor_Escaper' not found in /home/ohdev/public_html/ohproject/app/vendor/twig/twig/lib/Twig/Extension/Escaper.php on line 36
+[10-May-2017 15:31:25 Europe/Helsinki] PHP Fatal error:  Class 'app\controllers\ewa\find' not found in /home/ohdev/public_html/ohproject/app/controllers/MainController.php on line 40
+[11-May-2017 13:19:43 Europe/Helsinki] PHP Fatal error:  Class 'app\controllers\AutoCategories' not found in /home/ohdev/public_html/ohproject/app/controllers/OsagoController.php on line 39
