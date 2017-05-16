@@ -71,6 +71,7 @@ $(document).ready(function(){
 	// OSAGO propositions
 	var showPropositions = function($containerAjax){	// ф-я для підвантаження пропозицій
 		hideContainerAjax($containerAjax);
+
                 var type = $("#vehicleForm [name='type']").val();
                 var notTaxi = $("#vehicleForm [name='notTaxi']").is(':checked') ? 1 : 0;
                 var franshiza = $("#vehicleForm [name='franshiza']").val();
@@ -86,22 +87,22 @@ $(document).ready(function(){
 			// 		$(t).dequeue("ajax");
 			// 	}
 			// }
-                $.ajax({
-                    type: "get",
-                    url : "/ohproject/osago/send-request",
-                    data: { type : type, notTaxi : notTaxi, franshiza : franshiza, city : city, cityName : cityName },
-                    error : function(){
-                        alert('error');
-                    },
-                    success: function(response){
-                        $containerAjax.html(response);
-                        propositionsInit($containerAjax);
-                    },
-                    complete: function(){
-                            showContainerAjax($containerAjax);
-                            $containerAjax.dequeue("ajax");
-                    }
-                });
+			$.ajax({
+            	type: "get",
+                url : "/ohproject/osago/send-request",
+                data: { type : type, notTaxi : notTaxi, franshiza : franshiza, city : city, cityName : cityName },
+            	error : function(){
+            	    alert('error');
+            	},
+            	success: function(response){
+            	    $containerAjax.html(response);
+            	    propositionsInit($containerAjax);
+            	},
+            	complete: function(){
+            		showContainerAjax($containerAjax);
+            		$containerAjax.dequeue("ajax");
+            	}
+            });
 
 			// $(this).dequeue("ajax");
 			// showBcrumbs($bCrumbs);	// show breadcrumbs
@@ -212,10 +213,10 @@ $(document).ready(function(){
                     success: function(response){
                         $containerAjax.html(response);
                         orderBlockInit($containerAjax);
-                    },
+                    }, 
                     complete: function(){
-                            showContainerAjax($containerAjax);
-                            $containerAjax.dequeue("ajax");
+                        showContainerAjax($containerAjax);
+                        $containerAjax.dequeue("ajax");
                     }
                 });
 			// $(this).load("./ajax/__orderBlock.html", function(){orderBlockInit($containerAjax)});	// підвантажуємо пропозиції та ініціалізуємо на них js-функціонал
@@ -364,17 +365,17 @@ $(document).ready(function(){
                     pattern: "ваш почтовый адресс"
         		},
         		year:     {
-        			required: "Поле обязательно для заполнения!",
-        			number: "1999 например",
-        			min: "не ранее 1960 года выпуска",
-        			max: "не позднее 2018 года выпуска",
+                            required: "Поле обязательно для заполнения!",
+                            number: "1999 например",
+                            min: "не ранее 1960 года выпуска",
+                            max: "не позднее 2018 года выпуска",
                     //pattern: "1999 например"
         		},
         		chassis:  {
-        			required: "Поле обязательно для заполнения!",
-                    minlength: "не менее 2х символов",
-                    maxlength: "не более 17 символов",
-                    pattern: "латинница, кириллица, дефис, цифры"
+                            required: "Поле обязательно для заполнения!",
+                            minlength: "не менее 2х символов",
+                            maxlength: "не более 17 символов",
+                            pattern: "латинница, кириллица, дефис, цифры"
         		},
         		plateNum: {
                     required: "Поле обязательно для заполнения!",
@@ -387,35 +388,35 @@ $(document).ready(function(){
                     pattern: "формат: ДД.ММ.ГГГГ"
         		}
         	},
-			submitHandler: function(form) {	// replaces default form submit behavior
-				// треба також перевірити поля автокомпліта
-				var  bFocused = false
-					,bValid = true
-					;
-				$autoCompleteFields.each(function(){
-					if($(this).attr("disabled") == ""){
-						if ($(this).next().val() ){
-							$(this).parent(".b-form__cell").addClass("b-cell_valid")
-						} else{
-							$(this).parent(".b-form__cell").addClass("b-cell_error");
-							bValid = false;
-							if (!bFocused){
-								$(this).focus();
-								bFocused = true;
-							}
-						}
-					}
-				});
-				if (bValid){
-					$.ajax({
-						url: form.action,
-						type: form.method,
-						data: $(form).serialize(),
-						success: function(response) {
-							showThanks($containerAjax, response);
-						}            
-					});
-				}
+                    submitHandler: function(form) {	// replaces default form submit behavior
+                        // треба також перевірити поля автокомпліта
+                        var bFocused = false
+                            ,bValid = true
+                            ;
+                        $autoCompleteFields.each(function(){
+                            if(!$(this).prop("disabled")){
+                                if ($(this).next().val() ){
+                                    $(this).parent(".b-form__cell").addClass("b-cell_valid")
+                                } else{
+                                    $(this).parent(".b-form__cell").addClass("b-cell_error");
+                                    bValid = false;
+                                    if (!bFocused){
+                                        $(this).focus();
+                                        bFocused = true;
+                                    }
+                                }
+                            }
+                        });
+//                        if (bValid){
+//                            $.ajax({
+//                                url: form.action,
+//                                type: form.method,
+//                                data: $(form).serialize(),
+//                                success: function(response) {
+//                                    showThanks($containerAjax, response);
+//                                }            
+//                            });
+//                        }
 		    }
         };
         
@@ -427,24 +428,37 @@ $(document).ready(function(){
 		var  $orderBlock = $("#finalize")
 			,$methodBtns = $orderBlock.find(".b-finalize__btn_method")
 			,$methods = $orderBlock.find(".b-finalize__method")
-			,$trash = $orderBlock.find(".b-method__trash")
+			,$activeMethod = $methods.filter(".js-method_active")	// метод "Заповнити самостійно"
+			,$trash = $orderBlock.find(".b-method__trash")	// блок хлопець-дівчина
 			,$trashTabs = $trash.find(".b-trash__tab")
 			,$trashCard = $trash.find(".b-trash__sides")
+			,$brand = $("#brand")
+			,$model = $("#model")
 			,$filesWrap = $orderBlock.find(".b-wrap_files")
 			,$filesInput = $filesWrap.find("input[type='file']")
 			,$filesList = $filesWrap.find(".b-list_files")
 			,$filesProgress = $filesWrap.find(".b-progress_files")
 			,$submitButtons = $methods.find("#submitBySelf, #submitByPhone, #submitByUpload")
-			// ,$deliveryMode = $methods.find("select[name='deliveryMode']")
 			,validatorCurrent = orderFormsValidation($methods.filter("#bySelf"))	// formBySelf validation init
+			// змінні для логіки відображення доставки
+			,$deliveryMode = $methods.find("select[name='deliveryMode']")	// селекти методів доставки
+			,deliveryStr = "bySelf"	//самовывоз
+			// наступних елементів буде по 2 об'єкти - один в формі методу "Заповнити самостійно", другий в "Отправить документы"
+			,$selfMap = $methods.find(".b-form__cell_map")
+			,$courierCity = $methods.find("input[name='delivCityId']").prev()
+			,$courierAddr = $methods.find("input[name='deliveryAddr']")
+			,$newPostRegion = $methods.find("input[name='delivRegionIdNP']").prev()
+			,$newPostCity = $methods.find("input[name='delivCityIdNP']").prev()
+			,$newPostDivision = $methods.find("input[name='delivDivisionIdNP']").prev()
+			,$newPostRow = $newPostDivision.parents(".row_form")
 			;
 		
 		// show only selected buy method
 		$methodBtns.click(function(){
 			var $activeBtn = $methodBtns.filter(".b-finalize__btn_active")
 				,methodNum = $methodBtns.index($(this))
-				,$activeMethod = $methods.filter(".js-method_active")
 				;
+				// $activeMethod = $methods.filter(".js-method_active");
 				
 			if($activeBtn[0] != $(this)[0]){
 				$activeBtn.removeClass("b-finalize__btn_active");
@@ -492,7 +506,7 @@ $(document).ready(function(){
 				,filesListStr=""
 				;
 			// console.log("before:", this.files.length);
-			if (this.files.length > 10){
+			if (this.files.length > 10){	// обмеження за к-тю файлів
 				this.files.length = 10;
 				// console.log("after:", this.files.length);
 			}
@@ -508,32 +522,96 @@ $(document).ready(function(){
 		});
 
 		// autocomplete для полів:
-		// "модель"
-		fieldAutocomplete("model", "/vehicles/ewa-model");
 		// "марка"
-		fieldAutocomplete("brand", "/vehicles/ewa-brand");
+		// fieldAutocomplete("#brand", "./ajax/brand.json", null, function(){
+		// fieldAutocomplete("#" + $("input[name = 'brand']").prev().attr("id"), "./ajax/brand.json", null, function(){
+		// 	$model.prop("disabled", false);
+		// });
+		fieldAutocomplete($("input[name = 'brandId']").prev(), "/ohproject/vehicles/ewa-brand", null, function(){
+			$model.prop("disabled", false);
+		});
+                fieldAutocomplete($("input[name = 'modelId']").prev(), "/ohproject/vehicles/ewa-model", $brand.next(), function(){});
+		// console.log($("input[name = 'delivRegionIdNP']").prev().attr("id"));
+		// "модель"
+//		fieldAutocomplete($("#model"), "/ohproject/vehicles/ewa-model", $brand.next().val());
 		// місто доставки (із областю для кур’єра)
-		fieldAutocomplete("delivCitySelf", "./ajax/cityRegion.json");
-		// НП область
-		fieldAutocomplete("delivRegionNP", "./ajax/region.json");
-		// НП місто
-		fieldAutocomplete("delivCityNP", "./ajax/region.json");
-		// НП відділення
-		fieldAutocomplete("delivDivisionNP", "./ajax/division.json");
-
+		fieldAutocomplete($("#delivCitySelf"), "./ajax/cityRegion.json");
+		// НП:
+ 		// область
+ 		fieldAutocomplete($newPostRegion, "/ohproject/cities/np-region", null, function(){
+                    $newPostCity.each(function(index){
+                        $(this).prop("disabled", false)
+                    });
+ 		});
+ 			// місто
+ 		fieldAutocomplete($newPostCity, "/ohproject/cities/np-city", null, function(){
+                    $newPostDivision.each(function(index){
+                        $(this).prop("disabled", false)
+                    });
+ 		});
+                // відділення
+ 		fieldAutocomplete($newPostDivision, "./ajax/division.json");
 
 		// selects stylization
-		// $methods.find("#deliveryMode").selectric();
-		// var deliveryNum;
-		$methods.find("select[name='deliveryMode']").selectric({
-			onChange: function(element) {
-				$(element).change();
-				// $(element).parents(".selectric-js-selectric")
-				// console.log($(element).parent());
-			}
-		});
-		// $deliveryMode = $methods.find("select[name='deliveryMode']")
+		var oSelectrics = $deliveryMode.selectric({	// стилізуємо селекти вибора доставки
+                    onChange: function(element) {	// element==this - це наш select, він лишається тим самим об'єктом і після ініціалізації selectric
+                        deliveryStr = $(element).val();	// current select value				
+                        var indexOfThis = $deliveryMode.index($(element));	// index of current $(element) between $deliveryMode selects
 
+                        // при зміні значення клікнутого селекта змінимо значення решти селектів доставки в інших методах з доставкою
+                        for (var i=0; i < $deliveryMode.length; ++i){
+                                if (i != indexOfThis){
+                                        $deliveryMode.eq(i).val(deliveryStr).selectric("refresh");	// змінюємо значення і оновлюємо selectric
+                                }
+                        }
+
+                        switch (deliveryStr) {
+                            case "bySelf":	// самовивоз
+                                // елементи Кур'єра
+                                $courierCity.prop("disabled", true).addClass("hidden")
+                                                        .parent().addClass("hidden");
+                                $courierAddr.prop("disabled", true).addClass("hidden")
+                                                        .parent().addClass("hidden");
+                                // елементи НП						
+                                $newPostRegion.prop("disabled", true).addClass("hidden");
+                                $newPostCity.prop("disabled", true).addClass("hidden");
+                                $newPostDivision.prop("disabled", true).addClass("hidden");
+                                $newPostRow.addClass("hidden");
+                                // елементи Самовивоза
+                                $selfMap.removeClass("hidden");
+                                break;
+                            case "byCourier":	// кур'єр
+                                // елементи Самовивоза
+                                $selfMap.addClass("hidden");
+                                // елементи НП						
+                                $newPostRegion.prop("disabled", true).addClass("hidden");
+                                $newPostCity.prop("disabled", true).addClass("hidden");
+                                $newPostDivision.prop("disabled", true).addClass("hidden");
+                                $newPostRow.addClass("hidden");
+                                // елементи Кур'єра
+                                $courierCity.prop("disabled", false).removeClass("hidden")
+                                                        .parent().removeClass("hidden");
+                                $courierAddr.prop("disabled", false).removeClass("hidden")
+                                                        .parent().removeClass("hidden");
+                                break;
+                            case "byNP":	// НП
+                                // елементи Кур'єра
+                                $courierCity.prop("disabled", true).addClass("hidden")
+                                                        .parent().addClass("hidden");
+                                $courierAddr.prop("disabled", true).addClass("hidden")
+                                                        .parent().addClass("hidden");
+                                // елементи Самовивоза
+                                $selfMap.addClass("hidden");
+                                // елементи НП						
+                                $newPostRow.removeClass("hidden");
+                                $newPostRegion.prop("disabled", false).removeClass("hidden");
+                                $newPostCity.removeClass("hidden");
+                                $newPostDivision.removeClass("hidden");
+                                break;
+                        }
+                        $(element).change();	// fired by default
+                    }
+		});
 		// show thanks page
 		// $submitButtons.click(function(event){
 		// 		event.preventDefault();
@@ -545,41 +623,41 @@ $(document).ready(function(){
 	}
 	
 	// show thanks page
-	var showThanks = function($containerAjax, responseFromPhp){
-		hideContainerAjax($containerAjax);
-
-		// -- temporary Ajax for static demo --
-		// !!! comment it on server
-		$containerAjax.queue("ajax", function(){
-			// place for Ajax sending
-			$.ajax({
-            	type: "get",
-            	url : "./ajax/__thanks.html",
-            	error : function(){
-            	    alert('error');
-            	},
-            	success: function(response){
-            	    $containerAjax.html(response);
-            	    // thanksInit($containerAjax);
-            	},
-            	complete: function(){
-            		showContainerAjax($containerAjax);
-            		$containerAjax.dequeue("ajax");
-            	}
-            });
-		});
-		//-----------------------------------
-
-		// !!! 
-		// commented variant for php server
-		// $containerAjax.queue("ajax", function(){
-  //           $containerAjax.html(responseFromPhp);
-  //           showContainerAjax($containerAjax);
-  //           $containerAjax.dequeue("ajax");
-		// });
-
-		$containerAjax.dequeue("ajax");
-	}
+//	var showThanks = function($containerAjax, responseFromPhp){
+//		hideContainerAjax($containerAjax);
+//
+//		// -- temporary Ajax for static demo --
+//		// !!! comment it on server
+//		$containerAjax.queue("ajax", function(){
+//			// place for Ajax sending
+//			$.ajax({
+//            	type: "get",
+//            	url : "./ajax/__thanks.html",
+//            	error : function(){
+//            	    alert('error');
+//            	},
+//            	success: function(response){
+//            	    $containerAjax.html(response);
+//            	    // thanksInit($containerAjax);
+//            	},
+//            	complete: function(){
+//                    showContainerAjax($containerAjax);
+//                    $containerAjax.dequeue("ajax");
+//            	}
+//            });
+//		});
+//		//-----------------------------------
+//
+//		// !!! 
+//		// commented variant for php server
+//		// $containerAjax.queue("ajax", function(){
+//  //           $containerAjax.html(responseFromPhp);
+//  //           showContainerAjax($containerAjax);
+//  //           $containerAjax.dequeue("ajax");
+//		// });
+//
+//		$containerAjax.dequeue("ajax");
+//	}
 
 	// vehicle calculator
 	var showVehicleCalc = function($containerAjax){
@@ -655,7 +733,8 @@ $(document).ready(function(){
 		});
 
 		//ajax registration city autocomplete
-		fieldAutocomplete("regCity", "/ohproject/cities/ewa-city")
+//		fieldAutocomplete($("#regCity"), "./ajax/city.json")
+                fieldAutocomplete($("#regCity"), "/ohproject/cities/ewa-city", $("#cityId").val());
 		
 		// валідація
 		var  $vehicleForm = $("#vehicleForm")
@@ -665,49 +744,66 @@ $(document).ready(function(){
 		$vehicleForm.submit(function(event){
 			event.preventDefault();
 			if (!$cityId.val()){
+			// if (false){
 				$cityName.focus();
 			} else {
-				showPropositions($containerAjax);	// load of propositions
+                            showPropositions($containerAjax);	// load of propositions
 			}
 		});
 	};
 
 	// autocomplete function 
 	// (enter string, shows items, select item -> send item id)
-	// note: after autocompleted field must be hidden input with name attr to returnitem id
-	var fieldAutocomplete = function(fieldId, jsonAddr){
+	// note: under autocompleted field must be placed hidden input with name attr, to return item id
+	var fieldAutocomplete = function($objToComplete, jsonAddr, $dataIdtoSend, callbackFn = false){
 		var  oJS
-			,items = []
+                    ,items = []
 		    ,itemIds = []
-		    ,objToComplete = $("#" + fieldId)
+                    ,criteria = null
+		    // ,objToComplete = $("#" + fieldId)
+		    // ,objToComplete = $(fieldSelector)
 			;
 
-		objToComplete.autoComplete({
-				minChars: 2,
+		$objToComplete.each(function(){
+			var t = this;
+			$(t).autoComplete({
+//				minChars: 2,
 			    source: function(term, response){
-			        $.getJSON(jsonAddr, { city: term }, function(data){
-			        	items = []; // масив елементів
-			    		itemIds = [];	// масив id елементів
-			        	oJS = data;	//відповідний JSоб'єкт до JSON об'єкту AJAX відповіді
+                                if ($dataIdtoSend instanceof jQuery){
+                                    criteria = $dataIdtoSend.val();
+                                }
+			        $.ajax({
+		            	type: "get",
+		            	data: {item: term, criteria: criteria},
+		            	url : jsonAddr,
+		            	error : function(){
+		            	    alert('error');
+		            	},
+                                success: function(data){
+                                    items = []; // масив елементів
+                                    itemIds = [];	// масив id елементів
+                                    oJS = data;	//відповідний JSоб'єкт до JSON об'єкту AJAX відповіді
 
-			        	for (var i = 0; i < oJS.items.length; ++i) {	// наповнимо масив елементів і їхніх id
-			        		items.push(oJS.items[i].name);
-			        		itemIds.push(oJS.items[i].id);
-			        	};
-			        	response(items);
+                                    if (oJS.length > 0){	// перевіряємо чи не відсутні співпадіння (чи відповідь не пустий масив)
+                                        for (var i = 0; i < oJS.items.length; ++i) {	// наповнимо масив елементів і їхніх id
+                                            items.push(oJS.items[i].name);
+                                            itemIds.push(oJS.items[i].id);
+                                        };
+                                        response(items);
+                                    }
+                                }
 			        });
 			    },
-			    // renderItem: function (item, search){
-			    //     search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-			    //     var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
-			    //     return '<div class="autocomplete-suggestion" data-langname="'+item[0]+'" data-lang="'+item[1]+'" data-val="'+search+'"><img src="img/'+item[1]+'.png"> '+item[0].replace(re, "<b>$1</b>")+'</div>';
-			    // },
 			    onSelect: function (event, term, item) {
-			    	var itemIndex = items.indexOf(term);	// індекс міста в масиві
-			    	objToComplete.next().val(itemIds[itemIndex]);	// повертаємо id міста прихованому елементу форми
-					objToComplete.parent(".b-form__cell").removeClass("b-cell_error").addClass("b-cell_valid");
+			    	var itemIndex = items.indexOf(term);	// індекс елемента в масиві
+			    	$(t).next().val(itemIds[itemIndex]);	// повертаємо id елемента прихованому елементу форми
+                                $(t).parent(".b-form__cell").removeClass("b-cell_error").addClass("b-cell_valid");
+                                if (callbackFn){
+                                    callbackFn();
+                                }
 			    }
 			});
+		});
 		// objToComplete.focus(function(){
 		// 	var e = jQuery.Event( "keydown", { keyCode: 128 } );
 		// 	$(this).trigger(e);

@@ -30,7 +30,7 @@ class VehiclesController extends \app\components\BaseController
         {
             throw new BadRequestHttpException("Wrong request", 400);
         }
-        $criteria = strip_tags(trim($request->get('brand')));
+        $criteria = strip_tags(trim($request->get('item')));
         return AutoMakers::getAutocompleteMakersArray($criteria);
     }
     
@@ -42,8 +42,8 @@ class VehiclesController extends \app\components\BaseController
         {
             throw new BadRequestHttpException("Wrong request", 400);
         }
-        $criteria = strip_tags(trim($request->get('model')));
-        $brand_id = (int)$request->get('brand');
+        $criteria = strip_tags(trim($request->get('item')));
+        $brand_id = (int)$request->get('criteria');
         return AutoModels::getAutocompleteModelsArray($criteria, $brand_id);
     }
     

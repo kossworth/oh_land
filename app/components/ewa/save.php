@@ -31,7 +31,7 @@ class save
             ],
             'tariff'          => [
                 'type' => 'policy',
-                'id'   => ArrayHelper::getValue($offer, 'osago.tariff.id'),	//	1556
+                'id'   => ArrayHelper::getValue($offer, 'tariff.id'),	//	1556
             ],
             'date'            => date('Y-m-d'),	//	2016-10-03
             'dateFrom'        => date_create_from_format('d.m.Y', ArrayHelper::getValue($info, 'contract.start_date'))->format('Y-m-d'),	//	2016-10-03T21:00:00.000+0000
@@ -42,22 +42,22 @@ class save
                 'name'         => ArrayHelper::getValue($info, 'customer.name_last').' '.ArrayHelper::getValue($info, 'customer.name_first').' '.ArrayHelper::getValue($info, 'name_customer.name_middle'),	//	Иванов Иван Иванович
                 'nameLast'     => ArrayHelper::getValue($info, 'customer.name_last'),	//	Иванов
                 'nameFirst'    => ArrayHelper::getValue($info, 'customer.name_first'),	//	Иван
-                'nameMiddle'   => ArrayHelper::getValue($info, 'customer.name_middle'),	//	Иванович
+//                'nameMiddle'   => ArrayHelper::getValue($info, 'customer.name_middle'),	//	Иванович
                 'address'      => ArrayHelper::getValue($info, 'customer.address'),	//	03150, м. Київ, вул. Ямська, буд. 487
                 'phone'        => preg_replace('#[^\d\+]+#', '', ArrayHelper::getValue($info, 'customer.phone')),	//	+380670048701
-                'birthDate'    => date_create_from_format('d.m.Y', ArrayHelper::getValue($info, 'customer.birth_date'))->format('Y-m-d'),	//	1976-04-03
+                'birthDate'    => date('Y-m-d', strtotime(ArrayHelper::getValue($info, 'customer.birth_date'))),	//	1976-04-03
                 'document'     => [
-                    'type'     => ArrayHelper::getValue($info, 'document.type'),
-                    'series'   => ArrayHelper::getValue($info, 'document.series'),	//	АА
-                    'number'   => ArrayHelper::getValue($info, 'document.number'),	//	048701
-                    'date'     => date_create_from_format('d.m.Y', ArrayHelper::getValue($info, 'document.issued_date'))->format('Y-m-d'),	//	1994-12-09
-                    'issuedBy' => ArrayHelper::getValue($info, 'document.issued_by'),	//	ДАІ МВС-УВС
+                    'type'     => 'PASSPORT',
+                    'series'   => 'AA',	
+                    'number'   => '000000',
+                    'date'     => '2012-12-12',
+                    'issuedBy' => 'Выдан'
                 ],
                 'legal'        => FALSE,
             ],
             'insuranceObject' => [
                 'type'              => 'auto',
-                'category'          => ArrayHelper::getValue($search, 'car_category.code'),	//	B1
+                'category'          => ArrayHelper::getValue($search, 'autoCategory'),	//	B1
                 'model'             => [
                     'id'        => ArrayHelper::getValue($info, 'transport.model_id'),	//	5811
                     'autoMaker' => [
@@ -68,8 +68,10 @@ class save
                 'bodyNumber'        => mb_strtoupper(ArrayHelper::getValue($info, 'transport.vin_number'), 'UTF-8'),	//	AAAAAAAAAAAA42076
                 'stateNumber'       => mb_strtoupper(ArrayHelper::getValue($info, 'transport.gov_number'), 'UTF-8'),	//	ЯЯ4207ЯЯ
                 'registrationPlace' => [
-                    'id'   => ArrayHelper::getValue($search, 'city.id'),	//	1
-                    'zone' => ArrayHelper::getValue($search, 'city.zone'),	//	1
+//                    'id'   => ArrayHelper::getValue($search, 'city.id'),	//	1
+//                    'zone' => ArrayHelper::getValue($search, 'city.zone'),	//	1
+                    'id'   => 1,
+                    'zone' => 1,
                 ],
                 'year'              => ArrayHelper::getValue($info, 'transport.year'),	//	2008
                 'registrationType'  => 'PERMANENT_WITHOUT_OTK',

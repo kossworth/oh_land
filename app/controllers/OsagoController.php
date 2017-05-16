@@ -19,6 +19,7 @@ class OsagoController extends \app\components\BaseController
                     'index'                     => ['get'],
                     'send-request'              => ['get'],
                     'create-osago-order'        => ['post'],
+                    'osago-self-order'          => ['post'],
                 ]
             ],
         ];
@@ -133,8 +134,62 @@ class OsagoController extends \app\components\BaseController
         $order->offer   = $propositions[$counter] ? json_encode($propositions[$counter], JSON_UNESCAPED_UNICODE) : null;
         if($order->save(false))
         {
-            return $this->renderAjax('form_order.twig', []);
+            $regions = \app\models\NpCities::find()->where(['parent_id' => -1])->asArray()->all();
+            return $this->renderAjax('form_order.twig', [
+                'regions' => $regions
+            ]);
         }
+        else
+        {
+            return ['status' => false, 'msg' => serialize($order->getErrors())];
+        }
+    }
+    
+    public function actionOsagoSelfOrder()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+//        if(!Yii::$app->request->isAjax)
+//        {
+//            throw new \yii\web\BadRequestHttpException('Wrong request!', 400);
+//        }
+        
+        $post   = Yii::$app->request->post();
+        
+        $order  = Orders::getCurrent('osago');
+        
+        $order_info = [];
+        $order_info['customer'] = [
+            'code'          => isset($post['inn']) ? (int)$post['inn'] : 0,
+            'name_last'     => isset($post['lastName']) ? strip_tags(trim($post['lastName'])) : 0,
+            'name_first'    => isset($post['firstName']) ? strip_tags(trim($post['firstName'])) : 0,
+//            'name_middle' => isset($post['name_middle']) ? strip_tags(trim($post['name_middle'])) : 0,
+            'address'       => isset($post['address']) ? strip_tags(trim($post['address'])) : 0,
+            'phone'         => isset($post['phone']) ? strip_tags(trim($post['phone'])) : 0,
+            'email'         => isset($post['email']) ? strip_tags(trim($post['email'])) : 0,
+//            'birth_date' => isset($post['birth_date']) ? (int)$post['birth_date'] : 0,
+        ];
+        $order_info['transport'] = [
+            'model_id'      => isset($post['modelId']) ? (int)$post['modelId'] : 0,
+            'vendor_id'     => isset($post['brandId']) ? (int)$post['brandId'] : 0,
+            'model'         => isset($post['model']) ? strip_tags(trim($post['model'])) : 0,
+            'vendor'        => isset($post['brand']) ? strip_tags(trim($post['brand'])) : 0,
+            'vin_number'    => isset($post['chassis']) ? strip_tags(trim($post['chassis'])) : 0,
+            'gov_number'    => isset($post['plateNum']) ? strip_tags(trim($post['plateNum'])) : 0,
+            'year'          => isset($post['year']) ? (int)$post['year'] : 0,
+        ];
+        $order_info['contract'] = [
+            'comment'       => isset($post['commentBySelf']) ? strip_tags(trim($post['commentBySelf'])) : 0,
+            'start_date'    => isset($post['date']) ? strip_tags(trim($post['date'])) : 0,
+        ];
+        
+        $order->info = json_encode($order_info, JSON_UNESCAPED_UNICODE);
+
+        if($order->save(false))
+        {
+            $status = ewa\save::osago($order);
+//            var_dump($status); die();
+            return ['status' => true, 'msg' => true];
+        } 
         else
         {
             return ['status' => false, 'msg' => serialize($order->getErrors())];

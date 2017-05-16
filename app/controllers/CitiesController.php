@@ -5,7 +5,8 @@ namespace app\controllers;
 use Yii;
 use yii\web\BadRequestHttpException;
 use app\components\ewa;
-use app\models\NovaposhtaCities;
+use app\models\NpFilials;
+use app\models\NpCities;
 
 class CitiesController extends \app\components\BaseController
 {
@@ -31,10 +32,10 @@ class CitiesController extends \app\components\BaseController
             throw new BadRequestHttpException("Wrong request", 400);
         }
         $get = $request->get();
-
-        if(isset($get['city']))
+        
+        if(isset($get['item']))
         {
-            $criteria =  strip_tags(trim($get['city']));   
+            $criteria =  strip_tags(trim($get['item']));   
         }
         else
         {
@@ -42,10 +43,10 @@ class CitiesController extends \app\components\BaseController
         }
         
         $cities = ewa\find::city($criteria);
-
-        if(empty($cities))
+        
+        if(empty($cities) || is_null($cities))
         {
-            return null;
+            return [];
         }
         
         $result = [];
@@ -56,7 +57,7 @@ class CitiesController extends \app\components\BaseController
         return $result;
     }
     
-    public function actionPoshtaCity()
+    public function actionNpRegion()
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $request = Yii::$app->request;
@@ -64,7 +65,19 @@ class CitiesController extends \app\components\BaseController
         {
             throw new BadRequestHttpException("Wrong request", 400);
         }
-        $criteria = strip_tags(trim($request->get('city')));
+        $criteria = strip_tags(trim($request->get('item')));
+        return NovaposhtaCities::getAutocompleteArray($criteria);
+    }
+    
+    public function actionNpCity()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $request = Yii::$app->request;
+        if(!$request->isAjax)
+        {
+            throw new BadRequestHttpException("Wrong request", 400);
+        }
+        $criteria = strip_tags(trim($request->get('item')));
         return NovaposhtaCities::getAutocompleteArray($criteria);
     }
 }

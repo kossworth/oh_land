@@ -39,7 +39,7 @@ class AppAsset extends AssetBundle
         'app/web/js/picker.date.js',
         'app/web/js/pickaday_rus.js',
         'app/web/js/app.js',
-        'app/web/js/script.js',
+        'app/web/js/custom.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',
