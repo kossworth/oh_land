@@ -68,10 +68,8 @@ class save
                 'bodyNumber'        => mb_strtoupper(ArrayHelper::getValue($info, 'transport.vin_number'), 'UTF-8'),	//	AAAAAAAAAAAA42076
                 'stateNumber'       => mb_strtoupper(ArrayHelper::getValue($info, 'transport.gov_number'), 'UTF-8'),	//	ЯЯ4207ЯЯ
                 'registrationPlace' => [
-//                    'id'   => ArrayHelper::getValue($search, 'city.id'),	//	1
-//                    'zone' => ArrayHelper::getValue($search, 'city.zone'),	//	1
-                    'id'   => 1,
-                    'zone' => 1,
+                    'id'   => ArrayHelper::getValue($search, 'city.id'),	//	1
+                    'zone' => ArrayHelper::getValue($search, 'city.zone'),	//	1
                 ],
                 'year'              => ArrayHelper::getValue($info, 'transport.year'),	//	2008
                 'registrationType'  => 'PERMANENT_WITHOUT_OTK',

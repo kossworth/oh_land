@@ -166,46 +166,33 @@
                                 <div class="b-bg_car"></div>
                                 <div class="b-form__heading_finalize">Транспортное средство </div>
                                 <div class="row row_form">
-<!--                                       test-->
-<!--
-                                        <div class="b-form__cell">
-                                            <label for="brandd" class="b-label_finalize" title="марка авто">Марка тест  
-                                                <span class="fa_ok fa fa-check-circle" aria-hidden="true"></span>
-                                                <span class="fa_error fa fa-times" aria-hidden="true"></span>
-                                                <span class="icon_tooltip fa fa-info-circle" aria-hidden="true"></span>
-                                            </label>
-                                            <input type="text" class="js-autocomplete js-ignoreValidate" id="brandd">
-                                            <input type="hidden" name="brand" class="hidden">
-                                        </div>
--->
-<!--                                       test-->
-                                        <div class="b-form__cell">
-                                            <label for="brand" class="b-label_finalize" title="марка авто">Марка  
-                                                <span class="fa_ok fa fa-check-circle" aria-hidden="true"></span>
-                                                <span class="fa_error fa fa-times" aria-hidden="true"></span>
-                                                <span class="icon_tooltip fa fa-info-circle" aria-hidden="true"></span>
-                                            </label>
-                                            <input type="text" class="js-autocomplete js-ignoreValidate" id="brand" name="brand">
-                                            <input type="hidden" name="brandId" class="hidden" id="brandId">
-                                        </div>
-                                        <div class="b-form__cell">
-                                            <label for="model" class="b-label_finalize" title="модель авто">Модель 
-                                                <span class="fa_ok fa fa-check-circle" aria-hidden="true"></span>
-                                                <span class="fa_error fa fa-times" aria-hidden="true"></span>
-                                                <span class="icon_tooltip fa fa-info-circle" aria-hidden="true" ></span>
-                                            </label>
-                                            <input type="text" class="js-autocomplete js-ignoreValidate" id="model" disabled  name="model">
-                                            <input type="hidden" name="modelId" class="hidden" id="modelId" >
-                                        </div>
-                                        <div class="b-form__cell">
-                                            <label for="year" class="b-label_finalize">Год выпуска авто
-                                                <span class="fa_ok fa fa-check-circle" aria-hidden="true"></span>
-                                                <span class="fa_error fa fa-times" aria-hidden="true"></span>
-                                                <span class="icon_tooltip" aria-hidden="true">*</span>
-                                            </label>
-                                            <input type="text" name="year" id="year">
-                                        </div>
+                                    <div class="b-form__cell">
+                                        <label for="brand" class="b-label_finalize" title="марка авто">Марка  
+                                            <span class="fa_ok fa fa-check-circle" aria-hidden="true"></span>
+                                            <span class="fa_error fa fa-times" aria-hidden="true"></span>
+                                            <span class="icon_tooltip fa fa-info-circle" aria-hidden="true"></span>
+                                        </label>
+                                        <input type="text" class="js-autocomplete js-ignoreValidate" id="brand" name="brand">
+                                        <input type="hidden" name="brandId" class="hidden" id="brandId">
                                     </div>
+                                    <div class="b-form__cell">
+                                        <label for="model" class="b-label_finalize" title="модель авто">Модель 
+                                            <span class="fa_ok fa fa-check-circle" aria-hidden="true"></span>
+                                            <span class="fa_error fa fa-times" aria-hidden="true"></span>
+                                            <span class="icon_tooltip fa fa-info-circle" aria-hidden="true" ></span>
+                                        </label>
+                                        <input type="text" class="js-autocomplete js-ignoreValidate" id="model" disabled  name="model">
+                                        <input type="hidden" name="modelId" class="hidden" id="modelId" >
+                                    </div>
+                                    <div class="b-form__cell">
+                                        <label for="year" class="b-label_finalize">Год выпуска авто
+                                            <span class="fa_ok fa fa-check-circle" aria-hidden="true"></span>
+                                            <span class="fa_error fa fa-times" aria-hidden="true"></span>
+                                            <span class="icon_tooltip" aria-hidden="true">*</span>
+                                        </label>
+                                        <input type="text" name="year" id="year" value="1996">
+                                    </div>
+                                </div>
                                 <div class="row row_form">
                                         <div class="b-form__cell">
                                             <label for="chassis" class="b-label_finalize">Номер кузова (шасси) 
@@ -213,7 +200,7 @@
                                                 <span class="fa_error fa fa-times" aria-hidden="true"></span>
                                                 <span class="icon_tooltip" aria-hidden="true">*</span>
                                             </label>
-                                            <input type="text" name="chassis" id="chassis">
+                                            <input type="text" name="chassis" id="chassis" value="JN1WNYD21U0000001">
                                         </div>
                                         <div class="b-form__cell">
                                             <label for="plateNum" class="b-label_finalize">Гос номер
@@ -221,7 +208,7 @@
                                                 <span class="fa_error fa fa-times" aria-hidden="true"></span>
                                                 <span class="icon_tooltip" aria-hidden="true">*</span>
                                             </label>
-                                            <input type="text" name="plateNum" id="plateNum">
+                                            <input type="text" name="plateNum" id="plateNum" value="АА2000СБ">
                                         </div>
                                         <div class="b-form__cell">
                                             <label for="date" class="b-label_finalize">Дата начала действия полиса
@@ -274,17 +261,18 @@
                                         </label>
                                         <select name="regionNP" id="delivRegionNP">
                                             <option value="" disabled selected hidden>Выберите область</option>
-                                            <option value="1">Киевская</option>
-                                            <option value="2">Житомирская</option>
-                                            <option value="3">Черкасская</option>
+                                            {% for region in regions %}
+                                                <option value="{{ region.id }}">{{ region.name_1 }}</option>
+                                            {% endfor %}
                                         </select>
+                                        <input type="hidden" name="delivRegionIdNP" class="hidden" id="delivRegionIdNP">
                                     </div>
                                     <div class="b-form__cell">
                                         <label for="delivCityNP" class="b-label_finalize">Выберите город
                                             <span class="fa_ok fa fa-check-circle" aria-hidden="true"></span>
                                             <span class="fa_error fa fa-times" aria-hidden="true"></span>
                                         </label>
-                                        <input type="text" class="js-autocomplete js-ignoreValidate" id="delivCityNP" disabled>
+                                        <input type="text" class="js-autocomplete js-ignoreValidate" id="delivCityNP" disabled name="delivCityNP">
                                         <input type="hidden" name="delivCityIdNP" class="hidden" id="delivCityIdNP">
                                     </div>
                                     <div class="b-form__cell">
@@ -292,7 +280,7 @@
                                             <span class="fa_ok fa fa-check-circle" aria-hidden="true"></span>
                                             <span class="fa_error fa fa-times" aria-hidden="true"></span>
                                         </label>
-                                        <input type="text" class="js-autocomplete js-ignoreValidate" id="delivDivisionNP" disabled>
+                                        <input type="text" class="js-autocomplete js-ignoreValidate" id="delivDivisionNP" disabled name="delivFilialNP">
                                         <input type="hidden" name="delivDivisionIdNP" class="hidden" id="delivDivisionIdNP">
                                     </div>
                                 </div>
@@ -301,7 +289,7 @@
                                     <div class="b-form__cell b-form__cell_comment">
                                         <label for="commentBySelf" class="b-label_finalize">Комментарий к заказу
                                         </label>
-                                        <textarea class="b-autocomplete b-comment b-comment_finalize" id="commentBySelf" name="commentBySelf"></textarea>
+                                        <textarea class="b-autocomplete b-comment b-comment_finalize" id="commentBySelf" name="comment">Мой комментарий</textarea>
                                     </div>
                                     <div class="b-form__cell b-form__cell_map">
                                         <label class="b-label_finalize">&nbsp;</label>
@@ -334,7 +322,7 @@
         <div class="b-finalize__method b-finalize__method__phone" id="byPhone">
             <div class="b-calculator__heading b-heading_finalize b-heading_method">Введите ваши данные и мы вам перезвоним</div>
             <div class="b-bg_phone"></div>
-            <form action="" class="b-form_finalize" id="formByPhone">
+            <form action="{{ Url.to('/ohproject/osago/osago-phone-order') }}" method="post" class="b-form_finalize" id="formByPhone">
                  <div class="b-form__block">
                     <div class="b-container">
                         <div class="b-container_finalize">
@@ -372,7 +360,7 @@
         </div>
         <div class="b-finalize__method b-finalize__method__upload" id="byUpload">
             <div class="b-calculator__heading b-heading_finalize b-heading_method">Введите данные, чтобы получить полис</div>
-            <form action="" class="b-form_finalize" id="formByUpload">
+            <form class="b-form_finalize" id="formByUpload" enctype="multipart/form-data">
                 <div class="b-form__block b-form__insured_byupload">
                     <div class="b-container">
                         <div class="b-container_finalize">
@@ -408,7 +396,7 @@
                                         <span class="fa_error fa fa-times" aria-hidden="true"></span>
                                     </label>
                                     <div class="b-wrap_files">
-                                        <input type="file" name="docsScans" multiple accept="image/*" id="copies_byupload" title="Не более 10ти фото">
+                                        <input type="file" name="docsScans[]" multiple accept="image/*" id="copies_byupload" title="Не более 10ти фото">
                                         <button type="button" class="b-button_files">
                                             <span class="b-progress_files"></span>
                                             <span class="b-button__text_files">Нажмите чтобы выбрать фото</span>
@@ -444,8 +432,8 @@
                                             <span class="fa_ok fa fa-check-circle" aria-hidden="true"></span>
                                             <span class="fa_error fa fa-times" aria-hidden="true"></span>
                                         </label>
-                                        <input type="text" class="js-autocomplete js-ignoreValidate" id="delivCityCourier_byUpload" disabled>
-                                        <input type="hidden" name="delivCityId" class="hidden" id="delivCityIdCourier_byUpload">
+                                        <input type="text" class="js-autocomplete js-ignoreValidate" id="delivCityCourier_byUpload" disabled name="delivCityName">
+                                        <input type="hidden" class="hidden" name="delivCityId" id="delivCityIdCourier_byUpload">
                                     </div>
                                     <div class="b-form__cell hidden">
                                         <label for="deliveryAddrCourier_byUpload" class="b-label_finalize">Адрес доставки
@@ -458,23 +446,24 @@
                                 
                                 <div class="row row_form hidden">
                                     <div class="b-form__cell">
-                                        <label for="delivRegionNP_byUpload" class="b-label_finalize">Выберите область
+                                        <label for="delivRegionNP" class="b-label_finalize">Выберите область
                                             <span class="fa_ok fa fa-check-circle" aria-hidden="true"></span>
                                             <span class="fa_error fa fa-times" aria-hidden="true"></span>
                                         </label>
                                         <select name="regionNP" id="delivRegionNP">
                                             <option value="" disabled selected hidden>Выберите область</option>
-                                            <option value="1">Киевская</option>
-                                            <option value="2">Житомирская</option>
-                                            <option value="3">Черкасская</option>
+                                                {% for region in regions %}
+                                                    <option value="{{ region.id }}">{{ region.name_1 }}</option>
+                                                {% endfor %}
                                         </select>
+                                        <input type="hidden" name="delivRegionIdNP" class="hidden" id="delivRegionIdNP">
                                     </div>
                                     <div class="b-form__cell">
                                         <label for="delivCityNP_byUpload" class="b-label_finalize">Выберите город
                                             <span class="fa_ok fa fa-check-circle" aria-hidden="true"></span>
                                             <span class="fa_error fa fa-times" aria-hidden="true"></span>
                                         </label>
-                                        <input type="text" class="js-autocomplete js-ignoreValidate" id="delivCityNP_byUpload" disabled>
+                                        <input type="text" class="js-autocomplete js-ignoreValidate" id="delivCityNP_byUpload" disabled name="delivCityNP">
                                         <input type="hidden" name="delivCityIdNP" class="hidden" id="delivCityIdNP_byUpload">
                                     </div>
                                     <div class="b-form__cell">
@@ -482,7 +471,7 @@
                                             <span class="fa_ok fa fa-check-circle" aria-hidden="true"></span>
                                             <span class="fa_error fa fa-times" aria-hidden="true"></span>
                                         </label>
-                                        <input type="text" class="js-autocomplete js-ignoreValidate" id="delivDivisionNP_byUpload" disabled>
+                                        <input type="text" class="js-autocomplete js-ignoreValidate" id="delivDivisionNP_byUpload" disabled name="delivFilialNP">
                                         <input type="hidden" name="delivDivisionIdNP" class="hidden" id="delivDivisionIdNP_byUpload">
                                     </div>
                                 </div>
@@ -491,7 +480,7 @@
                                     <div class="b-form__cell b-form__cell_comment">
                                         <label for="commentByUpload" class="b-label_finalize">Комментарий к заказу
                                         </label>
-                                        <textarea class="b-autocomplete b-comment b-comment_finalize" id="commentByUpload"></textarea>
+                                        <textarea class="b-autocomplete b-comment b-comment_finalize" id="commentByUpload" name="comment"></textarea>
                                     </div>
                                     <div class="b-form__cell b-form__cell_map">
                                         <label class="b-label_finalize">&nbsp;</label>

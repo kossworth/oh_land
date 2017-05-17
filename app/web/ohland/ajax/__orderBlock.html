@@ -185,8 +185,8 @@
                                                 <span class="fa_error fa fa-times" aria-hidden="true"></span>
                                                 <span class="icon_tooltip fa fa-info-circle" aria-hidden="true"></span>
                                             </label>
-                                            <input type="text" class="js-autocomplete js-ignoreValidate" id="brand">
-                                            <input type="hidden" name="brand" class="hidden" id="brandId">
+                                            <input type="text" class="js-autocomplete js-ignoreValidate" name="brand" id="brand">
+                                            <input type="hidden" name="brandId" class="hidden" id="brandId">
                                         </div>
                                         <div class="b-form__cell">
                                             <label for="model" class="b-label_finalize" title="модель авто">Модель 
@@ -194,8 +194,8 @@
                                                 <span class="fa_error fa fa-times" aria-hidden="true"></span>
                                                 <span class="icon_tooltip fa fa-info-circle" aria-hidden="true" ></span>
                                             </label>
-                                            <input type="text" class="js-autocomplete js-ignoreValidate" id="model" disabled>
-                                            <input type="hidden" name="model" class="hidden" id="modelId">
+                                            <input type="text" class="js-autocomplete js-ignoreValidate" name="model" id="model" disabled>
+                                            <input type="hidden" name="modelId" class="hidden" id="modelId">
                                         </div>
                                         <div class="b-form__cell">
                                             <label for="year" class="b-label_finalize">Год выпуска авто
@@ -272,7 +272,13 @@
                                             <span class="fa_ok fa fa-check-circle" aria-hidden="true"></span>
                                             <span class="fa_error fa fa-times" aria-hidden="true"></span>
                                         </label>
-                                        <input type="text" class="js-autocomplete js-ignoreValidate" id="delivRegionNP">
+<!--                                        <input type="text" class="js-autocomplete js-ignoreValidate" id="delivRegionNP">-->
+                                        <select name="regionNP" id="delivRegionNP">
+                                            <option value="" disabled selected hidden>Выберите область</option>
+                                            <option value="1">Киевская</option>
+                                            <option value="2">Житомирская</option>
+                                            <option value="3">Черкасская</option>
+                                        </select>
                                         <input type="hidden" name="delivRegionIdNP" class="hidden" id="delivRegionIdNP">
                                     </div>
                                     <div class="b-form__cell">
@@ -429,7 +435,7 @@
                                 <div class="row row_form">
                                     <div class="b-form__cell">
                                         <label class="b-label_finalize">&nbsp;</label>
-                                        <select name="deliveryMode" class="js-selectric" id="deliveryMode_byUpload">
+                                        <select name="deliveryMode" class="js-selectric" id="deliveryMode_byUpload" disabled>
                                             <option value="bySelf" selected>Самовывоз</option>
                                             <option value="byCourier">Курьер</option>
                                             <option value="byNP">Новая почта</option>
@@ -458,7 +464,13 @@
                                             <span class="fa_ok fa fa-check-circle" aria-hidden="true"></span>
                                             <span class="fa_error fa fa-times" aria-hidden="true"></span>
                                         </label>
-                                        <input type="text" class="js-autocomplete js-ignoreValidate" id="delivRegionNP_byUpload">
+<!--                                        <input type="text" class="js-autocomplete js-ignoreValidate" id="delivRegionNP_byUpload">-->
+                                        <select name="regionNP" id="delivRegionNP_byUpload" disabled>
+                                            <option value="" disabled selected hidden>Выберите область</option>
+                                            <option value="1">Киевская</option>
+                                            <option value="2">Житомирская</option>
+                                            <option value="3">Черкасская</option>
+                                        </select>
                                         <input type="hidden" name="delivRegionIdNP" class="hidden" id="delivRegionIdNP_byUpload">
                                     </div>
                                     <div class="b-form__cell">

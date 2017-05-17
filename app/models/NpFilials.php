@@ -70,4 +70,26 @@ class NpFilials extends \yii\db\ActiveRecord
     {
         return new \app\models\Queries\NpFilialsQuery(get_called_class());
     }
+    
+    public static function getAutocompleteFilialsArray($criteria = '', $city_id = 1)
+    {
+        $search_result = self::find()->where(['LIKE', self::tableName().'.number', $criteria.'%', false])
+                ->orWhere(['LIKE', self::tableName().'.address', $criteria.'%', false])
+                ->andWhere([self::tableName().'.city_id' => (int)$city_id])
+                ->limit(10)
+                ->orderBy(self::tableName().'.number ASC')
+                ->asArray()
+                ->all();
+        if(is_null($search_result))
+        {
+            return ['items' => []];
+        }
+        
+        $filials = [];
+        foreach ($search_result as $res)
+        {
+            $filials['items'][] = ['name' => $res['address'], 'id' => $res['id']];
+        }
+        return $filials;
+    }
 }

@@ -58,23 +58,24 @@ class NpCities extends \yii\db\ActiveRecord
         return new \app\models\Queries\NpCitiesQuery(get_called_class());
     }
     
-    public static function getAutocompleteArray($criteria)
+    public static function getAutocompleteCitiesArray($criteria, $region_id)
     {
-        $search_result = self::find()->where(['LIKE', self::tableName().'.name_ru', $criteria.'%', false])
-                ->orWhere(['LIKE', self::tableName().'.name_ua', $criteria.'%', false])
-                ->limit(10)->orderBy(self::tableName().'.name_ru ASC')
+        $search_result = self::find()->where(['LIKE', self::tableName().'.name_1', $criteria.'%', false])
+                ->andFilterWhere([self::tableName().'.parent_id' => $region_id])
+                ->limit(10)
+                ->orderBy(self::tableName().'.name_1 ASC')
                 ->asArray()
                 ->all();
         
         if(is_null($search_result))
         {
-            return false;
+            return ['items' => []];
         }
         
         $cities = [];
         foreach ($search_result as $res)
         {
-            $cities['items'][] = ['name' => $res['name_ru'], 'id' => $res['id']];
+            $cities['items'][] = ['name' => $res['name_1'], 'id' => $res['id']];
         }
         return $cities;
     }

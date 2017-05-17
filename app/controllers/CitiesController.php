@@ -18,6 +18,8 @@ class CitiesController extends \app\components\BaseController
                 'actions' => [
                     'search-city'              => ['get'],
                     'ewa-city'                 => ['get'],
+                    'np-city'                  => ['get'],
+                    'np-filial'                => ['get'],
                 ]
             ],
         ];
@@ -46,29 +48,17 @@ class CitiesController extends \app\components\BaseController
         
         if(empty($cities) || is_null($cities))
         {
-            return [];
+            return ['items' => []];
         }
         
         $result = [];
         foreach ($cities as $city)
         {
-            $result['items'][] = ['name' => $city['name_full'], 'id' => $city['zone']];
+            $result['items'][] = ['name' => $city['name_full'], 'id' => $city['id'], 'zone_id' => $city['zone']];
         }
         return $result;
     }
-    
-    public function actionNpRegion()
-    {
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $request = Yii::$app->request;
-        if(!$request->isAjax)
-        {
-            throw new BadRequestHttpException("Wrong request", 400);
-        }
-        $criteria = strip_tags(trim($request->get('item')));
-        return NovaposhtaCities::getAutocompleteArray($criteria);
-    }
-    
+      
     public function actionNpCity()
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -77,7 +67,22 @@ class CitiesController extends \app\components\BaseController
         {
             throw new BadRequestHttpException("Wrong request", 400);
         }
-        $criteria = strip_tags(trim($request->get('item')));
-        return NovaposhtaCities::getAutocompleteArray($criteria);
+        $get = $request->get();
+        $search = strip_tags(trim($get['item']));
+        $region_id = isset($get['criteria']) ? strip_tags(trim($get['criteria'])) : null;
+        return NpCities::getAutocompleteCitiesArray($search, $region_id);
+    }
+    
+    public function actionNpFilial()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $request = Yii::$app->request;
+        if(!$request->isAjax)
+        {
+            throw new BadRequestHttpException("Wrong request", 400);
+        }
+        $search = strip_tags(trim($request->get('item')));
+        $city_id = strip_tags(trim($request->get('criteria')));
+        return NpFilials::getAutocompleteFilialsArray($search, $city_id);
     }
 }

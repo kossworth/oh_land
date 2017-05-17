@@ -447,7 +447,7 @@ body{
     color: #444444;
     font-weight: 700;
     height: 29px;
-    text-transform: capitalize;
+/*    text-transform: capitalize;*/
 }
 .b-autocomplete_vehicle{
     margin-right: 29px;

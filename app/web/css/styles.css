@@ -447,7 +447,7 @@ body{
     color: #444444;
     font-weight: 700;
     height: 29px;
-    /*text-transform: capitalize;*/
+/*    text-transform: capitalize;*/
 }
 .b-autocomplete_vehicle{
     margin-right: 29px;
@@ -1610,6 +1610,7 @@ body{
     top: 0;
     left: 0;
     width: 245px;
+    min-height: 320px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -1653,6 +1654,7 @@ body{
 }
 .b-propos__details{
     overflow: hidden;
+    min-height: 83px;
 /*    max-height: 70px;*/
 /*    max-height: 83px;*/
     -webkit-box-sizing: border-box;
@@ -1664,6 +1666,9 @@ body{
     padding-left: 20px;
     font-weight: 300;
     color: #fff;
+}
+.b-details__list>li:nth-child(3)~li{
+    display: none;
 }
 .b-details__btn_readmore{
 /*    margin-bottom: 20px;*/
@@ -1687,6 +1692,7 @@ body{
 .b-discont{
     margin-top: 20px;
     font-family: 'Roboto Condensed', sans-serif;
+    height: 20px;
     line-height: 20px;
     font-weight: 300;
     color: #f2c916;
@@ -1707,6 +1713,10 @@ body{
     border: 1px solid #fff;
     color: #fff;
     background-color: transparent;
+}
+.b-proposition__buy span.b-text_btn{
+    padding: 0;
+    min-width: 158px;
 }
 .b-proposition__buy span.fa{
     border-left: 1px solid #fff;

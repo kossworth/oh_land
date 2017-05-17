@@ -47,6 +47,9 @@
                 <div class="b-propositions__string">
                     {% for prop in propositions %}
 {#                        {{ prop.tariff.brokerDiscount | dump }}#}
+                        {% if loop.index%4 == 1 and not loop.first %}
+                            <div class="b-propositions__string b-propositions__string_hidden">
+                        {% endif%}
                         <div class="b-proposition__wrap">
                             <div class="b-proposition b-gradient_bg">
                                 {% if prop.company.osago.landing_top %}
@@ -70,24 +73,15 @@
                                     <span class="fa fa-star-o" aria-hidden="true"></span>
                                 </span>
                                 <div class="b-propos__details">
-                                    <ul class="b-details__list">
+                                    <ul class="b-details__list js-content_readmore">
                                         {% set bonuses = prop.company.osago.landing_bonuses | split('\n') %}
                                         {% if not bonuses[0] is empty %}
                                             {% for bonus in bonuses %}
-
-                                                {% if loop.index == 4 %}
-                                                </ul>
-                                                <div class="b-details_hidden js-content_readmore">
-                                                    <ul class="b-details__list">
-                                                {% endif %}
 
                                                 <li class="b-propos__detail">{{ bonus }}</li>
 
                                                 {% if loop.last %}
                                                     </ul>
-                                                    {% if loop.length > 3 %}
-                                                        </div>
-                                                    {% endif %}
                                                 {% endif %}
                                             {% endfor %}
                                         {% if bonuses|length > 3 %}
@@ -110,6 +104,9 @@
                                 
                             </div>
                         </div>
+                        {% if loop.index%4 == 0 %}
+                            </div>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>
