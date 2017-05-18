@@ -26,6 +26,7 @@ $(document).ready(function(){
 		// 	queue: "ajax"
 		// 	}
 		// );
+                $("#toTop").trigger("click");	// прокручуємо сторінку нагору
 		$containerAjax.animate({
 				opacity: 0,
 			},{
@@ -556,21 +557,15 @@ $(document).ready(function(){
 		});
 
 	// autocomplete для полів:
-		// "марка"
-//		fieldAutocomplete($brand, "./ajax/brand.json", null, function(){
-//			$model.prop("disabled", false);
-//		});
-//		// "модель"
 //		fieldAutocomplete($model, "./ajax/model.json", $brand.next());
                 
-                fieldAutocomplete($("input[name = 'brandId']").prev(), "/ohproject/vehicles/ewa-brand", null, function(){
+                fieldAutocomplete(2, $("input[name = 'brandId']").prev(), "/ohproject/vehicles/ewa-brand", null, function(){
                     $model.prop("disabled", false);
 		});
-                fieldAutocomplete($("input[name = 'modelId']").prev(), "/ohproject/vehicles/ewa-model", $brand.next(), function(){});
+                fieldAutocomplete(2, $("input[name = 'modelId']").prev(), "/ohproject/vehicles/ewa-model", $brand.next(), function(){});
 // - Delivery fields -------------------------
 	// delivery selects stylization
 		// delivery method select
-		// var oSelectric = 
 		$deliveryMode.selectric({	// стилізуємо селекти вибора доставки
                     onChange: function(element) {	// element==this - це наш select, він лишається тим самим об'єктом і після ініціалізації selectric
                         deliveryStr = $(element).val();	// current select value				
@@ -642,7 +637,7 @@ $(document).ready(function(){
                     onInit: function() {
                         $(this).parents(".selectric-wrapper").find(".selectric-items li.disabled").remove();	//прибираємо з меню неактивний пункт (placeholder)
                         $(this).each(function(){
-                                $(this).prop("disabled", true)
+                            $(this).prop("disabled", true)
                         })
                     },
                     onChange: function(element) {	// element==this - це наш select, він лишається тим самим об'єктом і після ініціалізації selectric
@@ -679,7 +674,7 @@ $(document).ready(function(){
 	
 	//delivery autocompletes...
 		// місто доставки (із областю для кур’єра) delivRegionIdNP
-		fieldAutocomplete($courierCity, "/ohproject/cities/np-city");
+		fieldAutocomplete(2, $courierCity, "/ohproject/cities/np-city");
 
 		// НП:
                 // область
@@ -689,7 +684,7 @@ $(document).ready(function(){
 		// 	});
 		// });
                 // місто
-		fieldAutocomplete($newPostCity, "/ohproject/cities/np-city",  $newPostRegion, function(){
+		fieldAutocomplete(2, $newPostCity, "/ohproject/cities/np-city",  $newPostRegion, function(){
                     $newPostDivision.each(function(index){
                         $(this).val("");
                         $(this).next().val("");
@@ -697,7 +692,7 @@ $(document).ready(function(){
                     });
 		});
                 // відділення
-		fieldAutocomplete($newPostDivision, "/ohproject/cities/np-filial", $newPostCity.next());
+		fieldAutocomplete(1, $newPostDivision, "/ohproject/cities/np-filial", $newPostCity.next());
 
 //- Delivery fields END -------------------------
 	
@@ -828,7 +823,7 @@ $(document).ready(function(){
 		});
 
 		//ajax registration city autocomplete
-		fieldAutocomplete($("#regCity"), "/ohproject/cities/ewa-city")
+		fieldAutocomplete(3, $("#regCity"), "/ohproject/cities/ewa-city")
 		
 		// валідація
 		var  $vehicleForm = $("#vehicleForm")
@@ -837,8 +832,7 @@ $(document).ready(function(){
                     ;
 		$vehicleForm.submit(function(event){
                     event.preventDefault();
-                    if (!$cityId.val()){
-                    // if (false){
+                    if (!$cityId.val()){	//якщо не вибране місто реєстрації (відповідне приховане поле без значення)
                         $cityName.focus();
                     } else {
                         showPropositions($containerAjax);	// load of propositions
@@ -849,7 +843,7 @@ $(document).ready(function(){
 	// autocomplete function 
 	// (enter string, shows items, select item -> send item id)
 	// note: under autocompleted field must be placed hidden input with name attr, to return item id
-	var fieldAutocomplete = function($objToComplete, jsonAddr, $dataIdtoSend, callbackFn){
+	var fieldAutocomplete = function(iMinChars, $objToComplete, jsonAddr, $dataIdtoSend, callbackFn){
 		var  oJS		//відповідний JSоб'єкт до JSON об'єкту AJAX відповіді
                     ,items = []		// масив елементів
                     ,propertiesLength	// зберігаємо тут к-ть властивостей item-а
@@ -865,7 +859,7 @@ $(document).ready(function(){
 		$objToComplete.each(function(index){
                     var t = this;
                     $(t).autoComplete({
-                        minChars: 2,
+                        minChars: iMinChars,
                         source: function(term, response){
                             if ($dataIdtoSend instanceof jQuery){
                                 criteria = $dataIdtoSend.val();
@@ -884,9 +878,9 @@ $(document).ready(function(){
                                 propertiesLength = 0;
                                 var i;
                                 for (i in oJS.items[0]) {
-                                        if (oJS.items[0].hasOwnProperty(i)) {
-                                                ++propertiesLength;
-                                        }
+                                    if (oJS.items[0].hasOwnProperty(i)) {
+                                        ++propertiesLength;
+                                    }
                                 }
                                 bLength3 = (propertiesLength == 3); // маємо додатковий Id треба створитиїх масив itemOtherIds
 
@@ -906,29 +900,29 @@ $(document).ready(function(){
 			    	currentId = itemIds[itemIndex];		// id обраного елемента
 		    		if (bLength3){currentOtherId = itemOtherIds[itemIndex]}	// зберігаємо обраний zone_id (якщо такі є)
 			    	$objToComplete.each(function(){	// заповнимо решту однакових полів однаковими значеннями
-			    		if($(this) != $(t)){	// значення в полі на якому ми вибрали значення автокомпліта
-			    			$(this).val(term);
-			    		};
-			    		$(this).attr("data-item", term);	// додаємо атрибут в якому зберігатиметься вибраний item
-			    		$(this).next().val(currentId);	// повертаємо id елемента прихованому елементу форми
-			    		if (bLength3){$(this).next().next().val(currentOtherId)}	// присвоюємо zone_id 2му прихованому полю
+                                    if($(this) != $(t)){	// значення в полі на якому ми вибрали значення автокомпліта
+                                        $(this).val(term);
+                                    };
+                                    $(this).attr("data-item", term);	// додаємо атрибут в якому зберігатиметься вибраний item
+                                    $(this).next().val(currentId);	// повертаємо id елемента прихованому елементу форми
+                                    if (bLength3){$(this).next().next().val(currentOtherId)}	// присвоюємо zone_id 2му прихованому полю
 			    	});
 
-					$objToComplete.parent(".b-form__cell").removeClass("b-cell_error").addClass("b-cell_valid");	// позначаємо валідним поле
+                                    $objToComplete.parent(".b-form__cell").removeClass("b-cell_error").addClass("b-cell_valid");	// позначаємо валідним поле
 
-					if (callbackFn){	// перевіряємо чи існує колбек ф-я в параметрах, щоб уникнути помилки
-						callbackFn();
-					}
+                                    if (callbackFn){	// перевіряємо чи існує колбек ф-я в параметрах, щоб уникнути помилки
+                                        callbackFn();
+                                    }
 			    }
 			});
 		});
-		$objToComplete.blur(function(){
-			var  dataItem = $(this).attr("data-item")
-				,fieldValue = $(this).val()
-				;
-			if (dataItem && (fieldValue != dataItem)){
-				$(this).val(dataItem);
-			}
+		$objToComplete.blur(function(){	// при втраті фокуса, якщо ми змінили значення, але не обрали з меню автокомпліта, то повернемо раніше обране значення полю
+                    var  dataItem = $(this).attr("data-item")	// раніше обране значення, збережене в атрибуті "data-item"
+                        ,fieldValue = $(this).val()	// поточне значення
+                        ;
+                    if (dataItem && (fieldValue != dataItem)){	// перевірка чи є попередньо обране значення (якщо)
+                        $(this).val(dataItem);	// як є то запишемо вибране раніше значення
+                    }
 		})
 		// objToComplete.focus(function(){
 		// 	var e = jQuery.Event( "keydown", { keyCode: 128 } );
@@ -1228,15 +1222,17 @@ $(document).ready(function(){
 		//$modals.fadeOut();
 		//$modalError.fadeIn();
 	})
-	// scroll to top
+        
+        // scroll to top
 	$("#toTop").click(function(){
-		event.preventDefault();
+		// event.preventDefault();
 		var  $anchor = $($(this).find(".b-btn_toTop").attr("href"))
 			,offsetAnchor = $anchor.offset().top
 			;
-		$('html, body').animate({ scrollTop: offsetAnchor}, 600);
+		$('html, body').animate({ scrollTop: offsetAnchor}, 400);
 		return false;
 	})
 
+	$("#toTop").trigger("click");	// scroll to top after page is loaded
 	
 });

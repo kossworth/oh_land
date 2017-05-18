@@ -46,14 +46,16 @@
                             <th>Телефон</th>
                             <td>{{ order.phone }}</td>
                         </tr>
-                        <tr>
-                            <th>Способ оплаты</th>
-                            {% if order.payment == 'cash' %}
-                                <td>Наличными</td>
-                            {% elseif order.payment == 'card' %}
-                                <td>Online-оплата</td>
-                            {% endif %}
-                        </tr>
+                        {% if order.payment and order.payment != '' %}
+                            <tr>
+                                <th>Способ оплаты</th>
+                                {% if order.payment == 'cash' %}
+                                    <td>Наличными</td>
+                                {% elseif order.payment == 'card' %}
+                                    <td>Online-оплата</td>
+                                {% endif %}
+                            </tr>
+                        {% endif %}
                         {% if delivery_type %}
                             <tr>
                                 <th>Способ доставки</th>
