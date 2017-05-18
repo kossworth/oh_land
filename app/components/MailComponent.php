@@ -3,6 +3,7 @@
 namespace app\components;
 
 use Yii;
+use app\models\MailNotice;
 
 class MailComponent
 {
@@ -45,27 +46,38 @@ class MailComponent
         }
     }
     
-    public static function unisenderMailsend($topic, $email_subject = '', $email_to = '', $data = [])
+    public static function unisenderMailsend($template_name = '', $email_to = '', $data = [])
     {
-        $api_key    = "6xr69wgc5ryjoc5yuyd1gn6qttsc9qhxjk6mco3o";
-        $dir        = Yii::getAlias('@app'.DIRECTORY_SEPARATOR.'mail');
+        $api_key    = "6pgjgyo3tec6xdosusk1mhpa7kcbo8cs7bxpppio";
 
-        $file       = Yii::getAlias($dir) . DIRECTORY_SEPARATOR . $topic.".php"; 
-        $body       = self::view_include($file, $data);
+        $template = MailNotice::find()->where([MailNotice::tableName().'.key' => $template_name])->limit(1)->one();
+        if(is_null($template))
+        {
+            return 'Unknown template: '.$template_name;
+        }
+        
+        $body = $template->body_1;
+        if(is_array($data) && !empty($data))
+        {
+            foreach($data as $key => $value)
+            {
+                $body = str_replace('{'.$key.'}', $value, $body);
+            }
+        }
+        
         /*
          *Preparing email for sending by Unisender sendEmail method
          */
-        $email_from_name        = 'VUSO';
-        $email_from_email       = 'admin@oh.ua';
-        $list_id                = 8182574;
+        $email_from_name        = 'Oh.UA';
+        $email_from_email       = 'sales@oh.ua';
+        $list_id                = 5034770;
 
         $request = [
            'api_key'               => $api_key,
-           'sender'                => 'VUSO',
            'email'                 => $email_to,
            'sender_name'           => $email_from_name,
            'sender_email'          => $email_from_email,
-           'subject'               => $email_subject,
+           'subject'               => $template->theme_1,
            'body'                  => $body,
            'list_id'               => $list_id
         ];

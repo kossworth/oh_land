@@ -62,7 +62,7 @@
                                 <td>{{ delivery_type }}</td>
                             </tr>
                         {% endif %}
-                        {% if order.delivery and order.delivery != '' %}
+                        {% if order.delivery and order.delivery != '' and delivery_type != '' %}
                             <tr>
                                 <th>Адрес доставки</th>
                                 <td>{{ order.delivery }}</td>

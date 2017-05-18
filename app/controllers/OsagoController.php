@@ -80,6 +80,7 @@ class OsagoController extends \app\components\BaseController
             'driveExp'              => false,
         ];
         $propositions = ewa\find::osago($tariff_options);
+//        var_dump($tariff_options); die();
         $tariff_options['city'] = ['id' => $get['city'], 'zone' => $get['zone'], 'name' => $get['cityName']];
 
         if($session->has('osago_search_data'))
@@ -111,6 +112,7 @@ class OsagoController extends \app\components\BaseController
                 {
                     $prop['company'] = $comp;
                     $prop['discount_sum'] = round($discount * $prop['payment']);
+                    $prop['payment'] = round($prop['payment'] - $prop['discount_sum']);
                     array_push($result_propositions, $prop);
                     unset($companies[$key]); // удаляем из массива компанию, которую добавили в массив предложений
                     break;
@@ -138,7 +140,7 @@ class OsagoController extends \app\components\BaseController
         {
             throw new \yii\base\Exception('Havent order!');
         }
-        $search_data = $session->get('osago_search_data') ? $session->get('osago_search_data') : [];
+        $search_data = $session->get('osago_search_data') ? $session->get('osago_search_data') : '';
         $propositions = ewa\find::osago(json_decode($search_data, true));
         
         $order->search  = $search_data;
@@ -229,10 +231,22 @@ class OsagoController extends \app\components\BaseController
         $order->comment = isset($post['comment']) ? strip_tags(trim($post['comment'])) : '';
         $order->delivery = $delivery_city.' '.$delivery_address;
         
+        $ewa_status = ewa\save::osago($order);
+        $order->result = json_encode($ewa_status, JSON_UNESCAPED_UNICODE);
+        
         if($order->save(false))
         {
-            $status = ewa\save::osago($order);
-            MailComponent::mailsend($post, 'order_letter', ['kossworth@gmail.com'], "Новый заказ");
+            MailComponent::unisenderMailsend('thanks_landing_order', $order->email, ['order_id' => $order->id]);
+            MailComponent::unisenderMailsend('landing_order_manager', 'kudrinskiy.y@vuso.ua', [
+                'user_name' => $order->name,
+                'user_phone' => $order->phone,
+                'user_email' => $order->email,
+                'type' => $order->type,
+                'search' => print_r(json_decode($order->search, true), true),
+                'offer' => print_r(json_decode($order->offer, true), true),
+                'info' => print_r(json_decode($order->info, true), true),
+                'date' => $order->last_active,
+            ]);
             Yii::$app->session->destroy();
             $offer = json_decode($order->offer);
             return $this->renderAjax('thanks.twig', [
@@ -243,7 +257,7 @@ class OsagoController extends \app\components\BaseController
         } 
         else
         {
-            var_dump($status);
+            return false;
         }
     }
 
@@ -262,7 +276,16 @@ class OsagoController extends \app\components\BaseController
         if($order->save(false))
         {
             Yii::$app->session->destroy();
-            MailComponent::mailsend($post, 'order_letter', ['kossworth@gmail.com'], "Новый заказ");
+            MailComponent::unisenderMailsend('landing_order_manager', 'kudrinskiy.y@vuso.ua', [
+                'user_name' => $order->name,
+                'user_phone' => $order->phone,
+                'user_email' => $order->email,
+                'type' => $order->type,
+                'search' => print_r(json_decode($order->search, true), true),
+                'offer' => print_r(json_decode($order->offer, true), true),
+                'info' => print_r(json_decode($order->info, true), true),
+                'date' => $order->last_active,
+            ]);
             $offer = json_decode($order->offer);
             return $this->renderAjax('thanks.twig', [
                 'order' => $order,
@@ -348,7 +371,17 @@ class OsagoController extends \app\components\BaseController
             
         if ($order->save(false)) 
         {
-            MailComponent::mailsend($post, 'order_letter', ['kossworth@gmail.com'], "Новый заказ");
+            MailComponent::unisenderMailsend('thanks_landing_order', $order->email, ['order_id' => $order->id]);
+            MailComponent::unisenderMailsend('landing_order_manager', 'kudrinskiy.y@vuso.ua', [
+                'user_name' => $order->name,
+                'user_phone' => $order->phone,
+                'user_email' => $order->email,
+                'type' => $order->type,
+                'search' => print_r(json_decode($order->search, true), true),
+                'offer' => print_r(json_decode($order->offer, true), true),
+                'info' => print_r(json_decode($order->info, true), true),
+                'date' => $order->last_active,
+            ]);            
             Yii::$app->session->destroy();
             $offer = json_decode($order->offer);
             return $this->renderAjax('thanks.twig', [

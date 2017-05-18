@@ -17,23 +17,4 @@ $params = [
 
 ];
 
-//if (isset($_SERVER['HTTP_HOST']))
-//{
-//    switch ($_SERVER['HTTP_HOST'])
-//    {
-//        case 'otp.inswidget.vuso.ua':
-//        case 'otp.vuso.local':
-//            $params['site_id'] = 'otp';
-//            break;
-//        case 'avtoradosti.inswidget.vuso.ua':
-//        case 'avtoradosti.vuso.local':
-//            $params['site_id'] = 'avtoradosti';
-//            $params['ewa']['login'] = 'avtoradosti@vuso.ua';
-//            $params['ewa']['password'] = '77187719';
-//            $params['ewa']['cookie_file'] = realpath(__DIR__.'/..').'/runtime/ewa.cookie.avtoradosti.txt';
-//            break;
-//        default;
-//    }
-//}
-
 return $params;

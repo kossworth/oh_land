@@ -26,8 +26,6 @@ class MainController extends \app\components\BaseController
     
     public function actionIndex()
     {        
-//        $test = MailComponent::unisenderMailsend('test', 'subject_email', 'kossworth@gmail.com');
-
         return $this->render('index.twig', [
             
         ]);

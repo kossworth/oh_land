@@ -412,6 +412,8 @@ $(document).ready(function(){
                                 }
                             });
                             if (bValid){
+                                hideContainerAjax($containerAjax);
+                                $containerAjax.queue("ajax", function(){
                                 if(form.id == 'formByUpload'){
                                     var formData = new FormData($('#formByUpload')[0]);
                                     $.ajax({
@@ -425,8 +427,12 @@ $(document).ready(function(){
                                             $containerAjax.html(response);
                                         },
                                         error: function(){
-                                            alert('ERROR at PHP side!!');
+                                            console.log('ERROR at PHP side!!');
                                         },
+                                        complete: function(){
+                                            showContainerAjax($containerAjax);
+                                            $containerAjax.dequeue("ajax");
+                                        }
                                         //Options to tell jQuery not to process data or worry about content-type.
 
                                     });
@@ -439,19 +445,16 @@ $(document).ready(function(){
                                         data: $(form).serialize(),
                                         success: function(response){
                                             $containerAjax.html(response);
-    //                                        orderBlockInit($containerAjax);
                                         },
                                         complete: function(){
                                             showContainerAjax($containerAjax);
                                             $containerAjax.dequeue("ajax");
-                                        }
-    //                                    success: function(response) {
-    //                                        
-    //                                        showThanks($containerAjax, response);
-    //                                    }            
+                                        }           
                                     });
                                 }
-                               
+                                });
+                                $containerAjax.dequeue("ajax");
+					//Show thanks function end ------
                             }
 		    }
         };
