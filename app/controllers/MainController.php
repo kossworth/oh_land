@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\components\ewa;
+use app\components\MailComponent;
 /**
  * Description of MainController
  *
@@ -25,20 +26,8 @@ class MainController extends \app\components\BaseController
     
     public function actionIndex()
     {        
-//        $tariff_options = [
-//            'autoCategory' => 'A1',
-//            'bonusMalus' => 0.8,
-//            'customerCategory' => 'NATURAL',
-//            'dateFrom' => date('Y-m-d', strtotime('+1 day')),
-//            'dateTo' => date('Y-m-d', strtotime('+1 year')),
-//            'zone' => 1,
-//            'taxi' => false,
-//            'usageMonths' => 0,
-//            'driveExp' => false
-//        ];
-//        
-//        $test = ewa\find::osago($tariff_options);
-//        var_dump($test); die();
+//        $test = MailComponent::unisenderMailsend('test', 'subject_email', 'kossworth@gmail.com');
+
         return $this->render('index.twig', [
             
         ]);
