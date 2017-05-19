@@ -24,7 +24,7 @@ class MainController extends \app\components\BaseController
     
     public function actionIndex()
     {        
-        $compamies = Company::find()->asArray()->all();
+        $compamies = Company::find()->all();
         $faqs = Faq::find()->orderBy(Faq::tableName().'.sort DESC')->asArray()->all();
         return $this->render('index.twig', [
             'companies' => $compamies,

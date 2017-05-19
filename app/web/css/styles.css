@@ -819,6 +819,7 @@ body{
     display: table;
 }
 .b-rating__btn{
+    outline: none;
     border: none;
     padding: 0;
     background-color: #fff;
@@ -896,6 +897,8 @@ body{
 */
 .b-company__logo{
     float: left;
+    max-height: 33px;
+    max-width: 150px;
 }
 .b-company__rating{
     float: left;
@@ -1518,7 +1521,7 @@ body{
 .b-data_your{
     margin-bottom: 11px;
     overflow: hidden;
-    height: 297px;
+    min-height: 297px;
     padding: 23px 25px;
     background-color: #f2c916;
     -webkit-box-sizing: border-box;

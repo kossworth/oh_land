@@ -292,371 +292,48 @@
         <div class="b-rating__wrapper_clients">
             <div class="b-rating__slider">
                 <div class="b-slider__string_rating">
-                    <div class="b-rating__slide">
-                        <div class="b-rating__company_clients">
-                            <span class="b-rating__num">01</span>
-                            <div class="b-rating__content">
-                                <div class="b-rating__description">
-                                    <img src="{{ Url.to('app/web/img/vuso.png') }}" alt="" class="b-company__logo">
-                                    <span class="b-company__rating">
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                    </span>
-                                    <p class="b-company__about">Работаем на украинском страховом рынке с 2015 года, помогли сэкономить деньги </p>
-                                </div>
-                                <div class="b-rating__bonuses">
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-gift" aria-hidden="true"></span>
-                                        Минус 15% от Oh.UA
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-check-circle-o" aria-hidden="true"></span>
-                                        Выбор выбор Клиентов
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-refresh" aria-hidden="true"></span>
-                                        Прямое урегулирование
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                                    
-                        <div class="b-rating__company_clients">
-                            <span class="b-rating__num">02</span>
-                            <div class="b-rating__content">
-                                <div class="b-rating__description">
-                                    <img src="{{ Url.to('app/web/img/vuso.png') }}" alt="" class="b-company__logo">
-                                    <span class="b-company__rating">
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                    </span>
-                                    <p class="b-company__about">Работаем на украинском страховом рынке с 2015 года, помогли сэкономить деньги </p>
-                                </div>
-                                <div class="b-rating__bonuses">
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-gift" aria-hidden="true"></span>
-                                        Минус 15% от Oh.UA
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-check-circle-o" aria-hidden="true"></span>
-                                        Выбор выбор Клиентов
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-refresh" aria-hidden="true"></span>
-                                        Прямое урегулирование
-                                    </span>
+                    {% for company in companies %}
+                        {% if loop.first or loop.index%6 == 1%}
+                            <div class="b-rating__slide">
+                        {% endif %}
+                                
+                            <div class="b-rating__company_clients">
+                                <span class="b-rating__num">{{ loop.index }} </span>
+                                <div class="b-rating__content">
+                                    <div class="b-rating__description">
+                                        <img src="{{ company.logo | raw }}" alt="{{ company.name_1 }}" class="b-company__logo">
+                                        <span class="b-company__rating">
+                                            <span class="fa fa-star-o" aria-hidden="true"></span>
+                                            <span class="fa fa-star-o" aria-hidden="true"></span>
+                                            <span class="fa fa-star-o" aria-hidden="true"></span>
+                                            <span class="fa fa-star-o" aria-hidden="true"></span>
+                                            <span class="fa fa-star-o" aria-hidden="true"></span>
+                                        </span>
+                                        <p class="b-company__about">{{ company.landing_description }}</p>
+                                    </div>
+                                    <div class="b-rating__bonuses">
+                                        <span class="b-rating__bonus">
+                                            <span class="fa fa-gift" aria-hidden="true"></span>
+                                            Минус 15% от Oh.UA
+                                        </span>
+                                        <span class="b-rating__bonus">
+                                            <span class="fa fa-check-circle-o" aria-hidden="true"></span>
+                                            Выбор выбор Клиентов
+                                        </span>
+                                        <span class="b-rating__bonus">
+                                            <span class="fa fa-refresh" aria-hidden="true"></span>
+                                            Прямое урегулирование
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="b-rating__company_clients">
-                            <span class="b-rating__num">03</span>
-                            <div class="b-rating__content">
-                                <div class="b-rating__description">
-                                    <img src="{{ Url.to('app/web/img/vuso.png') }}" alt="" class="b-company__logo">
-                                    <span class="b-company__rating">
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                    </span>
-                                    <p class="b-company__about">Работаем на украинском страховом рынке с 2015 года, помогли сэкономить деньги </p>
-                                </div>
-                                <div class="b-rating__bonuses">
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-gift" aria-hidden="true"></span>
-                                        Минус 15% от Oh.UA
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-check-circle-o" aria-hidden="true"></span>
-                                        Выбор выбор Клиентов
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-refresh" aria-hidden="true"></span>
-                                        Прямое урегулирование
-                                    </span>
-                                </div>
+
+                        {% if loop.last or loop.index%6 == 0 %}
                             </div>
-                        </div>
-                        <div class="b-rating__company_clients">
-                            <span class="b-rating__num">04</span>
-                            <div class="b-rating__content">
-                                <div class="b-rating__description">
-                                    <img src="{{ Url.to('app/web/img/vuso.png') }}" alt="" class="b-company__logo">
-                                    <span class="b-company__rating">
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                    </span>
-                                    <p class="b-company__about">Работаем на украинском страховом рынке с 2015 года, помогли сэкономить деньги </p>
-                                </div>
-                                <div class="b-rating__bonuses">
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-gift" aria-hidden="true"></span>
-                                        Минус 15% от Oh.UA
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-check-circle-o" aria-hidden="true"></span>
-                                        Выбор выбор Клиентов
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-refresh" aria-hidden="true"></span>
-                                        Прямое урегулирование
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="b-rating__company_clients">
-                            <span class="b-rating__num">05</span>
-                            <div class="b-rating__content">
-                                <div class="b-rating__description">
-                                    <img src="{{ Url.to('app/web/img/vuso.png') }}" alt="" class="b-company__logo">
-                                    <span class="b-company__rating">
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                    </span>
-                                    <p class="b-company__about">Работаем на украинском страховом рынке с 2015 года, помогли сэкономить деньги </p>
-                                </div>
-                                <div class="b-rating__bonuses">
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-gift" aria-hidden="true"></span>
-                                        Минус 15% от Oh.UA
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-check-circle-o" aria-hidden="true"></span>
-                                        Выбор выбор Клиентов
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-refresh" aria-hidden="true"></span>
-                                        Прямое урегулирование
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="b-rating__company_clients">
-                            <span class="b-rating__num">06</span>
-                            <div class="b-rating__content">
-                                <div class="b-rating__description">
-                                    <img src="{{ Url.to('app/web/img/vuso.png') }}" alt="" class="b-company__logo">
-                                    <span class="b-company__rating">
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                    </span>
-                                    <p class="b-company__about">Работаем на украинском страховом рынке с 2015 года, помогли сэкономить деньги </p>
-                                </div>
-                                <div class="b-rating__bonuses">
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-gift" aria-hidden="true"></span>
-                                        Минус 15% от Oh.UA
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-check-circle-o" aria-hidden="true"></span>
-                                        Выбор выбор Клиентов
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-refresh" aria-hidden="true"></span>
-                                        Прямое урегулирование
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="b-rating__slide">
-                        <div class="b-rating__company_clients">
-                            <span class="b-rating__num">07</span>
-                            <div class="b-rating__content">
-                                <div class="b-rating__description">
-                                    <img src="{{ Url.to('app/web/img/vuso.png') }}" alt="" class="b-company__logo">
-                                    <span class="b-company__rating">
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                    </span>
-                                    <p class="b-company__about">Работаем на украинском страховом рынке с 2015 года, помогли сэкономить деньги </p>
-                                </div>
-                                <div class="b-rating__bonuses">
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-gift" aria-hidden="true"></span>
-                                        Минус 15% от Oh.UA
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-check-circle-o" aria-hidden="true"></span>
-                                        Выбор выбор Клиентов
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-refresh" aria-hidden="true"></span>
-                                        Прямое урегулирование
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="b-rating__company_clients">
-                            <span class="b-rating__num">08</span>
-                            <div class="b-rating__content">
-                                <div class="b-rating__description">
-                                    <img src="{{ Url.to('app/web/img/vuso.png') }}" alt="" class="b-company__logo">
-                                    <span class="b-company__rating">
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                    </span>
-                                    <p class="b-company__about">Работаем на украинском страховом рынке с 2015 года, помогли сэкономить деньги </p>
-                                </div>
-                                <div class="b-rating__bonuses">
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-gift" aria-hidden="true"></span>
-                                        Минус 15% от Oh.UA
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-check-circle-o" aria-hidden="true"></span>
-                                        Выбор выбор Клиентов
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-refresh" aria-hidden="true"></span>
-                                        Прямое урегулирование
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="b-rating__company_clients">
-                            <span class="b-rating__num">09</span>
-                            <div class="b-rating__content">
-                                <div class="b-rating__description">
-                                    <img src="{{ Url.to('app/web/img/vuso.png') }}" alt="" class="b-company__logo">
-                                    <span class="b-company__rating">
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                    </span>
-                                    <p class="b-company__about">Работаем на украинском страховом рынке с 2015 года, помогли сэкономить деньги </p>
-                                </div>
-                                <div class="b-rating__bonuses">
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-gift" aria-hidden="true"></span>
-                                        Минус 15% от Oh.UA
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-check-circle-o" aria-hidden="true"></span>
-                                        Выбор выбор Клиентов
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-refresh" aria-hidden="true"></span>
-                                        Прямое урегулирование
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="b-rating__company_clients">
-                            <span class="b-rating__num">10</span>
-                            <div class="b-rating__content">
-                                <div class="b-rating__description">
-                                    <img src="{{ Url.to('app/web/img/vuso.png') }}" alt="" class="b-company__logo">
-                                    <span class="b-company__rating">
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                    </span>
-                                    <p class="b-company__about">Работаем на украинском страховом рынке с 2015 года, помогли сэкономить деньги </p>
-                                </div>
-                                <div class="b-rating__bonuses">
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-gift" aria-hidden="true"></span>
-                                        Минус 15% от Oh.UA
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-check-circle-o" aria-hidden="true"></span>
-                                        Выбор выбор Клиентов
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-refresh" aria-hidden="true"></span>
-                                        Прямое урегулирование
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="b-rating__company_clients">
-                            <span class="b-rating__num">11</span>
-                            <div class="b-rating__content">
-                                <div class="b-rating__description">
-                                    <img src="{{ Url.to('app/web/img/vuso.png') }}" alt="" class="b-company__logo">
-                                    <span class="b-company__rating">
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                    </span>
-                                    <p class="b-company__about">Работаем на украинском страховом рынке с 2015 года, помогли сэкономить деньги </p>
-                                </div>
-                                <div class="b-rating__bonuses">
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-gift" aria-hidden="true"></span>
-                                        Минус 15% от Oh.UA
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-check-circle-o" aria-hidden="true"></span>
-                                        Выбор выбор Клиентов
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-refresh" aria-hidden="true"></span>
-                                        Прямое урегулирование
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="b-rating__company_clients">
-                            <span class="b-rating__num">12</span>
-                            <div class="b-rating__content">
-                                <div class="b-rating__description">
-                                    <img src="{{ Url.to('app/web/img/vuso.png') }}" alt="" class="b-company__logo">
-                                    <span class="b-company__rating">
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                        <span class="fa fa-star-o" aria-hidden="true"></span>
-                                    </span>
-                                    <p class="b-company__about">Работаем на украинском страховом рынке с 2015 года, помогли сэкономить деньги </p>
-                                </div>
-                                <div class="b-rating__bonuses">
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-gift" aria-hidden="true"></span>
-                                        Минус 15% от Oh.UA
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-check-circle-o" aria-hidden="true"></span>
-                                        Выбор выбор Клиентов
-                                    </span>
-                                    <span class="b-rating__bonus">
-                                        <span class="fa fa-refresh" aria-hidden="true"></span>
-                                        Прямое урегулирование
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        {% endif %}
+                        
+                    {% endfor %}            
+                   
                 </div>
                 <div class="b-slider__buttons_rating">
                     <button class="b-slider__control b-slider__control_rating b-slider__control_left"><span class="fa fa-angle-double-left" aria-hidden="true"></span></button>
@@ -770,86 +447,18 @@
                                     
 <section class="b-section_faq">
     <div class="b-container">
-            <span class="b-section__heading b-section__heading_rating b-section__heading_faq">У нас часто спрашивают</span>
-            <div class="b-container__faq b-faq">
-                <article class="b-questAnsw b-questAnsw_unrolled">
-                   <h5>
-                        Что такое полис ОСАГО?
+        <span class="b-section__heading b-section__heading_rating b-section__heading_faq">У нас часто спрашивают</span>
+        <div class="b-container__faq b-faq">
+            {% for faq in faqs%}
+                <article class="b-questAnsw {% if loop.first %} b-questAnsw_unrolled {% endif %}">
+                    <h5>
+                        {{ faq.name_1 }}
                         <span class="b-toggler_question"></span>
-                   </h5>
-                   <p>Работаем на украинском страховом рынке с 2015 года, помогли сэкономить деньги на страховке более 2000 клиентам  Мы гарантируем самые низкие цены. Не дороже, чем напрямую в страховой компании. Решим все вопросы по доставке полиса и оплате.</p>
+                    </h5>
+                    <p>{{ faq.text_1 | striptags }}</p>
                 </article>
-                <article class="b-questAnsw">
-                   <h5>
-                        Почему в некоторых страховых полис ОСАГО дешевле, а в других дороже?
-                        <span class="b-toggler_question"></span>
-                   </h5>
-                   <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quibusdam aliquam adipisci perspiciatis distinctio? Aperiam ea pariatur explicabo architecto facere qui a numquam, ad quisquam dolor nostrum dicta, adipisci, distinctio hic!</p>
-                </article>
-                <article class="b-questAnsw">
-                   <h5>
-                        Могу ли я купить ОСАГО на сайте страховой дешевле?
-                        <span class="b-toggler_question"></span>
-                   </h5>
-                   <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores temporibus dolorem repellat facilis in quos ab officiis animi libero dignissimos alias veniam aliquid expedita, praesentium, rem totam velit tempora autem.</p>
-                </article>
-                <article class="b-questAnsw">
-                   <h5>
-                        С какими страховыми компания вы работаете?
-                        <span class="b-toggler_question"></span>
-                   </h5>
-                   <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores temporibus dolorem repellat facilis in quos ab officiis animi libero dignissimos alias veniam aliquid expedita, praesentium, rem totam velit tempora autem.</p>
-                </article>
-                <article class="b-questAnsw">
-                   <h5>
-                        Город регистрации авто - что это?
-                        <span class="b-toggler_question"></span>
-                   </h5>
-                   <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores temporibus dolorem repellat facilis in quos ab officiis animi libero dignissimos alias veniam aliquid expedita, praesentium, rem totam velit tempora autem.</p>
-                </article>
-                <article class="b-questAnsw">
-                   <h5>
-                        Что такое “франшиза”?
-                        <span class="b-toggler_question"></span>
-                   </h5>
-                   <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores temporibus dolorem repellat facilis in quos ab officiis animi libero dignissimos alias veniam aliquid expedita, praesentium, rem totam velit tempora autem.</p>
-                </article>
-                <article class="b-questAnsw">
-                   <h5>
-                        Что такое “расширение лимита ответственности” по ОСАГО?
-                        <span class="b-toggler_question"></span>
-                   </h5>
-                   <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores temporibus dolorem repellat facilis in quos ab officiis animi libero dignissimos alias veniam aliquid expedita, praesentium, rem totam velit tempora autem.</p>
-                </article>
-                <article class="b-questAnsw">
-                   <h5>
-                        Есть ли скидки для льготников и пенсионеров?
-                        <span class="b-toggler_question"></span>
-                   </h5>
-                   <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores temporibus dolorem repellat facilis in quos ab officiis animi libero dignissimos alias veniam aliquid expedita, praesentium, rem totam velit tempora autem.</p>
-                </article>
-                <article class="b-questAnsw">
-                   <h5>
-                        За руль своего авто сажусь не только я, но и члены семьи. Действует ли страховка на других людей за рулем?
-                        <span class="b-toggler_question"></span>
-                   </h5>
-                   <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores temporibus dolorem repellat facilis in quos ab officiis animi libero dignissimos alias veniam aliquid expedita, praesentium, rem totam velit tempora autem.</p>
-                </article>
-                <article class="b-questAnsw">
-                   <h5>
-                        Какие документы нужно предоставить в страховую, чтобы получить выплату?
-                        <span class="b-toggler_question"></span>
-                   </h5>
-                   <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores temporibus dolorem repellat facilis in quos ab officiis animi libero dignissimos alias veniam aliquid expedita, praesentium, rem totam velit tempora autem.</p>
-                </article>
-                <article class="b-questAnsw">
-                   <h5>
-                        Как я могу оплатить и получить свой полис ОСАГО?
-                        <span class="b-toggler_question"></span>
-                   </h5>
-                   <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores temporibus dolorem repellat facilis in quos ab officiis animi libero dignissimos alias veniam aliquid expedita, praesentium, rem totam velit tempora autem.</p>
-                </article>
-            </div>
+            {% endfor %}
+        </div>
     </div>
 </section>
                                     
