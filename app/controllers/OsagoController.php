@@ -369,7 +369,7 @@ class OsagoController extends \app\components\BaseController
             $order->files = $upload_imgs;
         }
             
-        if ($order->save(false)) 
+        if ($order->save(false))  
         {
             MailComponent::unisenderMailsend('thanks_landing_order', $order->email, ['order_id' => $order->id]);
             MailComponent::unisenderMailsend('landing_order_manager', 'kudrinskiy.y@vuso.ua', [

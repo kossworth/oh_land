@@ -5,11 +5,9 @@ namespace app\controllers;
 use Yii;
 use app\components\ewa;
 use app\components\MailComponent;
-/**
- * Description of MainController
- *
- * @author kossworth
- */
+use app\models\Faq;
+use app\models\Company;
+
 class MainController extends \app\components\BaseController 
 {
 
@@ -26,8 +24,11 @@ class MainController extends \app\components\BaseController
     
     public function actionIndex()
     {        
+        $compamies = Company::find()->asArray()->all();
+        $faqs = Faq::find()->orderBy(Faq::tableName().'.sort DESC')->asArray()->all();
         return $this->render('index.twig', [
-            
+            'companies' => $compamies,
+            'faqs' => $faqs,
         ]);
     }
     

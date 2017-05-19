@@ -40,7 +40,7 @@ class Company extends \yii\db\ActiveRecord
         return [
             [['name_1', 'description_1', 'description_2', 'cis_id', 'ewa_id', 'rating', 'sort'], 'required'],
             [['active', 'active_osago', 'active_greencard', 'ewa_id', 'sort'], 'integer'],
-            [['description_1', 'description_2'], 'string'],
+            [['description_1', 'description_2', 'landing_description'], 'string'],
             [['cis_id', 'rating'], 'number'],
             [['name_1'], 'string', 'max' => 100],
             [['name_2', 'alias', 'background_file'], 'string', 'max' => 255],
@@ -62,6 +62,7 @@ class Company extends \yii\db\ActiveRecord
             'active_greencard' => Yii::t('app', 'Active Greencard'),
             'description_1' => Yii::t('app', 'Description 1'),
             'description_2' => Yii::t('app', 'Description 2'),
+            'landing_description' => Yii::t('app', 'Landing Description'),
             'cis_id' => Yii::t('app', 'CIS ID'),
             'ewa_id' => Yii::t('app', 'EWA ID'),
             'rating' => Yii::t('app', 'Рейтинг'),
