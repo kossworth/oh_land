@@ -157,69 +157,23 @@
 <section class="b-section_reasons">
     <div class="b-container">
             <span class="b-section__heading">
-           <span class="b-header__num">7</span> причин купить ОСАГО на Oh.ua<br>
+           <span class="b-header__num">{{ reasons|length }}</span> причин купить ОСАГО на Oh.ua<br>
            <span class="b-subHeader">и сэкономить время и деньги!</span>
         </span>
         <div class="b-reasons__container_slider">
             <div class="b-reasons__slider">
                 <div class="b-slider__wrap">
                     <div class="b-slider__string">
-                    <div class="b-string__slide">
-                        <div class="b-reason__count">
-                            <span>01</span>
-                            <span>/</span>
-                            <span>07</span>
-                        </div>
-                        <p class="b-reason__text">Сервис сравнения и подбора ОСАГО №1 в Украине</p>
-                    </div>
-                    <div class="b-string__slide">
-                        <div class="b-reason__count">
-                            <span>02</span>
-                            <span>/</span>
-                            <span>07</span>
-                        </div>
-                        <p class="b-reason__text">Стоимость страховки дешевле, чем на сайтах страховых компаний</p>
-                    </div>
-                    <div class="b-string__slide">
-                        <div class="b-reason__count">
-                            <span>03</span>
-                            <span>/</span>
-                            <span>07</span>
-                        </div>
-                        <p class="b-reason__text">Моментальный расчет и оформление ОСАГО, до 5 минут</p>
-                    </div>
-                    <div class="b-string__slide">
-                        <div class="b-reason__count">
-                            <span>04</span>
-                            <span>/</span>
-                            <span>07</span>
-                        </div>
-                        <p class="b-reason__text">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                    </div>
-                    <div class="b-string__slide">
-                        <div class="b-reason__count">
-                            <span>05</span>
-                            <span>/</span>
-                            <span>07</span>
-                        </div>
-                        <p class="b-reason__text">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                    </div>
-                    <div class="b-string__slide">
-                        <div class="b-reason__count">
-                            <span>06</span>
-                            <span>/</span>
-                            <span>07</span>
-                        </div>
-                        <p class="b-reason__text">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                    </div>
-                    <div class="b-string__slide">
-                        <div class="b-reason__count">
-                            <span>07</span>
-                            <span>/</span>
-                            <span>07</span>
-                        </div>
-                        <p class="b-reason__text">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                    </div>
+                        {% for reason in reasons %}
+                            <div class="b-string__slide">
+                                <div class="b-reason__count">
+                                    <span>0{{ loop.index }}</span>
+                                    <span>/</span>
+                                    <span>0{{ reasons|length }}</span>
+                                </div>
+                                <p class="b-reason__text">{{ reason.name_1 }}</p>
+                            </div>
+                        {% endfor %}
                 </div>
                 </div>
                 <button class="b-slider__control b-slider__control_left"><span class="fa fa-angle-double-left" aria-hidden="true"></span></button>
@@ -309,21 +263,27 @@
                                             <span class="fa fa-star-o" aria-hidden="true"></span>
                                             <span class="fa fa-star-o" aria-hidden="true"></span>
                                         </span>
-                                        <p class="b-company__about">{{ company.landing_description }}</p>
+                                        <p class="b-company__about">{{ company.landing_description | raw }}</p>
                                     </div>
+                                    {% set bonuses = company.osago.landing_bonuses | split('\n') %}
                                     <div class="b-rating__bonuses">
-                                        <span class="b-rating__bonus">
-                                            <span class="fa fa-gift" aria-hidden="true"></span>
-                                            Минус 15% от Oh.UA
-                                        </span>
-                                        <span class="b-rating__bonus">
+                                        {% if bonuses | length > 0 %}
+                                            {% for bonus in bonuses%}
+                                            <span class="b-rating__bonus">
+                                                <span class="fa fa-gift" aria-hidden="true"></span>
+                                                {{ bonus }}
+                                            </span>
+                                            {% endfor %}
+                                        {% endif %}
+                                        
+    {#                                    <span class="b-rating__bonus">
                                             <span class="fa fa-check-circle-o" aria-hidden="true"></span>
                                             Выбор выбор Клиентов
                                         </span>
                                         <span class="b-rating__bonus">
                                             <span class="fa fa-refresh" aria-hidden="true"></span>
                                             Прямое урегулирование
-                                        </span>
+                                        </span>#}
                                     </div>
                                 </div>
                             </div>
@@ -444,139 +404,93 @@
         </div>
     </div>
 </section>
-                                    
-<section class="b-section_faq">
-    <div class="b-container">
-        <span class="b-section__heading b-section__heading_rating b-section__heading_faq">У нас часто спрашивают</span>
-        <div class="b-container__faq b-faq">
-            {% for faq in faqs%}
-                <article class="b-questAnsw {% if loop.first %} b-questAnsw_unrolled {% endif %}">
-                    <h5>
-                        {{ faq.name_1 }}
-                        <span class="b-toggler_question"></span>
-                    </h5>
-                    <p>{{ faq.text_1 | striptags }}</p>
-                </article>
-            {% endfor %}
+
+{% if faqs%}
+    <section class="b-section_faq">
+        <div class="b-container">
+            <span class="b-section__heading b-section__heading_rating b-section__heading_faq">У нас часто спрашивают</span>
+            <div class="b-container__faq b-faq">
+                {% for faq in faqs%}
+                    <article class="b-questAnsw {% if loop.first %} b-questAnsw_unrolled {% endif %}">
+                        <h5>
+                            {{ faq.name_1 }}
+                            <span class="b-toggler_question"></span>
+                        </h5>
+                        <p>{{ faq.text_1 | striptags }}</p>
+                    </article>
+                {% endfor %}
+            </div>
         </div>
-    </div>
-</section>
-                                    
-<section class="b-section_responses">
-    <div class="b-container">
-            <span class="b-section__heading b-section__heading_rating b-section__heading_faq">ОТЗЬІВЬІ КЛИЕНТОВ</span>
-        <div class="b-rating__block_btns b-responses__block_btns">
-            <button class="b-rating__btn b-rating__btn_active b-rating__btn_mtsbu b-rating__btn_responses js-btn_responses">Отзывы от клиентов Oh.ua</button>
-            <button class="b-rating__btn b-rating__btn_clients b-rating__btn_responses js-btn_feedback">Для тех, кто хочет оставить отзыв</button>
-        </div>
-        <div class="b-responses__container_slider">
-            <div class="b-slider_responses">
-                <div class="b-slider__string_responses">
-                    <figure class="b-slide_responses b-slide">
-                        <div class="b-slide__side b-slide__side_front">
-                            <div class="b-slide__wrap">
-<!--                                    slide 1<br>FACE-->
-                                <div class="b-slide__heading">Сергей Зарицкий</div>
-                                <div class="b-slide__content">
-                                    <p class="b-slide__response">
-                                        <span class="b-response__highlight">
-                                            Воспользовался сервисом на прошлой неделе.
-                                        </span>
-                                        Всё быстро и качественно. Рекомендую. Девочка Юля предложила варианты, выбрали, в электронной форме всё оформили, курьер привёз полис. Я доволен :)
-                                    </p>
-                                    <div class="b-slide__aside_marks">
-                                        <div class="b-mark__heading">Качество сервиса </div>
-                                        <div class="b-mark__num">5/10</div>
-                                        <div class="b-mark__heading">Уровень цен</div>
-                                        <div class="b-mark__num">5/10</div>
-                                        <div class="b-mark__heading">Выбор компаний </div>
-                                        <div class="b-mark__num">5/10</div>
+    </section>
+{% endif %}
+            
+{% if feedbacks %}
+    <section class="b-section_responses">
+        <div class="b-container">
+                <span class="b-section__heading b-section__heading_rating b-section__heading_faq">ОТЗЬІВЬІ КЛИЕНТОВ</span>
+            <div class="b-rating__block_btns b-responses__block_btns">
+                <button class="b-rating__btn b-rating__btn_active b-rating__btn_mtsbu b-rating__btn_responses js-btn_responses">Отзывы от клиентов Oh.ua</button>
+                <button class="b-rating__btn b-rating__btn_clients b-rating__btn_responses js-btn_feedback">Для тех, кто хочет оставить отзыв</button>
+            </div>
+            <div class="b-responses__container_slider">
+                <div class="b-slider_responses">
+                    <div class="b-slider__string_responses">
+                        {% for feedback in feedbacks %}
+                            <figure class="b-slide_responses b-slide {% if loop.first %} b-slide_active {% endif %}">
+                                <div class="b-slide__side b-slide__side_front">
+                                    <div class="b-slide__wrap">
+                                        <div class="b-slide__heading">{{ feedback.username }}</div>
+                                        <div class="b-slide__content">
+                                            <p class="b-slide__response">
+                                                {{ feedback.text }}
+                                            </p>
+                                            <div class="b-slide__aside_marks">
+                                                <div class="b-mark__heading">Качество сервиса </div>
+                                                <div class="b-mark__num">{{ feedback.level_service }}/10</div>
+                                                <div class="b-mark__heading">Уровень цен </div>
+                                                <div class="b-mark__num">{{ feedback.level_price }}/10</div>
+                                                <div class="b-mark__heading">Выбор компаний </div>
+                                                <div class="b-mark__num">{{ feedback.level_companies }}/10</div>
+                                            </div>
+                                       </div>
                                     </div>
-                               </div>
-                            </div>
-                        </div>
-                        <div class="b-slide__side b-slide__side_back">
-                            <div class="b-slide__wrap b-slide__wrap_back">
-                            <div class="b-slide__heading b-slide__heading_back">Что вы о нас думаете</div>
-                               <form action="" class="b-form_feedback js-form_feedback">
-                                    <div class="row">
-                                        <div class="col-l">
-                                            <label for="name1" class="b-label_registration">Ваше Имя</label>
-                                            <input type="text" name="name" id="name1" required pattern="[A-Za-zА-Яа-яЁёІіЇї\s]{2,}">
-                                        </div>
-                                        <div class="col-r">
-                                            <label for="phone1" class="b-label_registration">Ваш Телефон</label>
-                                            <input type="tel" name="phone" id="phone1" required pattern="[0-9()\s+-]{19}">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-l col-12">
-                                            <label for="feedback" class="b-label_registration">Ваш отзыв</label>
-                                            <textarea name="feedback" id="feedback1" required pattern="[A-Za-zА-Яа-яЁёІіЇї\s]{2,}"></textarea>
-                                        </div>
-                                    </div>
-                                    <button type="submit" class="b-form__submit_feedback b-form__submit_vehicle">
-                                        <span class="b-text_btn">Оставить отзыв</span><span class="fa fa-comments" aria-hidden="true"></span>
-                                    </button>
-                               </form>
-                           </div>
-                        </div>
-                    </figure>
-                    <figure class="b-slide_responses b-slide b-slide_active">
-                        <div class="b-slide__side b-slide__side_front">
-                            <div class="b-slide__wrap">
-                                <div class="b-slide__heading">Зариц Сергейcкий</div>
-                                <div class="b-slide__content">
-                                    <p class="b-slide__response">
-                                        <span class="b-response__highlight">
-                                            Воспользовался сервисом на прошлой неделе.
-                                        </span>
-                                        Всё быстро и качественно. Рекомендую. Девочка Юля предложила варианты, выбрали, в электронной форме всё оформили, курьер привёз полис. Я доволен :)
-                                    </p>
-                                    <div class="b-slide__aside_marks">
-                                        <div class="b-mark__heading">Качество сервиса </div>
-                                        <div class="b-mark__num">5/10</div>
-                                        <div class="b-mark__heading">Уровень цен </div>
-                                        <div class="b-mark__num">5/10</div>
-                                        <div class="b-mark__heading">Выбор компаний </div>
-                                        <div class="b-mark__num">5/10</div>
-                                    </div>
-                               </div>
-                            </div>
-                        </div>
-                        <div class="b-slide__side b-slide__side_back">
-                            <div class="b-slide__wrap b-slide__wrap_back">
-                               <div class="b-slide__heading b-slide__heading_back">Что вы о нас думаете</div>
-                               <form action="" class="b-form_feedback js-form_feedback">
-                                    <div class="row">
-                                        <div class="col-l">
-                                            <label for="name1" class="b-label_registration">Ваше Имя</label>
-                                            <input type="text" name="name" id="name1" required pattern="[A-Za-zА-Яа-яЁёІіЇї\s]{2,}">
-                                        </div>
-                                        <div class="col-r">
-                                            <label for="phone1" class="b-label_registration">Ваш Телефон</label>
-                                            <input type="tel" name="phone" id="phone1" required pattern="[0-9()\s+-]{19}">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-l col-12">
-                                            <label for="feedback" class="b-label_registration">Ваш отзыв</label>
-                                            <textarea name="feedback" id="feedback1" required pattern="[A-Za-zА-Яа-яЁёІіЇї\s]{2,}"></textarea>
-                                        </div>
-                                    </div>
-                                    <button type="submit" class="b-form__submit_feedback b-form__submit_vehicle">
-                                        <span class="b-text_btn">Оставить отзыв</span><span class="fa fa-comments" aria-hidden="true"></span>
-                                    </button>
-                               </form>
-                           </div>
-                        </div>
-                    </figure>
-                </div>
-                <div class="b-slider__controls_responses">
-                    <button class="b-slider__control b-slider__control_responses b-slider__control_left"><span class="fa fa-angle-double-left" aria-hidden="true"></span></button>
-                    <button class="b-slider__control b-slider__control_responses b-slider__control_right"><span class="fa fa-angle-double-right" aria-hidden="true"></span></button>
+                                </div>
+                                <div class="b-slide__side b-slide__side_back">
+                                    <div class="b-slide__wrap b-slide__wrap_back">
+                                       <div class="b-slide__heading b-slide__heading_back">Что вы о нас думаете</div>
+                                       <form class="b-form_feedback js-form_feedback">
+                                            <div class="row">
+                                                <div class="col-l">
+                                                    <label for="name1" class="b-label_registration">Ваше Имя</label>
+                                                    <input type="text" name="name" id="name1" required pattern="[A-Za-zА-Яа-яЁёІіЇї\s]{2,}">
+                                                </div>
+                                                <div class="col-r">
+                                                    <label for="phone1" class="b-label_registration">Ваш Телефон</label>
+                                                    <input type="tel" name="phone" id="phone1" required pattern="[0-9()\s+-]{19}">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-l col-12">
+                                                    <label for="feedback" class="b-label_registration">Ваш отзыв</label>
+                                                    <textarea name="feedback" id="feedback1" required pattern="[A-Za-zА-Яа-яЁёІіЇї\s]{2,}"></textarea>
+                                                </div>
+                                            </div>
+                                           <input type="hidden" name="{{ app.request.csrfParam }}" value="{{ app.request.csrfToken }}"> 
+                                            <button type="submit" class="b-form__submit_feedback b-form__submit_vehicle">
+                                                <span class="b-text_btn">Оставить отзыв</span><span class="fa fa-comments" aria-hidden="true"></span>
+                                            </button>
+                                       </form>
+                                   </div>
+                                </div>
+                            </figure>
+                        {% endfor %}
+                    </div>
+                    <div class="b-slider__controls_responses">
+                        <button class="b-slider__control b-slider__control_responses b-slider__control_left"><span class="fa fa-angle-double-left" aria-hidden="true"></span></button>
+                        <button class="b-slider__control b-slider__control_responses b-slider__control_right"><span class="fa fa-angle-double-right" aria-hidden="true"></span></button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+{% endif %}

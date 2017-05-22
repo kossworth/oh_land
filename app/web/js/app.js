@@ -760,7 +760,7 @@ $(document).ready(function(){
                 // place for Ajax sending
                 $.ajax({
                     type: "get",
-                    url : "./ajax/__calcVehicle.html",
+                    url : "/ohproject/osago/osago-change-data",
                     error : function(){
                         alert('error');
                     },
@@ -1186,12 +1186,64 @@ $(document).ready(function(){
 
 	// feedback form submission
 	$(".js-form_feedback").submit(function(event){
-		event.preventDefault();
-		// place for Ajax sending
-		// in a case of Ajax success:
-		$modalOvl.fadeIn();	// show success modal
-		$modalFeedbackSuccess.fadeIn();
-		$feedbackBtn.trigger("click");	//розвертаємо слайд
+            event.preventDefault();
+            var data = $(this).serialize();
+
+            $.ajax({
+                type : 'post',
+                url: '/ohproject/feedbacks/create-feedback',
+                data : data,
+                cache : false,
+                success : function(response){
+                    if(response.status == true)
+                    {
+                        // in a case of Ajax success:
+                        $modalOvl.fadeIn();	// show success modal
+                        $modalFeedbackSuccess.fadeIn();
+                        $(".js-form_feedback input, .js-form_feedback textarea").val('');
+                    } 
+                    else
+                    {
+                        $modalOvl.fadeIn();	// show error modal
+                        $modalError.fadeIn();
+                    }
+                },
+                error: function(){
+                    alert('There is an error!');
+                }
+            });
+
+            $feedbackBtn.trigger("click");	//розвертаємо слайд
+	})
+
+	// callback form submission
+	$(".js-form_callback").submit(function(event){
+            event.preventDefault();
+            var data = $(this).serialize();
+
+            $.ajax({
+                type : 'post',
+                url: '/ohproject/feedbacks/create-callback',
+                data : data,
+                cache : false,
+                success : function(response){
+                    if(response.status == true)
+                    {
+                        // in a case of Ajax success:
+                        $modalOvl.fadeIn();	// show success modal
+                        $modalCallbackSuccess.fadeIn();
+                        $(".js-form_callback input").val('');
+                    } 
+                    else
+                    {
+                        $modalOvl.fadeIn();	// show error modal
+                        $modalError.fadeIn();
+                    }
+                },
+                error: function(){
+                    alert('There is an error!');
+                }
+            });
 	})
 
 	// modals
@@ -1206,24 +1258,24 @@ $(document).ready(function(){
 		;
 
 	$("#callbackBtn").click(function(){
-		$modalOvl.fadeIn();
-		$modalCallback.fadeIn();
+            $modalOvl.fadeIn();
+            $modalCallback.fadeIn();
 	});
 
 	$modalCloseBtn.click(function(){	// hide modals
-		$modalOvl.fadeOut();
-		$modals.fadeOut();
+            $modalOvl.fadeOut();
+            $modals.fadeOut();
 	});
 
 	$modalCallbackForm.submit(function(event){
-		event.preventDefault();
-		// place for Ajax sending
-		// in a case of Ajax success:
-		$modals.fadeOut();
-		$modalCallbackSuccess.fadeIn();
-		// in a case of Ajax error:
-		//$modals.fadeOut();
-		//$modalError.fadeIn();
+            event.preventDefault();
+            // place for Ajax sending
+            // in a case of Ajax success:
+            $modals.fadeOut();
+            $modalCallbackSuccess.fadeIn();
+            // in a case of Ajax error:
+            //$modals.fadeOut();
+            //$modalError.fadeIn();
 	})
         
         // scroll to top

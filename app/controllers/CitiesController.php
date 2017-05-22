@@ -29,10 +29,10 @@ class CitiesController extends \app\components\BaseController
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $request = Yii::$app->request;
-        if(!$request->isAjax)
-        {
-            throw new BadRequestHttpException("Wrong request", 400);
-        }
+//        if(!$request->isAjax)
+//        {
+//            throw new BadRequestHttpException("Wrong request", 400);
+//        }
         $get = $request->get();
         
         if(isset($get['item']))
@@ -63,10 +63,10 @@ class CitiesController extends \app\components\BaseController
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $request = Yii::$app->request;
-        if(!$request->isAjax)
-        {
-            throw new BadRequestHttpException("Wrong request", 400);
-        }
+//        if(!$request->isAjax)
+//        {
+//            throw new BadRequestHttpException("Wrong request", 400);
+//        }
         $get = $request->get();
         $search = strip_tags(trim($get['item']));
         $region_id = isset($get['criteria']) ? strip_tags(trim($get['criteria'])) : null;
@@ -77,10 +77,10 @@ class CitiesController extends \app\components\BaseController
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $request = Yii::$app->request;
-        if(!$request->isAjax)
-        {
-            throw new BadRequestHttpException("Wrong request", 400);
-        }
+//        if(!$request->isAjax)
+//        {
+//            throw new BadRequestHttpException("Wrong request", 400);
+//        }
         $search = strip_tags(trim($request->get('item')));
         $city_id = strip_tags(trim($request->get('criteria')));
         return NpFilials::getAutocompleteFilialsArray($search, $city_id);

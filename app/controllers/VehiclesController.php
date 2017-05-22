@@ -26,10 +26,10 @@ class VehiclesController extends \app\components\BaseController
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $request = Yii::$app->request;
-        if(!$request->isAjax)
-        {
-            throw new BadRequestHttpException("Wrong request", 400);
-        }
+//        if(!$request->isAjax)
+//        {
+//            throw new BadRequestHttpException("Wrong request", 400);
+//        }
         $criteria = strip_tags(trim($request->get('item')));
         return AutoMakers::getAutocompleteMakersArray($criteria);
     }
@@ -38,10 +38,10 @@ class VehiclesController extends \app\components\BaseController
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $request = Yii::$app->request;
-        if(!$request->isAjax)
-        {
-            throw new BadRequestHttpException("Wrong request", 400);
-        }
+//        if(!$request->isAjax)
+//        {
+//            throw new BadRequestHttpException("Wrong request", 400);
+//        }
         $criteria = strip_tags(trim($request->get('item')));
         $brand_id = (int)$request->get('criteria');
         return AutoModels::getAutocompleteModelsArray($criteria, $brand_id);

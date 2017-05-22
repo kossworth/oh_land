@@ -44,7 +44,7 @@
     
     <footer class="b-footer">
         <div class="b-footer__toTop" id="toTop">
-            <span class="b-heading_toTop">На вверх&nbsp;</span>
+            <span class="b-heading_toTop">Наверх&nbsp;</span>
             <a href="#header" class="b-btn_toTop">
                 <span class="fa fa-arrow-up" aria-hidden="true"></span>
             </a>
@@ -69,8 +69,9 @@
                 <span class="fa fa-times" aria-hidden="true"></span>
             </div>
             <div class="b-modal__heading">Введите ваш<br>номер телефона и мы<br>вам перезвоним</div>
-                <form action="" class="b-modal__form_callback b-form_feedback js-form_callback">
+                <form class="b-modal__form_callback b-form_feedback js-form_callback">
                     <input type="tel" name="phone" required pattern="[0-9()\s+-]{19}">
+                    <input type="hidden" name="{{ app.request.csrfParam }}" value="{{ app.request.csrfToken }}"> 
                     <button type="submit" class="b-form__submit_feedback b-form__submit_vehicle">
                         <span class="b-text_btn">Перезвонить</span><span class="fa fa-phone" aria-hidden="true"></span>
                     </button>
@@ -82,12 +83,14 @@
             </div>
             <div class="b-modal__heading">Спасибо, мы перезвоним вам на протяжении 5 минут.</div>
         </div>
+        
         <div class="b-modal b-modal_feedbackSuccess b-gradient_bg">
             <div class="b-modal__btn_close">
                 <span class="fa fa-times" aria-hidden="true"></span>
             </div>
             <div class="b-modal__heading">Спасибо, ваш отзыв принят.</div>
         </div>
+        
         <div class="b-modal b-modal_error b-gradient_bg">
             <div class="b-modal__btn_close">
                 <span class="fa fa-times" aria-hidden="true"></span>

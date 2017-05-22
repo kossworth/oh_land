@@ -96,15 +96,21 @@ class Company extends \yii\db\ActiveRecord
 
     public function getLogo()
     {
-//        $path = __DIR__ . "/../../../images/company/{$this->id}.1.b.jpg";
-//        if(file_exists($path))
-//        {
+        $path_png = __DIR__ . "/../../../images/company/{$this->id}.2.b.png";
+        $path_jpg = __DIR__ . "/../../../images/company/{$this->id}.2.b.jpg";
+
+        if(is_file($path_png))
+        {
             return '/images/company/'.$this->id.'.1.b.png';
-//        }
-//        else
-//        {
-//            return '111';
-//        }
+        }
+        elseif(is_file($path_jpg))
+        {
+            return '/images/company/'.$this->id.'.1.b.jpg';
+        }
+        else
+        {
+            return '/images/no-img.png';
+        }
     }
     
     /**

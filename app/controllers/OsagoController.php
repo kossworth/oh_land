@@ -24,6 +24,7 @@ class OsagoController extends \app\components\BaseController
                     'osago-self-order'          => ['post'],
                     'osago-phone-order'         => ['post'],
                     'osago-doc-order'           => ['post'],
+                    'osago-change-data'         => ['get'],
                 ]
             ],
         ];
@@ -45,10 +46,10 @@ class OsagoController extends \app\components\BaseController
     public function actionSendRequest()
     {
         $request = Yii::$app->request;
-        if(!$request->isAjax)
-        {
-            throw new \yii\web\BadRequestHttpException('Wrong request!', 400);
-        }
+//        if(!$request->isAjax)
+//        {
+//            throw new \yii\web\BadRequestHttpException('Wrong request!', 400);
+//        }
         $session = Yii::$app->session;
         $get = $request->get();
        
@@ -75,12 +76,12 @@ class OsagoController extends \app\components\BaseController
             'dateFrom'              => date('Y-m-d', strtotime('+1 day')),
             'dateTo'                => date('Y-m-d', strtotime('+1 year')),
             'zone'                  => $get['zone'] ? (int)$get['zone'] : 1,
-            'taxi'                  => $get['notTaxi'] ? (bool)$get['notTaxi'] : false,
+            'taxi'                  => ($get['notTaxi'] == 1) ? false : true,
             'usageMonths'           => 0,
             'driveExp'              => false,
         ];
         $propositions = ewa\find::osago($tariff_options);
-//        var_dump($tariff_options); die();
+
         $tariff_options['city'] = ['id' => $get['city'], 'zone' => $get['zone'], 'name' => $get['cityName']];
 
         if($session->has('osago_search_data'))
@@ -97,7 +98,6 @@ class OsagoController extends \app\components\BaseController
         
         $companies = Company::find()
                 ->joinWith(['osago'], true)
-//                ->asArray()
                 ->all();
         
         $result_propositions = [];
@@ -129,10 +129,10 @@ class OsagoController extends \app\components\BaseController
     
     public function actionCreateOsagoOrder()
     {
-        if(!Yii::$app->request->isAjax)
-        {
-            throw new \yii\web\BadRequestHttpException('Wrong request!', 400);
-        }
+//        if(!Yii::$app->request->isAjax)
+//        {
+//            throw new \yii\web\BadRequestHttpException('Wrong request!', 400);
+//        }
         $session = Yii::$app->session;
         $counter = Yii::$app->request->post('counter') ? (int)Yii::$app->request->post('counter') : 0;
         $order = Orders::getCurrent('osago');
@@ -145,6 +145,7 @@ class OsagoController extends \app\components\BaseController
         
         $order->search  = $search_data;
         $order->offer   = $propositions[$counter] ? json_encode($propositions[$counter], JSON_UNESCAPED_UNICODE) : null;
+        $order->last_stage = 'select_proposition';
         if($order->save(false))
         {
             $regions = NpCities::find()->where(['parent_id' => -1])
@@ -162,10 +163,10 @@ class OsagoController extends \app\components\BaseController
     public function actionOsagoSelfOrder()
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        if(!Yii::$app->request->isAjax)
-        {
-            throw new \yii\web\BadRequestHttpException('Wrong request!', 400);
-        }
+//        if(!Yii::$app->request->isAjax)
+//        {
+//            throw new \yii\web\BadRequestHttpException('Wrong request!', 400);
+//        }
         
         $post   = Yii::$app->request->post();
         
@@ -230,7 +231,7 @@ class OsagoController extends \app\components\BaseController
         $order->payment = isset($post['pay']) ? strip_tags(trim($post['pay'])) : '';
         $order->comment = isset($post['comment']) ? strip_tags(trim($post['comment'])) : '';
         $order->delivery = $delivery_city.' '.$delivery_address;
-        
+        $order->last_stage = 'save_self_order';
         $ewa_status = ewa\save::osago($order);
         $order->result = json_encode($ewa_status, JSON_UNESCAPED_UNICODE);
         
@@ -263,16 +264,17 @@ class OsagoController extends \app\components\BaseController
 
     public function actionOsagoPhoneOrder()
     {
-        if(!Yii::$app->request->isAjax)
-        {
-            throw new \yii\web\BadRequestHttpException('Wrong request!', 400);
-        }
+//        if(!Yii::$app->request->isAjax)
+//        {
+//            throw new \yii\web\BadRequestHttpException('Wrong request!', 400);
+//        }
         $post   = Yii::$app->request->post();
         $order  = Orders::getCurrent('osago');
         $fname = isset($post['firstName']) ? strip_tags(trim($post['firstName'])) : '';
         $lname = isset($post['lastName']) ? strip_tags(trim($post['lastName'])) : '';
         $order->name = $lname.' '.$fname;
         $order->phone = isset($post['phone']) ? strip_tags(trim($post['phone'])) : '';
+        $order->last_stage = 'save_phone_order';
         if($order->save(false))
         {
             Yii::$app->session->destroy();
@@ -334,7 +336,7 @@ class OsagoController extends \app\components\BaseController
         $order->payment = isset($post['pay']) ? strip_tags(trim($post['pay'])) : '';
         $order->comment = isset($post['comment']) ? strip_tags(trim($post['comment'])) : '';
         $order->delivery = $delivery_city.' '.$delivery_address;
-        
+        $order->last_stage = 'save_docs_order';
         $upload_imgs = '';
         if($_FILES['docsScans']['error'][0] != 4 ) 
         {
@@ -394,6 +396,31 @@ class OsagoController extends \app\components\BaseController
             var_dump($order->getErrors());
         }
         
+    }
+    
+    public function actionOsagoChangeData()
+    {
+//        if(!Yii::$app->request->isAjax)
+//        {
+//            throw new \yii\web\BadRequestHttpException('Wrong request!', 400);
+//        }       
+        $session = Yii::$app->session;
+        if($session->has('osago_search_data'))
+        {
+            $search_data = $session['osago_search_data'];
+        }
+        $data = json_decode($search_data);
+        $auto_categories = AutoCategories::find()->select([
+                AutoCategories::tableName().'.id_auto_kind',
+                AutoCategories::tableName().'.auto_code',
+                AutoCategories::tableName().'.name_object_rus',
+                AutoCategories::tableName().'.name_param_rus',
+            ])->asArray()->all();
+        
+        return $this->renderAjax('change_data.twig', [
+            'data' => $data,
+            'auto_categories' => $auto_categories,
+        ]);
     }
     
 }
