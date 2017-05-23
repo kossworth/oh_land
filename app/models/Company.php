@@ -53,21 +53,21 @@ class Company extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'name_1' => Yii::t('app', 'Name 1'),
-            'name_2' => Yii::t('app', 'Name 2'),
-            'alias' => Yii::t('app', 'Alias'),
-            'active' => Yii::t('app', 'Active'),
-            'active_osago' => Yii::t('app', 'Active Osago'),
-            'active_greencard' => Yii::t('app', 'Active Greencard'),
-            'description_1' => Yii::t('app', 'Description 1'),
-            'description_2' => Yii::t('app', 'Description 2'),
-            'landing_description' => Yii::t('app', 'Landing Description'),
-            'cis_id' => Yii::t('app', 'CIS ID'),
-            'ewa_id' => Yii::t('app', 'EWA ID'),
-            'rating' => Yii::t('app', 'Рейтинг'),
-            'background_file' => Yii::t('app', 'Background File'),
-            'sort' => Yii::t('app', 'SORT'),
+            'id'                    => Yii::t('app', 'ID'),
+            'name_1'                => Yii::t('app', 'Name 1'),
+            'name_2'                => Yii::t('app', 'Name 2'),
+            'alias'                 => Yii::t('app', 'Alias'),
+            'active'                => Yii::t('app', 'Active'),
+            'active_osago'          => Yii::t('app', 'Active Osago'),
+            'active_greencard'      => Yii::t('app', 'Active Greencard'),
+            'description_1'         => Yii::t('app', 'Description 1'),
+            'description_2'         => Yii::t('app', 'Description 2'),
+            'landing_description'   => Yii::t('app', 'Landing Description'),
+            'cis_id'                => Yii::t('app', 'CIS ID'),
+            'ewa_id'                => Yii::t('app', 'EWA ID'),
+            'rating'                => Yii::t('app', 'Рейтинг'),
+            'background_file'       => Yii::t('app', 'Background File'),
+            'sort'                  => Yii::t('app', 'SORT'),
         ];
     }
 
@@ -101,11 +101,11 @@ class Company extends \yii\db\ActiveRecord
 
         if(is_file($path_png))
         {
-            return '/images/company/'.$this->id.'.1.b.png';
+            return '/images/company/'.$this->id.'.2.b.png';
         }
         elseif(is_file($path_jpg))
         {
-            return '/images/company/'.$this->id.'.1.b.jpg';
+            return '/images/company/'.$this->id.'.2.b.jpg';
         }
         else
         {

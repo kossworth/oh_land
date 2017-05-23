@@ -421,6 +421,6 @@ class OsagoController extends \app\components\BaseController
             'data' => $data,
             'auto_categories' => $auto_categories,
         ]);
-    }
+    } 
     
 }

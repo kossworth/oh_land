@@ -412,9 +412,14 @@ body{
 .b-params{
     display: none;
 }
+.b-params_active{
+    display: block;
+}
+/*
 .b-params_car{
     display: block;
 }
+*/
 .b-block_select{
     display: inline-block;
     margin-right: 105px;
@@ -909,22 +914,28 @@ body{
 }
 .b-company__about{
     position: absolute;
-    top: 0;
+    top: 50%;
     right: 30px;
     bottom: 0;
     height: 50px;
     margin: 0;
-    margin-top: auto;
-    margin-bottom: auto;
+/*    margin-top: auto;*/
+/*    margin-bottom: auto;*/
 /*    display: inline-block;*/
     width: 200px;
 /*    vertical-align: middle;*/
 /*    padding-left: 178px;*/
     font-weight: 300;
+    overflow: hidden;
     color: #fff;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
 }
 .b-rating__bonuses{
     float: left;
+    width: 245px;
     height: 100%;
     padding: 23px 21px;
     -webkit-box-sizing: border-box;

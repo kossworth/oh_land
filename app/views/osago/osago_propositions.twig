@@ -65,7 +65,7 @@
 {#                                <img src="{{ Url.to('app/web/img/unica.png') }}" alt="" class="b-proposition__logo">#}
                                 <img src="{{ prop.company.logo | raw }}" alt="{{ prop.tariff.insurer.namePrint }}" class="b-proposition__logo">
                                 <span class="b-company__name">{{ prop.tariff.insurer.namePrint }}</span>
-                                <span class="b-company__rating b-company__rating_propos">
+                                <span class="b-company__rating b-company__rating_propos" data-rating="{{ prop.company.rating | round }}">
                                     <span class="fa fa-star-o" aria-hidden="true"></span>
                                     <span class="fa fa-star-o" aria-hidden="true"></span>
                                     <span class="fa fa-star-o" aria-hidden="true"></span>

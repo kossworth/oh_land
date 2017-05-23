@@ -60,7 +60,7 @@
                 </label>
             </div>
             <div class="b-vehicle__params">
-                <div class="b-params b-params_car {% if data.autoCategory in ['B1','B2','B3','B4'] %} js-params_active {% endif %}">
+                <div class="b-params b-params_car {% if data.autoCategory in ['B1','B2','B3','B4'] %} js-params_active b-params_active {% endif %}">
                     <input type="radio" class="radio sr-only" id="small" value="3" name="type" {% if data.autoCategory == 'B1' %} checked {% endif %}>
                     <label for="small">до 1600 см<sup>3</sup></label>
                     <input type="radio" class="radio sr-only" id="middle" value="4" name="type" {% if data.autoCategory == 'B2' %} checked {% endif %}>
@@ -70,19 +70,19 @@
                     <input type="radio" class="radio sr-only" id="xlarge" value="6" name="type" {% if data.autoCategory == 'B4' %} checked {% endif %}>
                     <label for="xlarge">от 3001 см<sup>3</sup></label>
                 </div>
-                <div class="b-params b-params_truck {% if data.autoCategory in ['C1','C2'] %} js-params_active {% endif %}">
+                <div class="b-params b-params_truck {% if data.autoCategory in ['C1','C2'] %} js-params_active b-params_active {% endif %}">
                     <input type="radio" class="radio sr-only" id="light" value="7" name="type" {% if data.autoCategory == 'C1' %} checked {% endif %}>
                     <label for="light">до 2т</label>
                     <input type="radio" class="radio sr-only" id="heavy" value="8" name="type" {% if data.autoCategory == 'C2' %} checked {% endif %}>
                     <label for="heavy">более 2т</label>
                 </div>
-                <div class="b-params b-params_bus {% if data.autoCategory in ['D1','D2'] %} js-params_active {% endif %}">
+                <div class="b-params b-params_bus {% if data.autoCategory in ['D1','D2'] %} js-params_active b-params_active {% endif %}">
                     <input type="radio" class="radio sr-only" id="few" value="9" name="type" {% if data.autoCategory == 'D1' %} checked {% endif %}>
                     <label for="few">до 20 человек</label>
                     <input type="radio" class="radio sr-only" id="many" value="10" name="type" {% if data.autoCategory == 'D2' %} checked {% endif %}>
                     <label for="many">более 20 человек</label>
                 </div>
-                <div class="b-params b-params_moto {% if data.autoCategory in ['A1','A2'] %} js-params_active {% endif %}">
+                <div class="b-params b-params_moto {% if data.autoCategory in ['A1','A2'] %} js-params_active b-params_active {% endif %}">
                     <input type="radio" class="radio sr-only" id="motorbike" value="1" name="type" {% if data.autoCategory == 'A1' %} checked {% endif %}>
                     <label for="motorbike">до 300 см<sup>3</sup></label>
                     <input type="radio" class="radio sr-only" id="motorcycle" value="2" name="type" {% if data.autoCategory == 'A2' %} checked {% endif %}>

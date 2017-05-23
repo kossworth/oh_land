@@ -103,8 +103,20 @@ $(document).ready(function(){
             $containerAjax.dequeue("ajax");
 	};
 	var propositionsInit = function($containerAjax){	// ф-я ініціалізації js-функціоналу на підвантаженому блоці пропозицій
-            var $btnsReadMore = $(".js-btn_readmore")
-                    ;
+            var $ratings = $(".b-company__rating_propos");
+		
+		$ratings.each(function(){
+                    var  starsNum = $(this).attr("data-rating")
+                        ,$stars = $(this).children("span.fa")
+                        ,i
+                        ;
+
+                    for (i=0; i<starsNum; ++i){
+                        $stars.eq(i).removeClass("fa-star-o").addClass("fa-star");
+                    }
+		});
+
+		var $btnsReadMore = $(".js-btn_readmore");
 
             // hide-show details  by click on "Подробнее"
                     // show:
@@ -814,15 +826,16 @@ $(document).ready(function(){
 			var index = $vehicles.index($(this))	// індекс типу тз (від 0 до 3)
                             ,$paramBlockActive = $paramBlocks.filter(".js-params_active")
                             ;
-			if ($paramBlockActive != $(this)){
-                            $paramBlockActive.removeClass("js-params_active");
-                            $paramBlocks.eq(index).addClass("js-params_active");
-                            $paramBlocks.eq(index).find("input").eq(1).prop("checked", true); // вибиратимемо 2й радіобатн вибраного тз
-                            $paramBlockActive.fadeOut(0, function(){
-                                $paramBlocks.eq(index).fadeIn(0);
-                            })
+			if ($paramBlockActive != $(this)){	// не будемо ховати і показувати вже видимий блок параметроів
+				$paramBlockActive.removeClass("js-params_active");	// робимо неактивним блоком параметрів
+				$paramBlockActive.removeClass("b-params_active");	// ховаємо неактивний блок параметрів
+				$paramBlocks.eq(index).addClass("js-params_active");// робимо активним блоком параметрів
+				$paramBlocks.eq(index).find("input").eq(1).prop("checked", true);	// вибиратимемо 2й радіобатн вибраного тз
+				$paramBlocks.eq(index).addClass("b-params_active");	// показуємо активний блок параметрів
+				// $paramBlockActive.fadeOut(0, function(){
+				// 	$paramBlocks.eq(index).fadeIn(0);
+				// })
 			}
-			// $("#" + $(this).attr("data-id")).trigger("click");	//перемикання радіобатонів об’єму при кліку на тз
 		});
 
 		//ajax registration city autocomplete
@@ -1060,45 +1073,45 @@ $(document).ready(function(){
 				}
 			);
 			$slide.animate({
-					top: 5,
-					left: 400
-				},	{
-					duration: 200,
-					easing: "linear",
-					queue: "active"	// черга для анімації цього слайда
-				}
+                                top: 5,
+                                left: 400
+                            },	{
+                                duration: 200,
+                                easing: "linear",
+                                queue: "active"	// черга для анімації цього слайда
+                            }
 			);
 			$slide.animate({
-					top: 2,
-					left: 201
-				},	{
-					duration: 300,
-					easing: "linear",
-					queue: "active",	// черга для анімації цього слайда
-					done: function(){
-						// завантажимо новий контент слайда
-						var $slideContent = $(this).find(".b-slide__side_front .b-slide__wrap");
-						$slideContent.fadeOut(100);
-						if(bNext){
-							$slideContent.load("./ajax/__nextSlide.html")
-						} else{
-							$slideContent.load("./ajax/__prevSlide.html")
-						}
-						$slideContent.fadeIn(100);
-					}
-				}
+                                top: 2,
+                                left: 201
+                            },	{
+                                duration: 300,
+                                easing: "linear",
+                                queue: "active",	// черга для анімації цього слайда
+                                done: function(){
+                                    // завантажимо новий контент слайда
+                                    var $slideContent = $(this).find(".b-slide__side_front .b-slide__wrap");
+                                    $slideContent.fadeOut(100);
+                                    if(bNext){
+                                        $slideContent.load("./ajax/__nextSlide.html")
+                                    } else{
+                                        $slideContent.load("./ajax/__prevSlide.html")
+                                    }
+                                    $slideContent.fadeIn(100);
+                                }
+                            }
 			);
 			$slide.animate({
-					top: 0,
-					left: 0
-				},	{
-					duration: 300,
-					easing: "linear",
-					queue: "active",
-					done: function(){
-						$slideResp.toggleClass("b-slide_active");
-					}
-				}
+                                top: 0,
+                                left: 0
+                            },	{
+                                duration: 300,
+                                easing: "linear",
+                                queue: "active",
+                                done: function(){
+                                        $slideResp.toggleClass("b-slide_active");
+                                }
+                            }
 			);
 			$slide.dequeue("active");	// запустимо чергу
 		}
@@ -1267,15 +1280,35 @@ $(document).ready(function(){
             $modals.fadeOut();
 	});
 
+// callback form submission
 	$modalCallbackForm.submit(function(event){
             event.preventDefault();
-            // place for Ajax sending
-            // in a case of Ajax success:
-            $modals.fadeOut();
-            $modalCallbackSuccess.fadeIn();
-            // in a case of Ajax error:
-            //$modals.fadeOut();
-            //$modalError.fadeIn();
+            var data = $(this).serialize();
+
+            $.ajax({
+                // type : 'post',
+                type : 'get',
+                url: './ajax/create-callback.json',
+                data : data,
+                cache : false,
+                success : function(response){
+                    if(response.status == true)
+                    {
+                        // in a case of Ajax success:
+                        $modals.fadeOut();	// ховаємо видимі модалки
+                        $modalCallbackSuccess.fadeIn();	// show success modal
+                        $(".js-form_callback input").val('');
+                    } 
+                    else
+                    {
+                    	$modals.fadeOut();	// ховаємо видимі модалки
+                        $modalError.fadeIn();	// show error modal
+                    }
+                },
+                error: function(){
+                    alert('There is an error!');
+                }
+            });
 	})
         
         // scroll to top
