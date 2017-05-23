@@ -35,7 +35,7 @@ class Faq extends \yii\db\ActiveRecord
         return [
             [['name_1', 'name_2', 'text_1', 'text_2', 'sort', 'crtdate'], 'required'],
             [['text_1', 'text_2'], 'string'],
-            [['to_main', 'sort', 'crtdate'], 'integer'],
+            [['to_main', 'to_landing', 'sort', 'crtdate'], 'integer'],
             [['name_1', 'name_2'], 'string', 'max' => 250],
             [['alias'], 'string', 'max' => 255],
         ];
@@ -54,6 +54,7 @@ class Faq extends \yii\db\ActiveRecord
             'text_1' => Yii::t('app', 'Текст'),
             'text_2' => Yii::t('app', 'Текст УКР'),
             'to_main' => Yii::t('app', 'To Main'),
+            'to_landing' => Yii::t('app', 'To Landing'),
             'sort' => Yii::t('app', 'SORT'),
             'crtdate' => Yii::t('app', 'Date of creation'),
         ];

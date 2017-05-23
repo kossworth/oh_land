@@ -43,16 +43,17 @@ class admin_faq
 	
 	function __construct()
 	{
-		$this->fld=array(
-			new Field("name_1","Заголовок",1),
-			new Field("name_2","Заголовок УКР",1),
-            new Field("alias","Alias для URL на английском без пробелов", 1,1),
-            new Field("text_1","Текст",2),
-            new Field("text_2","Текст УКР",2),
-            new Field("to_main","Вывести на главную",6,1,1),
+            $this->fld=array(
+                    new Field("name_1","Заголовок",1),
+                    new Field("name_2","Заголовок УКР",1),
+                    new Field("alias","Alias для URL на английском без пробелов", 1,1),
+                    new Field("text_1","Текст",2),
+                    new Field("text_2","Текст УКР",2),
+                    new Field("to_main","Вывести на главную",6,1,1),
+                    new Field("to_landing","Вывести на лендинге",6),
 //			new Field("under","Находится в разделе",9,0,0,'docs_categories',-1,'name_1'),
-			new Field("sort","SORT",4),
-			new Field("crtdate","Date of creation",4),
+                    new Field("sort","SORT",4),
+                    new Field("crtdate","Date of creation",4),
 		);
         
 

@@ -26,8 +26,8 @@ class MainController extends \app\components\BaseController
     
     public function actionIndex()
     {        
-        $compamies  = Company::find()->joinWith(['osago'], true)->all();
-        $faqs       = Faq::find()->orderBy(Faq::tableName().'.sort DESC')->asArray()->all();
+        $compamies  = Company::find()->joinWith(['osago'], true)->where([Company::tableName().'.active_osago' => 1])->all();
+        $faqs       = Faq::find()->andWhere([Faq::tableName().'.to_landing' => 1])->orderBy(Faq::tableName().'.sort DESC')->asArray()->all();
         $reasons    = LandingReasons::find()->where([LandingReasons::tableName().'.active' => 1])->orderBy('sort DESC')->asArray()->all();
         $feedbacks  = LandingFeedbacks::find()->published()->orderBy('crtdate DESC')->asArray()->all();
         return $this->render('index.twig', [
