@@ -428,6 +428,9 @@ body{
 .b-block_select:last-of-type{
     margin-right: 0;
 }
+.b-selectBlock_registration{
+    position: relative;
+}
 .b-selectBlock_registration .selectric-wrapper{
     width: 180px;
 }
@@ -458,7 +461,11 @@ body{
     margin-right: 29px;
 }
 #regCity{
-    width: 180px;
+/*    width: 180px;*/
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 .b-block_checkbox{
     width: 200px;
@@ -1588,6 +1595,16 @@ body{
     text-align: center;
     margin-bottom: 40px;
 }
+.b-precomplete_regCity{
+    top: 100%;
+    left: 0;
+    right: 0;
+}
+/*
+.b-precomplete_active{
+    display: block;
+}
+*/
 .b-propositions{
     position: relative;
 }
@@ -2043,6 +2060,7 @@ body{
     margin: 0;
 }
 .b-form__cell{
+    position: relative;
     float: left;
     margin-right: 60px;
     margin-bottom: 20px;
@@ -2106,7 +2124,11 @@ body{
     display: inline-block;
     color: #6c359d;
 }
-
+.b-precomplete_brand{
+    top: 100%;
+    left: 0;
+    right: 0;
+}
 .b-form__cell_rightShift{
     margin-left: 250px;
 }

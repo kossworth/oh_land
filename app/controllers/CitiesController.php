@@ -81,8 +81,12 @@ class CitiesController extends \app\components\BaseController
 //        {
 //            throw new BadRequestHttpException("Wrong request", 400);
 //        }
-        $search = strip_tags(trim($request->get('item')));
-        $city_id = strip_tags(trim($request->get('criteria')));
-        return NpFilials::getAutocompleteFilialsArray($search, $city_id);
+//        $search = strip_tags(trim($request->get('item')));
+        $city_id = strip_tags(trim($request->get('cityId')));
+        $divisions = NpFilials::getAutocompleteFilialsArray($city_id);
+
+        return $this->renderAjax('divisions.twig', [
+            'divisions' => $divisions
+        ]);
     }
 }

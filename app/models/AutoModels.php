@@ -118,7 +118,7 @@ class AutoModels extends \yii\db\ActiveRecord
         
         if(is_null($search_result))
         {
-            return false;
+            return ['items' => []];
         }
         
         $items = [];
