@@ -2,13 +2,13 @@
     <div class="b-section_crumbs">
         <div class="b-container">
             <ol class="b-crumbs">
-                <li class="b-crumbs__item" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
-                    <span class="b-crumbs__link">
-                        Главная
+                <li class="b-crumbs__item b-crumbs__item_unactive" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                    <span class="b-crumbs__link" data-step="1">
+                        Расчет
                     </span>
                 </li>
-                <li class="b-crumbs__item b-crumbs__item_active" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
-                    <span>Осаго</span>
+                <li class="b-crumbs__item" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                    <span>Выбор</span>
                 </li>
             </ol>
         </div>
@@ -42,14 +42,14 @@
         </div>
     </div>
     <div class="b-calculator b-calculator_propos">
-            <div class="b-calculator__heading b-calculator__heading_propos">Ваши данные:</div>
+            <div class="b-calculator__heading b-calculator__heading_propos">Выберите страховку на свое авто:</div>
             <div class="b-propositions">
                 <div class="b-propositions__string">
                     {% for prop in propositions %}
-{#                        {{ prop.tariff.brokerDiscount | dump }}#}
-                        {% if loop.index%4 == 1 and not loop.first %}
+
+                        {% if loop.index%4 == 1 and not loop.first and propositions|length > 4 %}
                             <div class="b-propositions__string b-propositions__string_hidden">
-                        {% endif%}
+                        {% endif %}
                         <div class="b-proposition__wrap">
                             <div class="b-proposition b-gradient_bg">
                                 {% if prop.company.osago.landing_top %}
@@ -62,7 +62,7 @@
                                         Рекомендуем
                                     </div>
                                 {% endif %}
-{#                                <img src="{{ Url.to('app/web/img/unica.png') }}" alt="" class="b-proposition__logo">#}
+
                                 <img src="{{ prop.company.logo | raw }}" alt="{{ prop.tariff.insurer.namePrint }}" class="b-proposition__logo">
                                 <span class="b-company__name">{{ prop.tariff.insurer.namePrint }}</span>
                                 <span class="b-company__rating b-company__rating_propos" data-rating="{{ prop.company.rating | round }}">
@@ -108,15 +108,19 @@
                             </div>
                         {% endif %}
                     {% endfor %}
-                </div>
+                {% if propositions|length > 4 %}
+                    </div>
+                {% endif %}
             </div>
             <div class="b-propos__guaranties">
                 <div class="b-guaranties__heading">Гарантия лучшей цены</div>
                 <p>Мы гарантируем самые низкие цены. Не дороже, чем напрямую в страховой компании. Если вы нашли цену ниже, мы компенсируем вам эту разницу.</p>
             </div>
-            <button type="button" class="b-form__submit_vehicle" id="morePropositions">
-                <span class="b-text_btn">Посмотреть еще предложения</span><span class="fa fa-angle-down" aria-hidden="true"></span>
-            </button>
+            {% if propositions|length > 4 %}
+                <button type="button" class="b-form__submit_vehicle" id="morePropositions">
+                    <span class="b-text_btn">Посмотреть еще предложения</span><span class="fa fa-angle-down" aria-hidden="true"></span>
+                </button>
+            {% endif %}
     </div>
     
     <div class="b-calculator__progress b-progress_propositions">

@@ -2,22 +2,22 @@
     <div class="b-container">
         <div class="b-section_crumbs">
             <div class="b-container">
-                <ol class="b-crumbs b-crumbs_finalize">
+                {#<ol class="b-crumbs b-crumbs_finalize">
                     <li class="b-crumbs__item" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
                         <span class="b-crumbs__link">
-                            Главная
+                            Расчет
                         </span>
                     </li>
                     <li class="b-crumbs__item" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
-                        <span>ОСАГО</span>
+                        <span>Выбор</span>
                     </li>
                     <li class="b-crumbs__item" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
-                        <span>Как оформить</span>
+                        <span>Оформление</span>
                     </li>
                     <li class="b-crumbs__item b-crumbs__item_active" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
                         <span>Спасибо</span>
                     </li>
-                </ol>
+                </ol>#}
             </div>
         </div>
         <div class="b-calculator__heading b-heading_finalize">Спасибо, мы получили ваш заказ :)</div>
@@ -52,7 +52,9 @@
                                 {% if order.payment == 'cash' %}
                                     <td>Наличными</td>
                                 {% elseif order.payment == 'card' %}
-                                    <td>Online-оплата</td>
+                                    <td>Online-оплата <br>
+                                    {{ liqpay_button | raw }}
+                                    </td>
                                 {% endif %}
                             </tr>
                         {% endif %}
@@ -62,7 +64,7 @@
                                 <td>{{ delivery_type }}</td>
                             </tr>
                         {% endif %}
-                        {% if order.delivery and order.delivery != '' and delivery_type != '' %}
+                        {% if order.delivery is not null and order.delivery is not empty %}
                             <tr>
                                 <th>Адрес доставки</th>
                                 <td>{{ order.delivery }}</td>

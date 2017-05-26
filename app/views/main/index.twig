@@ -118,10 +118,8 @@
                         <label for="franshiza" class="b-label_registration">Франшиза</label>
                         <select name="franshiza" class="js-selectric" id="franshiza">
                             <option value="0" selected>0 грн</option>
-                            <option value="1">1 грн</option>
-                            <option value="100">100 грн</option>
                             <option value="1000">1 000 грн</option>
-                            <option value="10000">10 000 грн</option>
+                            <option value="2000">2 000 грн</option>
                         </select>
                     </div>
                     <label class="b-block_checkbox">
@@ -251,7 +249,7 @@
             </div>
     </div>
 </section>
-
+                    
 <section class="b-section_rating">
     <div class="b-container">
             <span class="b-section__heading b-section__heading_rating">Рейтинг страховщиков по ОСАГО</span>
@@ -440,73 +438,91 @@
     </section>
 {% endif %}
             
-{% if feedbacks %}
-    <section class="b-section_responses">
-        <div class="b-container">
-                <span class="b-section__heading b-section__heading_rating b-section__heading_faq">ОТЗЬІВЬІ КЛИЕНТОВ</span>
-            <div class="b-rating__block_btns b-responses__block_btns">
-                <button class="b-rating__btn b-rating__btn_active b-rating__btn_mtsbu b-rating__btn_responses js-btn_responses">Отзывы от клиентов Oh.ua</button>
-                <button class="b-rating__btn b-rating__btn_clients b-rating__btn_responses js-btn_feedback">Для тех, кто хочет оставить отзыв</button>
-            </div>
-            <div class="b-responses__container_slider">
-                <div class="b-slider_responses">
-                    <div class="b-slider__string_responses">
-                        {% for feedback in feedbacks %}
-                            <figure class="b-slide_responses b-slide {% if loop.first %} b-slide_active {% endif %}">
-                                <div class="b-slide__side b-slide__side_front">
-                                    <div class="b-slide__wrap">
-                                        <div class="b-slide__heading">{{ feedback.username }}</div>
-                                        <div class="b-slide__content">
-                                            <p class="b-slide__response">
-                                                {{ feedback.text }}
-                                            </p>
-                                            <div class="b-slide__aside_marks">
-                                                <div class="b-mark__heading">Качество сервиса </div>
-                                                <div class="b-mark__num">{{ feedback.level_service }}/10</div>
-                                                <div class="b-mark__heading">Уровень цен </div>
-                                                <div class="b-mark__num">{{ feedback.level_price }}/10</div>
-                                                <div class="b-mark__heading">Выбор компаний </div>
-                                                <div class="b-mark__num">{{ feedback.level_companies }}/10</div>
-                                            </div>
-                                       </div>
+<section class="b-section_responses">
+    <div class="b-container">
+            <span class="b-section__heading b-section__heading_rating b-section__heading_faq">ОТЗЬІВЬІ КЛИЕНТОВ</span>
+        <div class="b-rating__block_btns b-responses__block_btns">
+            <button class="b-rating__btn b-rating__btn_active b-rating__btn_mtsbu b-rating__btn_responses js-btn_responses">Отзывы от клиентов Oh.ua</button>
+            <button class="b-rating__btn b-rating__btn_clients b-rating__btn_responses js-btn_feedback">Для тех, кто хочет оставить отзыв</button>
+        </div>
+        <div class="b-responses__container_slider">
+            <div class="b-slider_responses">
+                <div class="b-slider__string_responses">
+
+                    <figure class="b-slide_responses b-slide">
+                        <div class="b-slide__side b-slide__side_front">
+                            <div class="b-slide__wrap">
+                                <!-- slide content loads HERE by JS -->
+                            </div>
+                        </div>
+                        <div class="b-slide__side b-slide__side_back">
+                            <div class="b-slide__wrap b-slide__wrap_back">
+                            <div class="b-slide__heading b-slide__heading_back">Что вы о нас думаете</div>
+                               <form action="" class="b-form_feedback js-form_feedback">
+                                    <div class="row">
+                                        <div class="col-l">
+                                            <label for="name1" class="b-label_registration">Ваше Имя</label>
+                                            <input type="text" name="name" id="name1" required pattern="[A-Za-zА-Яа-яЁёІіЇї\s]{2,}">
+                                        </div>
+                                        <div class="col-r">
+                                            <label for="phone1" class="b-label_registration">Ваш Телефон</label>
+                                            <input type="tel" name="phone" id="phone1" required pattern="[0-9()\s+-]{19}">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="b-slide__side b-slide__side_back">
-                                    <div class="b-slide__wrap b-slide__wrap_back">
-                                       <div class="b-slide__heading b-slide__heading_back">Что вы о нас думаете</div>
-                                       <form class="b-form_feedback js-form_feedback">
-                                            <div class="row">
-                                                <div class="col-l">
-                                                    <label for="name1" class="b-label_registration">Ваше Имя</label>
-                                                    <input type="text" name="name" id="name1" required pattern="[A-Za-zА-Яа-яЁёІіЇї\s]{2,}">
-                                                </div>
-                                                <div class="col-r">
-                                                    <label for="phone1" class="b-label_registration">Ваш Телефон</label>
-                                                    <input type="tel" name="phone" id="phone1" required pattern="[0-9()\s+-]{19}">
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-l col-12">
-                                                    <label for="feedback" class="b-label_registration">Ваш отзыв</label>
-                                                    <textarea name="feedback" id="feedback1" required pattern="[A-Za-zА-Яа-яЁёІіЇї\s]{2,}"></textarea>
-                                                </div>
-                                            </div>
-                                           <input type="hidden" name="{{ app.request.csrfParam }}" value="{{ app.request.csrfToken }}"> 
-                                            <button type="submit" class="b-form__submit_feedback b-form__submit_vehicle">
-                                                <span class="b-text_btn">Оставить отзыв</span><span class="fa fa-comments" aria-hidden="true"></span>
-                                            </button>
-                                       </form>
-                                   </div>
-                                </div>
-                            </figure>
-                        {% endfor %}
-                    </div>
-                    <div class="b-slider__controls_responses">
-                        <button class="b-slider__control b-slider__control_responses b-slider__control_left"><span class="fa fa-angle-double-left" aria-hidden="true"></span></button>
-                        <button class="b-slider__control b-slider__control_responses b-slider__control_right"><span class="fa fa-angle-double-right" aria-hidden="true"></span></button>
-                    </div>
+                                    <div class="row">
+                                        <div class="col-l col-12">
+                                            <label for="feedback1" class="b-label_registration">Ваш отзыв</label>
+                                            <textarea class="b-comment" name="feedback" id="feedback1" required></textarea>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="{{ app.request.csrfParam }}" value="{{ app.request.csrfToken }}"> 
+                                    <button type="submit" class="b-form__submit_feedback b-form__submit_vehicle">
+                                        <span class="b-text_btn">Оставить отзыв</span><span class="fa fa-comments" aria-hidden="true"></span>
+                                    </button>
+                               </form>
+                           </div>
+                        </div>
+                    </figure>
+                    <figure class="b-slide_responses b-slide b-slide_active">
+                        <div class="b-slide__side b-slide__side_front">
+                            <div class="b-slide__wrap">
+                                <!-- slide content loads HERE by JS -->
+                            </div>
+                        </div>
+                        <div class="b-slide__side b-slide__side_back">
+                            <div class="b-slide__wrap b-slide__wrap_back">
+                            <div class="b-slide__heading b-slide__heading_back">Что вы о нас думаете</div>
+                               <form action="" class="b-form_feedback js-form_feedback">
+                                    <div class="row">
+                                        <div class="col-l">
+                                            <label for="name1" class="b-label_registration">Ваше Имя</label>
+                                            <input type="text" name="name" id="name1" required pattern="[A-Za-zА-Яа-яЁёІіЇї\s]{2,}">
+                                        </div>
+                                        <div class="col-r">
+                                            <label for="phone1" class="b-label_registration">Ваш Телефон</label>
+                                            <input type="tel" name="phone" id="phone1" required pattern="[0-9()\s+-]{19}">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-l col-12">
+                                            <label for="feedback1" class="b-label_registration">Ваш отзыв</label>
+                                            <textarea class="b-comment" name="feedback" id="feedback1" required></textarea>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="{{ app.request.csrfParam }}" value="{{ app.request.csrfToken }}"> 
+                                    <button type="submit" class="b-form__submit_feedback b-form__submit_vehicle">
+                                        <span class="b-text_btn">Оставить отзыв</span><span class="fa fa-comments" aria-hidden="true"></span>
+                                    </button>
+                               </form>
+                           </div>
+                        </div>
+                    </figure>
+                </div>
+                <div class="b-slider__controls_responses">
+                    <button class="b-slider__control b-slider__control_responses b-slider__control_left"><span class="fa fa-angle-double-left" aria-hidden="true"></span></button>
+                    <button class="b-slider__control b-slider__control_responses b-slider__control_right"><span class="fa fa-angle-double-right" aria-hidden="true"></span></button>
                 </div>
             </div>
         </div>
-    </section>
-{% endif %}
+    </div>
+</section>

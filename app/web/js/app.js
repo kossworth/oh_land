@@ -82,8 +82,8 @@ $(document).ready(function(){
             	    propositionsInit($containerAjax);
             	},
             	complete: function(){
-            		showContainerAjax($containerAjax);
-            		$containerAjax.dequeue("ajax");
+                    showContainerAjax($containerAjax);
+                    $containerAjax.dequeue("ajax");
             	}
             });
 			// showBcrumbs($bCrumbs);	// show breadcrumbs
@@ -217,13 +217,13 @@ $(document).ready(function(){
                     required: true,
                     minlength: 2,
                     maxlength: 100,
-                    pattern: /[A-Za-zА-Яа-яЁёІіЇї\-\s]+/
+                    pattern: /^[A-Za-zА-Яа-яЁёІіЇї\-\s]+$/
                 },
         		firstName:{
                     required: true,
                     minlength: 2,
                     maxlength: 75,
-                    pattern: /[A-Za-zА-Яа-яЁёІіЇї\-\s]+/
+                    pattern: /^[A-Za-zА-Яа-яЁёІіЇї\-\s]+$/
         		},
         		email:    {
                     required: true,
@@ -236,7 +236,7 @@ $(document).ready(function(){
                     required: true,
                     minlength: 1,
                     maxlength: 10,
-                    pattern: /[0-9]+/
+                    pattern: /^[0-9]+$/
                 },
         		phone:    {
         			required: true,
@@ -246,13 +246,13 @@ $(document).ready(function(){
         			required: true,
                     minlength: 2,
                     maxlength: 255,
-                    pattern: /[A-Za-zА-Яа-яЁёІіЇї\-\s\,\.\/0-9]+/
+                    pattern: /^[A-Za-zА-Яа-яЁёІіЇї\-\s\,\.\/0-9]+$/
         		},
         		deliveryAddr:  {
         			required: true,
                     minlength: 2,
                     maxlength: 255,
-                    pattern: /[A-Za-zА-Яа-яЁёІіЇї\-\s\,\.\/0-9]+/
+                    pattern: /^[A-Za-zА-Яа-яЁёІіЇї\-\s\,\.\/0-9]+$/
         		},
         		year:     {
         			required: true,
@@ -265,24 +265,24 @@ $(document).ready(function(){
         			required: true,
                     minlength: 2,
                     maxlength: 17,
-                    pattern: /[A-Za-zА-Яа-яЁёІіЇї\-0-9]+/
+                    pattern: /^[A-Za-zА-Яа-яЁёІіЇї\-0-9]+$/
         		},
         		plateNum: {
         			required: true,
                     minlength: 2,
                     maxlength: 10,
-                    pattern: /[A-Za-zА-Яа-яЁёІіЇї\-0-9]+/
+                    pattern: /^[A-Za-zА-Яа-яЁёІіЇї\-0-9]+$/
         		},
-        		date: {
-        			required: true,
-                    pattern: /[0-9\.]+/
-        		},
-        		regionNP:{
-        			required: true
-        		},
-        		delivDivisionIdNP:{
-        			required: true
-        		}
+                    date: {
+                        required: true,
+                        pattern: /^[0-9\.]+$/
+                    },
+                    regionNP:{
+                        required: true
+                    },
+                    delivDivisionIdNP:{
+                        required: true
+                    }
         	},
         	messages: {
         		lastName: {
@@ -399,7 +399,7 @@ $(document).ready(function(){
                                         $containerAjax.html(response);
                                     },
                                     error: function(){
-                                        console.log('ERROR at PHP side!!');
+//                                        console.log('ERROR at PHP side!!');
                                     },
                                     complete: function(){
                                         showContainerAjax($containerAjax);
@@ -531,7 +531,7 @@ $(document).ready(function(){
 		});
 
 		// додамо до поля марки статичну випадашку при введенні від 0 до 1 символа (до відпрацювання автокомпліта)
-		precomplete($brand, function(){
+		precomplete(1, $brand, function(){
                     $model.prop("disabled", false);
  		});
 
@@ -704,6 +704,7 @@ $(document).ready(function(){
                         },
                         success: function(response){
                             var html = $.parseHTML(response);
+                            $(t).html('<option value="" disabled selected hidden>Выберите отделение</option>');
                             $(t).append(response);
                         },
                         complete: function(){
@@ -838,10 +839,10 @@ $(document).ready(function(){
 		});
 
 		// додамо до поля міста реєстрації статичну випадашку при введенні від 0 до 1 символа (до відпрацювання автокомпліта)
-		precomplete($("#regCity"));
+		precomplete(2, $("#regCity"));
 
 		//ajax registration city autocomplete
-		fieldAutocomplete(3, $("#regCity"), "/ohproject/cities/ewa-city")
+		fieldAutocomplete(3, $("#regCity"), "/ohproject/cities/ewa-city") // EWA віддає результат, починаючи з 3х символів
 		
 		// валідація
 		var  $vehicleForm = $("#vehicleForm")
@@ -864,7 +865,7 @@ $(document).ready(function(){
 	// idsNum - quantity of hidden fields after:
 	//		1 - only id
 	//		2 - additional id (zoneId)
-	var precomplete = function($field, clickCallbackFn){
+	var precomplete = function(iSymbols, $field, clickCallbackFn){
             // var  $field = $(context)
             var  $idField = $field.next()
                 ,$zoneIdField
@@ -877,16 +878,16 @@ $(document).ready(function(){
             $field.keyup(function(){
                 currentValue = $(this).val();
                 // console.log(currentValue.length);
-                if ($field.val().length<2){
-                        $dropMenu.show();
+                if ($field.val().length<=iSymbols){
+                    $dropMenu.show();
                 } else{
-                        $dropMenu.hide();
+                    $dropMenu.hide();
                 }
             })
             $field.on("focus", function(){
                 // console.log($field.val().length);
-                if ($field.val().length<2){
-                        $dropMenu.stop().show();
+                if ($field.val().length<=iSymbols){
+                    $dropMenu.stop().show();
                 } 
                 // else{
                 // 	$dropMenu.hide();
@@ -977,7 +978,7 @@ $(document).ready(function(){
                             });
                         },
                         onSelect: function (event, term, item) {
-                            itemIndex = items.indexOf(term);	// індекс елемента в масиві
+                            itemIndex = items.indexOf(String(term));	// індекс елемента в масиві
                             currentId = itemIds[itemIndex];		// id обраного елемента
 
                             if (bLength3){currentOtherId = itemOtherIds[itemIndex]}	// зберігаємо обраний zone_id (якщо такі є)
@@ -1112,68 +1113,127 @@ $(document).ready(function(){
 		,$sliderRespPrevBtn = $sliderResp.find(".b-slider__controls_responses .b-slider__control_left")
 		,$sliderRespNextBtn = $sliderResp.find(".b-slider__controls_responses .b-slider__control_right")
 		,$activeSlide = $slideResp.filter(".b-slide_active")
-		,$unactiveSlide = $slideResp.filter(":not(.b-slide_active)"); 
+		,$unactiveSlide = $slideResp.filter(":not(.b-slide_active)")
+		,$slidesContent = $("#slides").children()	// знаходимо відгуки в прихованому блоці
+		,slidesArray = []	// масив з html відгуків
+		,responseNum	// зберігає індекс останнього завантаженого відгуку
+		,bPrevNext		// чи попередній напрямок запитів "Наступний слайд"
 		;
 
-	$unactiveSlide.css("top", "0px");
-	$unactiveSlide.css("left", "0px");
-	$activeSlide.css("top", "30px");
-	$activeSlide.css("left", "404px");
-	var  moveLeft = function($slide, bNext){
-			$slide.animate({
-					top: 20,
-					left: 444
-				},	{
-					duration: 200,
-					easing: "linear",
-					queue: "active",	// черга для анімації цього слайда
-					done: function(){
-						$(this).css("z-index", "-1")	// приберемо на задній фон
-					}
-				}
-			);
-			$slide.animate({
-					top: 5,
-					left: 400
-				},	{
-					duration: 200,
-					easing: "linear",
-					queue: "active"	// черга для анімації цього слайда
-				}
-			);
-			$slide.animate({
-					top: 2,
-					left: 201
-				},	{
-					duration: 300,
-					easing: "linear",
-					queue: "active",	// черга для анімації цього слайда
-					done: function(){
-						// завантажимо новий контент слайда
-						var $slideContent = $(this).find(".b-slide__side_front .b-slide__wrap");
-						$slideContent.fadeOut(100);
-						if(bNext){
-							$slideContent.load("./ajax/__nextSlide.html")
-						} else{
-							$slideContent.load("./ajax/__prevSlide.html")
-						}
-						$slideContent.fadeIn(100);
-					}
-				}
-			);
-			$slide.animate({
-					top: 0,
-					left: 0
-				},	{
-					duration: 300,
-					easing: "linear",
-					queue: "active",
-					done: function(){
-						$slideResp.toggleClass("b-slide_active");
-					}
-				}
-			);
-			$slide.dequeue("active");	// запустимо чергу
+	var  sliderInit = function(){
+                    // initial slides content
+                    $slidesContent.each(function(index, element){	// заповнюємо масив html відгуків
+                            slidesArray.push($(element).html())
+                    });
+                    // наповнимо слайди початковим контенотом
+                    $slideResp.eq(0).find(".b-slide__side_front .b-slide__wrap").html(slidesArray[1]);			
+                    $slideResp.eq(1).find(".b-slide__side_front .b-slide__wrap").html(slidesArray[0]);
+                    responseNum = 1;	// 2й відгук завантажували останнім
+                    bPrevNext =true;	// порядок завантаження слайдів був прямий
+                    // initial positions
+                    $unactiveSlide.css("top", "0px");
+                    $unactiveSlide.css("left", "0px");
+                    $activeSlide.css("top", "30px");
+                    $activeSlide.css("left", "404px");	
+		}
+		,moveLeft = function($slide, bNext){
+                    $slide.animate({
+                            top: 20,
+                            left: 444
+                        },	{
+                            duration: 200,
+                            easing: "linear",
+                            queue: "active",	// черга для анімації цього слайда
+                            done: function(){
+                                    $(this).css("z-index", "-1")	// приберемо на задній фон
+                            }
+                        }
+                    );
+                    $slide.animate({
+                            top: 5,
+                            left: 400
+                        },	{
+                            duration: 200,
+                            easing: "linear",
+                            queue: "active"	// черга для анімації цього слайда
+                        }
+                    );
+                    $slide.animate({
+                            top: 2,
+                            left: 201
+                        },	{
+                            duration: 300,
+                            easing: "linear",
+                            queue: "active",	// черга для анімації цього слайда
+                            done: function(){
+                                // завантажимо новий контент слайда
+                                var $slideContent = $(this).find(".b-slide__side_front .b-slide__wrap");
+                                $slideContent.fadeOut(100);
+//                                console.log("зараз next: " ,bNext);
+//                                console.log("раніше next: " ,bPrevNext);
+                                if(bNext){
+                                    // $slideContent.load("./ajax/__nextSlide.html")
+                                    if(bPrevNext){
+                                        // перевірка індекса масива перед інкрементом на 1
+                                        if (responseNum == slidesArray.length-1){
+                                            responseNum = 0
+                                        } else {
+                                            ++responseNum;
+                                        }
+                                        $slideContent.html(slidesArray[responseNum]);	// відмальовуєм відгук з індексом responseNum
+                                    } else {
+                                        // перевірка індекса масива перед інкрементом на 2
+                                        if (responseNum == slidesArray.length-1){
+                                                responseNum = 1
+                                        } else if (responseNum == slidesArray.length-2){
+                                                responseNum = 0;
+                                        } else {
+                                                responseNum+=2;
+                                        }
+                                        $slideContent.html(slidesArray[responseNum]);
+                                    }
+//                                    console.log(responseNum);
+                                    bPrevNext = true;
+                                } else {
+                                    if(!bPrevNext){
+                                        // перевірка індекса масива перед декрементом на 1
+                                        if (responseNum == 0){
+                                                responseNum = slidesArray.length - 1
+                                        } else {
+                                                --responseNum;
+                                        }
+                                        $slideContent.html(slidesArray[responseNum]);
+                                    } else {
+                                        // перевірка індекса масива перед декрементом на 2
+                                        if (responseNum == 1){
+                                                responseNum = slidesArray.length - 1
+                                        } else if (responseNum == 0){
+                                                responseNum = slidesArray.length - 2
+                                        } else {
+                                                responseNum-=2;
+                                        }
+                                        $slideContent.html(slidesArray[responseNum]);
+                                    }
+                                    bPrevNext = false;
+                                }
+
+                                $slideContent.fadeIn(100);
+                            }
+                        }
+                    );
+                    $slide.animate({
+                                    top: 0,
+                                    left: 0
+                            },	{
+                                    duration: 300,
+                                    easing: "linear",
+                                    queue: "active",
+                                    done: function(){
+                                            $slideResp.toggleClass("b-slide_active");
+                                    }
+                            }
+                    );
+                    $slide.dequeue("active");	// запустимо чергу
 		}
 		,moveRight = function($slide){
 			$slide.animate({
@@ -1212,6 +1272,8 @@ $(document).ready(function(){
 			moveLeft($active, bNext);
 			moveRight($unActive);
 		}
+
+	sliderInit();
 
 	$responsesBtn.click(function(){
 		$respFedbBtn.removeClass("b-rating__btn_active");
@@ -1255,8 +1317,7 @@ $(document).ready(function(){
 		// place for Ajax sending
 		var data = $(this).serialize();
 		$.ajax({
-                // type : 'post',
-                type : 'get',
+                type : 'post',
                 url: '/ohproject/feedbacks/create-feedback',
                 data : data,
                 cache : false,
@@ -1295,13 +1356,13 @@ $(document).ready(function(){
 		;
 
 	$("#callbackBtn").click(function(){
-		$modalOvl.fadeIn();
-		$modalCallback.fadeIn();
+            $modalOvl.fadeIn();
+            $modalCallback.fadeIn();
 	});
 
 	$modalCloseBtn.click(function(){	// hide modals
-		$modalOvl.fadeOut();
-		$modals.fadeOut();
+            $modalOvl.fadeOut();
+            $modals.fadeOut();
 	});
 
 // callback form submission
@@ -1347,13 +1408,50 @@ $(document).ready(function(){
 	// })
 	// scroll to top
 	$("#toTop").click(function(){
-		// event.preventDefault();
-		var  $anchor = $($(this).find(".b-btn_toTop").attr("href"))
-			,offsetAnchor = $anchor.offset().top
-			;
-		$('html, body').animate({ scrollTop: offsetAnchor}, 400);
-		return false;
+            // event.preventDefault();
+            var  $anchor = $($(this).find(".b-btn_toTop").attr("href"))
+                    ,offsetAnchor = $anchor.offset().top
+                    ;
+            $('html, body').animate({ scrollTop: offsetAnchor}, 400);
+            return false;
 	})
 
 	$("#toTop").trigger("click");	// scroll to top after page is loaded
+        
+        
+    // breadcrumbs
+    $(document).on('click', '.b-crumbs__link', function(){
+            
+        var step = parseInt($(this).data('step'), 10);
+        
+        switch (step)
+        {
+            case 1:
+                var url = "/ohproject/osago/osago-change-data";
+                break;
+            case 2:
+                var url = "/ohproject/osago/osago-show-propositions";
+                break;
+            default:
+                return false;
+        }
+            
+        $.ajax({
+            type: 'get',
+            url: url,
+            error: function(){
+                alert('error');
+            },
+            success: function(response) {
+                $containerAjax.html(response);
+                propositionsInit($containerAjax);
+                vehicleCalcInit($containerAjax);
+            },
+            complete: function(){
+                showContainerAjax($containerAjax);
+                $containerAjax.dequeue("ajax");
+            }
+        });
+        
+    });
 });

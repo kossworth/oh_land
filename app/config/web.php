@@ -14,6 +14,9 @@ $config = [
             'baseUrl'             => '/ohproject',    // for multiLang
 //            'class'               => 'app\components\LangRequest' // for multiLang
         ],
+        'liqpay' => [
+            'class' => 'app\components\LiqPay',
+        ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
@@ -88,12 +91,9 @@ $config = [
         // выключаем bootstap
         'assetManager' => [
             'bundles' => [
-                'yii\bootstrap\BootstrapAsset' => [
-                    'css' => [],
-                ],
-                'yii\bootstrap\BootstrapPluginAsset' => [
-                    'js'=>[]
-                ],
+                'yii\bootstrap\BootstrapAsset' => false,
+                'yii\bootstrap\BootstrapPluginAsset' => false,
+                'yii\web\JqueryAsset' => false,
             ],
         ],
     ],

@@ -3,16 +3,16 @@
         <div class="b-section_crumbs">
             <div class="b-container">
                 <ol class="b-crumbs b-crumbs_finalize">
-                    <li class="b-crumbs__item" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
-                        <span class="b-crumbs__link">
-                            Главная
+                    <li class="b-crumbs__item b-crumbs__item_unactive" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                        <span class="b-crumbs__link" data-step="1">
+                            Расчет
                         </span>
                     </li>
-                    <li class="b-crumbs__item" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
-                        <span>ОСАГО</span>
+                    <li class="b-crumbs__item b-crumbs__item_unactive" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                        <span class="b-crumbs__link" data-step="2">Выбор</span>
                     </li>
                     <li class="b-crumbs__item b-crumbs__item_active" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
-                        <span>Как оформить</span>
+                        <span>Оформление</span>
                     </li>
                 </ol>
             </div>
@@ -82,7 +82,7 @@
     <div class="b-finalize__methods">
         <div class="b-finalize__method b-finalize__method_self js-method_active" id="bySelf">
             <div class="b-calculator__heading b-heading_finalize b-heading_method">Введите данные, чтобы получить полис</div>
-            <form action="{{ Url.to('/ohproject/osago/osago-self-order') }}" method="post" class="b-form_finalize" id="formBySelf">
+            <form action="{{ Url.to('/landing/osago/osago-self-order') }}" method="post" class="b-form_finalize" id="formBySelf">
                     <div class="b-form__block b-form__insured">
                         <div class="b-container">
                             <div class="b-container_finalize">

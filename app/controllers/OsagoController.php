@@ -20,7 +20,7 @@ class OsagoController extends \app\components\BaseController
                 'actions' => [
                     'index'                     => ['get'],
                     'send-request'              => ['get'],
-                    'create-osago-order'        => ['post'],
+                    'create-osago-order'        => ['post', 'get'],
                     'osago-self-order'          => ['post'],
                     'osago-phone-order'         => ['post'],
                     'osago-doc-order'           => ['post'],
@@ -250,10 +250,25 @@ class OsagoController extends \app\components\BaseController
             ]);
             Yii::$app->session->destroy();
             $offer = json_decode($order->offer);
+            
+            $liqpay_button = '';
+            // если оплата онлайн - тогда гененрим параметры Liqpay
+            if($order->payment == 'card'){
+                $liqpay_params = [
+                    'currency' => 'UAH',
+                    'amount' => $offer->discountedPayment,
+                    'order_id' => (string)$order->id,
+                    'action' => 'pay',
+                    'description' => 'OSAGO landing pay'
+                ];
+                $liqpay_button = Yii::$app->liqpay->cnb_form($liqpay_params);    
+            }
+
             return $this->renderAjax('thanks.twig', [
-                'order' => $order,
-                'price' => round($offer->payment),
-                'delivery_type' => $del_type
+                'order'             => $order,
+                'price'             => round($offer->discountedPayment),
+                'delivery_type'     => $del_type,
+                'liqpay_button'     => $liqpay_button,
             ]);
         } 
         else
@@ -289,14 +304,29 @@ class OsagoController extends \app\components\BaseController
                 'date' => $order->last_active,
             ]);
             $offer = json_decode($order->offer);
+            
+            $liqpay_button = '';
+            // если оплата онлайн - тогда гененрим параметры Liqpay
+            if($order->payment == 'card'){
+                $liqpay_params = [
+                    'currency' => 'UAH',
+                    'amount' => $offer->discountedPayment,
+                    'order_id' => (string)$order->id,
+                    'action' => 'pay',
+                    'description' => 'OSAGO landing pay'
+                ];
+                $liqpay_button = Yii::$app->liqpay->cnb_form($liqpay_params);    
+            }
+            
             return $this->renderAjax('thanks.twig', [
-                'order' => $order,
-                'price' => round($offer->payment),
+                'order'             => $order,
+                'price'             => round($offer->discountedPayment),
+                'liqpay_button'     => $liqpay_button,                
             ]);
         }
         else
         {
-            var_dump($order->getErrors());
+//            var_dump($order->getErrors());
             return false;
         }
     }
@@ -392,8 +422,9 @@ class OsagoController extends \app\components\BaseController
                 'delivery_type' => $del_type
             ]);
         } else {
-            var_dump($order->files);
-            var_dump($order->getErrors());
+//            var_dump($order->files);
+//            var_dump($order->getErrors());
+            return false;
         }
         
     }
@@ -422,5 +453,83 @@ class OsagoController extends \app\components\BaseController
             'auto_categories' => $auto_categories,
         ]);
     } 
+    
+    public function actionOsagoShowPropositions()
+    {
+//        $request = Yii::$app->request;
+//        if(!$request->isAjax)
+//        {
+//            throw new \yii\web\BadRequestHttpException('Wrong request!', 400);
+//        }
+        $session = Yii::$app->session;
+       
+        if($session->has('osago_search_data') && $session->has('regCity'))
+        {
+            $search_data = json_decode($session['osago_search_data']);
+            $city = $session['regCity'];
+        }
+        else
+        {
+            return false;
+        }
+
+        $auto_category = AutoCategories::find()->select([
+                AutoCategories::tableName().'.auto_code',
+                AutoCategories::tableName().'.name_object_rus',
+                AutoCategories::tableName().'.name_param_rus',
+            ])->andFilterWhere([AutoCategories::tableName().'.auto_code' => $search_data->autoCategory])
+                ->asArray()
+                ->limit(1)->one();
+        
+        if(is_null($auto_category))
+        {
+            throw new \yii\db\Exception('Unknown category!');
+        }
+        
+        $tariff_options = [
+            'autoCategory'          => $auto_category['auto_code'],
+            'bonusMalus'            => 0.8,
+            'franchise'             => $search_data->franchise,
+            'customerCategory'      => 'NATURAL',
+            'dateFrom'              => date('Y-m-d', strtotime('+1 day')),
+            'dateTo'                => date('Y-m-d', strtotime('+1 year')),
+            'zone'                  => $search_data->zone,
+            'taxi'                  => $search_data->taxi,
+            'usageMonths'           => 0,
+            'driveExp'              => false,
+        ];
+        
+        $propositions = ewa\find::osago($tariff_options);
+        
+        $companies = Company::find()
+                ->joinWith(['osago'], true)
+                ->all();
+        
+        $result_propositions = [];
+        
+        foreach ($propositions as $prop)
+        {
+            $prop['company'] = null;
+            $discount = isset($prop['tariff']['brokerDiscount']) ? $prop['tariff']['brokerDiscount'] : 0;
+            foreach ($companies as $key => $comp)
+            {
+                if($comp->ewa_id == $prop['tariff']['insurer']['id'])
+                {
+                    $prop['company'] = $comp;
+                    $prop['discount_sum'] = round($discount * $prop['payment']);
+                    $prop['payment'] = round($prop['payment'] - $prop['discount_sum']);
+                    array_push($result_propositions, $prop);
+                    unset($companies[$key]); // удаляем из массива компанию, которую добавили в массив предложений
+                    break;
+                }
+            }
+        }
+
+        return $this->renderPartial('osago_propositions.twig', [
+            'propositions'  => $result_propositions,
+            'auto_category' => $auto_category,
+            'city_name'     => $city,
+        ]);
+    }
     
 }

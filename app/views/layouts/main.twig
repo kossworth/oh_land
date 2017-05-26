@@ -4,21 +4,21 @@
 <!DOCTYPE html>
 <html lang="{{ app.language }}">
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	{{ html.csrfMetaTags | raw }}
-	<title>ОСАГО-Ленд</title>
-        
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {{ html.csrfMetaTags | raw }}
+    <title>ОСАГО-Ленд</title>
+
 {#        <link rel="shortcut icon" href="/app/web/favicon.ico" type="image/x-icon" />#}
 
-	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-	<!--[if lt IE 9]>
-		<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-	<![endif]-->
-        {{  this.head  }}
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+            <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    {{  this.head  }}
 </head>
 <body>
     {{ this.beginBody }}
@@ -99,6 +99,31 @@
         </div>
     </div>
 <!-- MODALS END -->
+
+<!--    HIDDEN BLOCK FOR RESPONSES SLIDER-->
+    <div class="hidden" style="display:none" id="slides">
+        
+    {% if this.params.feedbacks %}
+        {% for feedback in this.params.feedbacks %}
+            <div class="b-slide__wrap">
+                <div class="b-slide__heading">{{ feedback.username }}</div>
+                <div class="b-slide__content">
+                    <p class="b-slide__response">{{ feedback.text }}</p>
+                    <div class="b-slide__aside_marks">
+                        <div class="b-mark__heading">Качество сервиса </div>
+                        <div class="b-mark__num">{{ feedback.level_service }}/10</div>
+                        <div class="b-mark__heading">Уровень цен </div>
+                        <div class="b-mark__num">{{ feedback.level_price }}/10</div>
+                        <div class="b-mark__heading">Выбор компаний </div>
+                        <div class="b-mark__num">{{ feedback.level_companies }}/10</div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+        
+    </div>
+<!--   /HIDDEN BLOCK FOR RESPONSES SLIDER-->
 
 {{ this.endBody }}
 </body>

@@ -6,34 +6,35 @@ use app\models\Orders;
 //use app\models\User\User;
 use Yii;
 
-use app\models\Pages;
-use app\models\Lang;
-use app\models\Slovar;
-use app\models\Redirect;
-use yii\helpers\ArrayHelper;
-use yii\helpers\Url;
+//use app\models\Pages;
+//use app\models\Lang;
+//use app\models\Slovar;
+//use app\models\Redirect;
+//use yii\helpers\ArrayHelper;
+//use yii\helpers\Url;
+use app\models\LandingFeedbacks;
 
 class BaseController extends \yii\web\Controller
 {
     public $default_content;
 
-    protected function url_origin( $use_forwarded_host = false )
-    {
-        $s        = $_SERVER;
-        $ssl      = ( ! empty( $s['HTTPS'] ) && $s['HTTPS'] == 'on' );
-        $sp       = strtolower( $s['SERVER_PROTOCOL'] );
-        $protocol = substr( $sp, 0, strpos( $sp, '/' ) ) . ( ( $ssl ) ? 's' : '' );
-        $port     = $s['SERVER_PORT'];
-        $port     = ( ( ! $ssl && $port=='80' ) || ( $ssl && $port=='443' ) ) ? '' : ':'.$port;
-        $host     = ( $use_forwarded_host && isset( $s['HTTP_X_FORWARDED_HOST'] ) ) ? $s['HTTP_X_FORWARDED_HOST'] : ( isset( $s['HTTP_HOST'] ) ? $s['HTTP_HOST'] : null );
-        $host     = isset( $host ) ? $host : $s['SERVER_NAME'] . $port;
-        return $protocol . '://' . $host;
-    }
-
-    protected function full_url( $use_forwarded_host = false )
-    {
-        return $this->url_origin( $use_forwarded_host ) . $_SERVER['REQUEST_URI'];
-    }
+//    protected function url_origin( $use_forwarded_host = false )
+//    {
+//        $s        = $_SERVER;
+//        $ssl      = ( ! empty( $s['HTTPS'] ) && $s['HTTPS'] == 'on' );
+//        $sp       = strtolower( $s['SERVER_PROTOCOL'] );
+//        $protocol = substr( $sp, 0, strpos( $sp, '/' ) ) . ( ( $ssl ) ? 's' : '' );
+//        $port     = $s['SERVER_PORT'];
+//        $port     = ( ( ! $ssl && $port=='80' ) || ( $ssl && $port=='443' ) ) ? '' : ':'.$port;
+//        $host     = ( $use_forwarded_host && isset( $s['HTTP_X_FORWARDED_HOST'] ) ) ? $s['HTTP_X_FORWARDED_HOST'] : ( isset( $s['HTTP_HOST'] ) ? $s['HTTP_HOST'] : null );
+//        $host     = isset( $host ) ? $host : $s['SERVER_NAME'] . $port;
+//        return $protocol . '://' . $host;
+//    }
+//
+//    protected function full_url( $use_forwarded_host = false )
+//    {
+//        return $this->url_origin( $use_forwarded_host ) . $_SERVER['REQUEST_URI'];
+//    }
 
     public function init()
     {
@@ -82,6 +83,9 @@ class BaseController extends \yii\web\Controller
 //            $this->view->params['current_url']="/{$lang->url}/{$current_url}";
 //        }
 
+        
+        $this->view->params['feedbacks'] = LandingFeedbacks::find()->published()->orderBy('crtdate DESC')->asArray()->all();
+        
         Yii::$app->view->registerMetaTag([
             'name'    => 'robots',
             'content' => 'NOINDEX, NOFOLLOW'
