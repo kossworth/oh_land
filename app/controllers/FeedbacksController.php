@@ -24,6 +24,12 @@ class FeedbacksController extends \app\components\BaseController
         ];
     }
     
+    public function beforeAction($action)
+    {
+        $this->enableCsrfValidation = false; 
+        return parent::beforeAction($action);
+    }
+    
     public function actionCreateFeedback()
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;

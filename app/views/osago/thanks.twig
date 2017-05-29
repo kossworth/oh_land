@@ -2,22 +2,7 @@
     <div class="b-container">
         <div class="b-section_crumbs">
             <div class="b-container">
-                {#<ol class="b-crumbs b-crumbs_finalize">
-                    <li class="b-crumbs__item" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
-                        <span class="b-crumbs__link">
-                            Расчет
-                        </span>
-                    </li>
-                    <li class="b-crumbs__item" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
-                        <span>Выбор</span>
-                    </li>
-                    <li class="b-crumbs__item" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
-                        <span>Оформление</span>
-                    </li>
-                    <li class="b-crumbs__item b-crumbs__item_active" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
-                        <span>Спасибо</span>
-                    </li>
-                </ol>#}
+
             </div>
         </div>
         <div class="b-calculator__heading b-heading_finalize">Спасибо, мы получили ваш заказ :)</div>
@@ -58,16 +43,16 @@
                                 {% endif %}
                             </tr>
                         {% endif %}
-                        {% if delivery_type %}
+                        {% if delivery %}
                             <tr>
                                 <th>Способ доставки</th>
-                                <td>{{ delivery_type }}</td>
+                                <td>{{ delivery.type }}</td>
                             </tr>
                         {% endif %}
-                        {% if order.delivery is not null and order.delivery is not empty %}
+                        {% if delivery.type != 'Самовывоз' and delivery %}
                             <tr>
                                 <th>Адрес доставки</th>
-                                <td>{{ order.delivery }}</td>
+                                <td>{{ delivery.city }}, {{ delivery.address }}</td>
                             </tr>
                         {% endif %}
                     </table>
@@ -111,7 +96,7 @@
                             <li class="b-obtain__stage">
                                 <span class="b-stage__content">
                                     Не забудьте оценить нашу работу и <span class="bold">оставить отзыв</span> о сервисе СК ВУСО на официальной странице
-                                    <a href="www.facebook.com" target="_blank" class="b-stage__link">Facebook.</a>
+                                    <a href="https://www.facebook.com/" target="_blank" class="b-stage__link">Facebook.</a>
                                 </span>
                             </li>
                         </ol>

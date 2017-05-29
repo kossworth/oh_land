@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 class Orders extends ActiveRecord
 {
@@ -24,6 +25,19 @@ class Orders extends ActiveRecord
         return [];
     }
 
+    protected function url_origin( $use_forwarded_host = false )
+    {
+        $s        = $_SERVER;
+        $ssl      = ( ! empty( $s['HTTPS'] ) && $s['HTTPS'] == 'on' );
+        $sp       = strtolower( $s['SERVER_PROTOCOL'] );
+        $protocol = substr( $sp, 0, strpos( $sp, '/' ) ) . ( ( $ssl ) ? 's' : '' );
+        $port     = $s['SERVER_PORT'];
+        $port     = ( ( ! $ssl && $port=='80' ) || ( $ssl && $port=='443' ) ) ? '' : ':'.$port;
+        $host     = ( $use_forwarded_host && isset( $s['HTTP_X_FORWARDED_HOST'] ) ) ? $s['HTTP_X_FORWARDED_HOST'] : ( isset( $s['HTTP_HOST'] ) ? $s['HTTP_HOST'] : null );
+        $host     = isset( $host ) ? $host : $s['SERVER_NAME'] . $port;
+        return $protocol . '://' . $host;
+    }
+    
     public static function getCurrent($type = 'osago')
     {
         $order = self::findOne(Yii::$app->session->get($type.'_order_id'));
@@ -76,6 +90,17 @@ class Orders extends ActiveRecord
         return [];
     }
 
+    public function getFilesData()
+    {
+        if (strlen($this->files))
+        {
+            $files = explode(';', $this->files);
+            array_pop($files);
+            return $files;
+        }
+        return [];
+    }
+
     public function getDeliveryData()
     {
         if (strlen($this->delivery))
@@ -107,7 +132,7 @@ class Orders extends ActiveRecord
     {
         if (strlen($this->payment))
         {
-            return json_decode($this->payment, TRUE);
+            return $this->payment;
         }
         return [];
     }
@@ -116,39 +141,32 @@ class Orders extends ActiveRecord
     {
         $search = $this->getSearchData();
         $offer = $this->getOfferData();
-        $auth = $this->getAuthData();
+        $payment = $this->getPaymentData();
         $info = $this->getInfoData();
+        $files = $this->getFilesData();
+        $contract = $this->getResultData();
         $delivery = $this->getDeliveryData();
 
-        $info = [
+        $result = [
             'Номер заказа на сайте' => $this->id,
-            'Способ оформления' => ArrayHelper::getValue($auth, 'type') == 'phone' ? 'По телефону' : 'На сайте',
+//            'Способ оформления' => ArrayHelper::getValue($auth, 'type') == 'phone' ? 'По телефону' : 'На сайте',
             'Параметры поиска' => [
-                'Тип ТС' => ArrayHelper::getValue($search, 'car_category.code').' ('.ArrayHelper::getValue($search, 'car_category.name').')',
+                'Категория ТС' => ArrayHelper::getValue($search, 'autoCategory'),
                 'Город регистрации' => ArrayHelper::getValue($search, 'city.name'),
-                'Используется как такси' => ArrayHelper::getValue($search, 'not_taxi') ? 'Нет' : 'Да',
-                'Год выпуска ТС' => ArrayHelper::getValue($search, 'year'),
+                'Используется как такси' => (ArrayHelper::getValue($search, 'taxi') == false) ? 'Нет' : 'Да',
             ],
             'Пакет страхования' => [
-                'Название' => ArrayHelper::getValue($offer, 'type'),
-                'Стоимость' => (float)ArrayHelper::getValue($offer, 'osago.payment') + (float)ArrayHelper::getValue($offer, 'dgo.payment') + (float)ArrayHelper::getValue($offer, 'auto.payment'),
+                'Идентификатор' => ArrayHelper::getValue($offer, 'tariff.id'),
+                'Название' => ArrayHelper::getValue($offer, 'tariff.name'),
+                'Стоимость' => ArrayHelper::getValue($offer, 'discountedPayment'),
             ],
             'Клиент' => [
                 'Фамилия' => ArrayHelper::getValue($info, 'customer.name_last'),
                 'Имя' => ArrayHelper::getValue($info, 'customer.name_first'),
-                'Отчество' => ArrayHelper::getValue($info, 'customer.name_middle'),
-                'Дата рождения' => ArrayHelper::getValue($info, 'customer.birth_date'),
                 'ИНН' => ArrayHelper::getValue($info, 'customer.code'),
                 'Телефон' => ArrayHelper::getValue($info, 'customer.phone'),
                 'E-mail' => ArrayHelper::getValue($info, 'customer.email'),
                 'Адрес проживания' => ArrayHelper::getValue($info, 'customer.address'),
-            ],
-            'Документ' => [
-                'Тип' => ArrayHelper::getValue($info, 'document.type'),
-                'Серия' => ArrayHelper::getValue($info, 'document.series'),
-                'Номер' => ArrayHelper::getValue($info, 'document.number'),
-                'Кем выдан' => ArrayHelper::getValue($info, 'document.issued_by'),
-                'Когда выдан' => ArrayHelper::getValue($info, 'document.issued_date'),
             ],
             'ТС' => [
                 'Марка' => ArrayHelper::getValue($info, 'transport.vendor'),
@@ -161,25 +179,65 @@ class Orders extends ActiveRecord
                 'Дата начала действия' => ArrayHelper::getValue($info, 'contract.start_date'),
                 'Комментаий к заказу' => ArrayHelper::getValue($info, 'contract.comment'),
             ],
-            'Доставка и оплата' => [
-                'Способ доставки' => ArrayHelper::getValue($delivery, 'delivery') == 'courier' ? 'Курьером' : 'Новой почтой',
-                'Адрес доставки' => ArrayHelper::getValue($delivery, 'address'),
+            'Оплата' => [
+                'Способ оплаты' => $payment == 'card' ? 'Оплата онлайн' : 'Наличными в момент получения',
+            ],
+            'Доставка' => [
+                'Способ доставки' => ArrayHelper::getValue($delivery, 'type'),
                 'Город' => ArrayHelper::getValue($delivery, 'city'),
-                'Отделение НП' => ArrayHelper::getValue($delivery, 'filial'),
-                'Способ оплаты' => ArrayHelper::getValue($delivery, 'pay') == 'online' ? 'Online Visa / Mastercard' : 'Наличными в момент получения',
+                'Адрес доставки' => ArrayHelper::getValue($delivery, 'address'),
+//                'Отделение НП' => ArrayHelper::getValue($delivery, 'filial'),
             ]
         ];
-
-        if (!$info['Клиент']['Имя'])
+        
+        if (!$result['Клиент']['Имя'])
         {
-            $info['Клиент']['Имя'] = $this->name;
+            $result['Клиент']['Имя'] = $this->name;
+            unset($result['Клиент']['Фамилия']);
         }
-        if (!$info['Клиент']['Телефон'])
+        if (!$result['Клиент']['Телефон'])
         {
-            $info['Клиент']['Телефон'] = $this->phone;
+            $result['Клиент']['Телефон'] = $this->phone;
+        }
+        if (!$result['Договор']['Комментаий к заказу'])
+        {
+            unset($result['Договор']['Комментаий к заказу']);
+        }
+        if (!count($delivery))
+        {
+            unset($result['Доставка']);
+        }
+        if (!$payment)
+        {
+            unset($result['Оплата']);
+        }
+        if(!$info)
+        {
+            unset($result['Договор']);
+            unset($result['ТС']);
+            unset($result['Клиент']['ИНН']);
+            unset($result['Клиент']['E-mail']);
+            unset($result['Клиент']['Адрес проживания']);
         }
 
-        foreach($info as $key => $value)
+        if(count($files))
+        {
+            $result["Загруженные файлы"] = [];
+            $counter = 1;
+            foreach ($files as $file)
+            {
+                $result["Загруженные файлы"][$counter] = $this->url_origin().$file;
+                $counter++;
+            }
+        }
+        
+        if(ArrayHelper::getValue($delivery, 'type') == 'Доставка Новой Почтой')
+        {
+            unset($result['Доставка']['Адрес доставки']);
+            $result['Доставка']['Отделение НП'] = ArrayHelper::getValue($delivery, 'address');
+        }
+        
+        foreach($result as $key => $value)
         {
             if (is_array($value))
             {
@@ -188,7 +246,7 @@ class Orders extends ActiveRecord
                     $value[$k] = '<strong>'.$k.':</strong> '.$v;
                 }
 
-                $info[$key] = '<strong>'.$key.':</strong><br>'
+                $result[$key] = '<strong>'.$key.':</strong><br>'
                     .'<div style="padding-left:25px">'.implode('<br>', $value).'</div>';
             }
             else
@@ -196,8 +254,7 @@ class Orders extends ActiveRecord
                 $info[$key] = '<strong>'.$key.':</strong> '.$value;
             }
         }
-        $info = implode('<br>', $info);
-
-        return $info;
+        $result = implode('<br>', $result);
+        return $result;
     }
 }

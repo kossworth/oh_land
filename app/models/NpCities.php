@@ -67,7 +67,7 @@ class NpCities extends \yii\db\ActiveRecord
                 ->asArray()
                 ->all();
         
-        if(is_null($search_result))
+        if(is_null($search_result) || empty($search_result))
         {
             return ['items' => []];
         }

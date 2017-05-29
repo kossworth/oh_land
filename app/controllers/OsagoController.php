@@ -32,9 +32,7 @@ class OsagoController extends \app\components\BaseController
     
     public function beforeAction($action)
     {
-//        if (in_array($action->id, ['create-osago-order'])) {
-            $this->enableCsrfValidation = false; 
-//        }
+        $this->enableCsrfValidation = false; 
         return parent::beforeAction($action);
     }
     
@@ -203,26 +201,22 @@ class OsagoController extends \app\components\BaseController
         switch ($delivery_type)
         {
             case 'bySelf':
-                $delivery_city = '';
-                $delivery_address = '';
-                $del_type = 'Самовывоз';
+                $delivery = ['type' => 'Самовывоз', 'city' => '', 'address' => ''];
                 break;
             case 'byCourier':
                 $delivery_city = isset($post['delivCityName']) ? strip_tags(trim($post['delivCityName'])) : '';
                 $delivery_address = isset($post['deliveryAddr']) ? strip_tags(trim($post['deliveryAddr'])) : '';
-                $del_type = 'Доставка курьером';
+                $delivery = ['type' => 'Доставка курьером', 'city' => $delivery_city, 'address' => $delivery_address];
                 break;
             case 'byNP':
-                $delivery_city = isset($post['delivCityNP']) ? strip_tags(trim($post['delivCityNP'])) : '';
-                $delivery_address = isset($post['delivFilialNP']) ? strip_tags(trim($post['delivFilialNP'])) : '';
-                $del_type = 'Доставка Новой Почтой';
+                $delivery_city = isset($post['delivCityNp']) ? strip_tags(trim($post['delivCityNp'])) : '';
+                $delivery_address = isset($post['delivDivisionIdNP']) ? strip_tags(trim($post['delivDivisionIdNP'])) : '';
+                $delivery = ['type' => 'Доставка Новой Почтой', 'city' => $delivery_city, 'address' => $delivery_address];
                 break;
             default :
-                $delivery_city = '';
-                $delivery_address = '';
-                $del_type = 'Самовывоз';
+                $delivery = ['type' => 'Самовывоз', 'city' => '', 'address' => ''];
         }
-               
+        
         $fname = isset($post['firstName']) ? strip_tags(trim($post['firstName'])) : '';
         $lname = isset($post['lastName']) ? strip_tags(trim($post['lastName'])) : '';
         $order->name = $lname.' '.$fname;
@@ -230,8 +224,9 @@ class OsagoController extends \app\components\BaseController
         $order->email = isset($post['email']) ? strip_tags(trim($post['email'])) : '';
         $order->payment = isset($post['pay']) ? strip_tags(trim($post['pay'])) : '';
         $order->comment = isset($post['comment']) ? strip_tags(trim($post['comment'])) : '';
-        $order->delivery = $delivery_city.' '.$delivery_address;
+        $order->delivery = json_encode($delivery, JSON_UNESCAPED_UNICODE);
         $order->last_stage = 'save_self_order';
+        $order->done = 1;
         $ewa_status = ewa\save::osago($order);
         $order->result = json_encode($ewa_status, JSON_UNESCAPED_UNICODE);
         
@@ -239,13 +234,12 @@ class OsagoController extends \app\components\BaseController
         {
             MailComponent::unisenderMailsend('thanks_landing_order', $order->email, ['order_id' => $order->id]);
             MailComponent::unisenderMailsend('landing_order_manager', 'kudrinskiy.y@vuso.ua', [
+//            MailComponent::unisenderMailsend('landing_order_manager', 'kossworth@gmail.com', [
                 'user_name' => $order->name,
                 'user_phone' => $order->phone,
                 'user_email' => $order->email,
                 'type' => $order->type,
-                'search' => print_r(json_decode($order->search, true), true),
-                'offer' => print_r(json_decode($order->offer, true), true),
-                'info' => print_r(json_decode($order->info, true), true),
+                'info' => $order->getTaskData(),
                 'date' => $order->last_active,
             ]);
             Yii::$app->session->destroy();
@@ -253,7 +247,7 @@ class OsagoController extends \app\components\BaseController
             
             $liqpay_button = '';
             // если оплата онлайн - тогда гененрим параметры Liqpay
-            if($order->payment == 'card'){
+            if($order->payment === 'card'){
                 $liqpay_params = [
                     'currency' => 'UAH',
                     'amount' => $offer->discountedPayment,
@@ -266,8 +260,8 @@ class OsagoController extends \app\components\BaseController
 
             return $this->renderAjax('thanks.twig', [
                 'order'             => $order,
+                'delivery'          => $delivery,
                 'price'             => round($offer->discountedPayment),
-                'delivery_type'     => $del_type,
                 'liqpay_button'     => $liqpay_button,
             ]);
         } 
@@ -290,17 +284,17 @@ class OsagoController extends \app\components\BaseController
         $order->name = $lname.' '.$fname;
         $order->phone = isset($post['phone']) ? strip_tags(trim($post['phone'])) : '';
         $order->last_stage = 'save_phone_order';
+        $order->done = 1;
         if($order->save(false))
         {
             Yii::$app->session->destroy();
             MailComponent::unisenderMailsend('landing_order_manager', 'kudrinskiy.y@vuso.ua', [
+//            MailComponent::unisenderMailsend('landing_order_manager', 'kossworth@gmail.com', [
                 'user_name' => $order->name,
                 'user_phone' => $order->phone,
                 'user_email' => $order->email,
                 'type' => $order->type,
-                'search' => print_r(json_decode($order->search, true), true),
-                'offer' => print_r(json_decode($order->offer, true), true),
-                'info' => print_r(json_decode($order->info, true), true),
+                'info' => $order->getTaskData(),
                 'date' => $order->last_active,
             ]);
             $offer = json_decode($order->offer);
@@ -326,7 +320,6 @@ class OsagoController extends \app\components\BaseController
         }
         else
         {
-//            var_dump($order->getErrors());
             return false;
         }
     }
@@ -340,24 +333,20 @@ class OsagoController extends \app\components\BaseController
         switch ($delivery_type)
         {
             case 'bySelf':
-                $delivery_city = '';
-                $delivery_address = '';
-                $del_type = 'Самовывоз';
+                $delivery = ['type' => 'Самовывоз', 'city' => '', 'address' => ''];
                 break;
             case 'byCourier':
                 $delivery_city = isset($post['delivCityName']) ? strip_tags(trim($post['delivCityName'])) : '';
                 $delivery_address = isset($post['deliveryAddr']) ? strip_tags(trim($post['deliveryAddr'])) : '';
-                $del_type = 'Доставка курьером';
+                $delivery = ['type' => 'Доставка курьером', 'city' => $delivery_city, 'address' => $delivery_address];
                 break;
             case 'byNP':
-                $delivery_city = isset($post['delivCityNP']) ? strip_tags(trim($post['delivCityNP'])) : '';
-                $delivery_address = isset($post['delivFilialNP']) ? strip_tags(trim($post['delivFilialNP'])) : '';
-                $del_type = 'Доставка Новой Почтой';
+                $delivery_city = isset($post['delivCityNp']) ? strip_tags(trim($post['delivCityNp'])) : '';
+                $delivery_address = isset($post['delivDivisionIdNP']) ? strip_tags(trim($post['delivDivisionIdNP'])) : '';
+                $delivery = ['type' => 'Доставка Новой Почтой', 'city' => $delivery_city, 'address' => $delivery_address];
                 break;
             default :
-                $delivery_city = '';
-                $delivery_address = '';
-                $del_type = 'Самовывоз';
+                $delivery = ['type' => 'Самовывоз', 'city' => '', 'address' => ''];
         }
                
         $order->name = isset($post['firstName']) ? strip_tags(trim($post['firstName'])) : '';
@@ -365,12 +354,13 @@ class OsagoController extends \app\components\BaseController
         $order->email = isset($post['email']) ? strip_tags(trim($post['email'])) : '';
         $order->payment = isset($post['pay']) ? strip_tags(trim($post['pay'])) : '';
         $order->comment = isset($post['comment']) ? strip_tags(trim($post['comment'])) : '';
-        $order->delivery = $delivery_city.' '.$delivery_address;
+        $order->delivery = json_encode($delivery, JSON_UNESCAPED_UNICODE);
         $order->last_stage = 'save_docs_order';
+        $order->done = 1;
         $upload_imgs = '';
-        if($_FILES['docsScans']['error'][0] != 4 ) 
+        if($_FILES['docScan']['error'][0] != 4 ) 
         {
-            $count_files = count($_FILES['docsScans']['name']);
+            $count_files = count($_FILES['docScan']['name']);
             for($i = 0; $i < $count_files; $i++){
 
 //                    $mime = $_FILES['docsScans']['type'][$i];
@@ -379,17 +369,17 @@ class OsagoController extends \app\components\BaseController
 //                    {
                     // если тип файлов подходящий - играем дальше. если нет - exception
                     $upload_dir = '../../../userfiles/landing_docs/';
-                    $ext = pathinfo($_FILES['docsScans']['name'][$i], PATHINFO_EXTENSION);
-                    $file_name = $order->id.'.'.$i.'.'.$ext;
+                    $ext = pathinfo($_FILES['docScan']['name'][$i], PATHINFO_EXTENSION);
+                    $file_name = $order->id.'.'.($i+1).'.'.$ext;
                     $upload_file = $upload_dir . basename($file_name);
 
                     // сохраняем файл и кидаем ексепшн, если не удалось сохранить
-                    if(move_uploaded_file($_FILES['docsScans']['tmp_name'][$i], $upload_file)){
+                    if(move_uploaded_file($_FILES['docScan']['tmp_name'][$i], $upload_file)){
                         $upload_imgs .= '/userfiles/landing_docs/'.$file_name.';';
                     } 
                     else 
                     {
-                        throw new \yii\base\Exception('Cant move file!');
+//                        throw new \yii\base\Exception('Cant move file!');
                     }
 //                    } 
 //                    else 
@@ -404,26 +394,38 @@ class OsagoController extends \app\components\BaseController
         if ($order->save(false))  
         {
             MailComponent::unisenderMailsend('thanks_landing_order', $order->email, ['order_id' => $order->id]);
+//            MailComponent::unisenderMailsend('landing_order_manager', 'kossworth@gmail.com', [
             MailComponent::unisenderMailsend('landing_order_manager', 'kudrinskiy.y@vuso.ua', [
                 'user_name' => $order->name,
                 'user_phone' => $order->phone,
                 'user_email' => $order->email,
                 'type' => $order->type,
-                'search' => print_r(json_decode($order->search, true), true),
-                'offer' => print_r(json_decode($order->offer, true), true),
-                'info' => print_r(json_decode($order->info, true), true),
+                'info' => $order->getTaskData(),
                 'date' => $order->last_active,
             ]);            
             Yii::$app->session->destroy();
             $offer = json_decode($order->offer);
+            
+            $liqpay_button = '';
+            // если оплата онлайн - тогда гененрим параметры Liqpay
+            if($order->payment == 'card'){
+                $liqpay_params = [
+                    'currency' => 'UAH',
+                    'amount' => $offer->discountedPayment,
+                    'order_id' => (string)$order->id,
+                    'action' => 'pay',
+                    'description' => 'OSAGO landing pay'
+                ];
+                $liqpay_button = Yii::$app->liqpay->cnb_form($liqpay_params);    
+            }
+            
             return $this->renderAjax('thanks.twig', [
-                'order' => $order,
-                'price' => round($offer->payment),
-                'delivery_type' => $del_type
+                'order'             => $order,
+                'delivery'          => $delivery,
+                'price'             => round($offer->payment),
+                'liqpay_button'     => $liqpay_button,
             ]);
         } else {
-//            var_dump($order->files);
-//            var_dump($order->getErrors());
             return false;
         }
         

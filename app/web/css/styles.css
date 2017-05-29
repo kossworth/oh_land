@@ -178,6 +178,7 @@ body{
 }
 
 .b-section_calculator{
+    position: relative;
     background-color: #f5f5f5;
 }
 .b-container__calculator_vehicle:after{
@@ -272,7 +273,7 @@ body{
     cursor: pointer;
 }
 .b-vehicle_active{
-    cursor: default;
+/*    cursor: default;*/
 }
 .b-vehicle:last-child{
     border-right: none;
@@ -2222,7 +2223,7 @@ body{
     display: none;
 }
 .b-form__insured_byupload{
-    height: 265px;
+    min-height: 265px;
 }
 .b-bg_man{
     position: absolute;
@@ -2245,8 +2246,9 @@ body{
     position: relative;
 }
 .b-wrap_files{
+    margin-bottom: 20px;
     width: 265px;
-    height: 40px;
+    min-height: 40px;
 }
 .b-form__cell input[type="file"]{
     position: absolute;
@@ -2296,23 +2298,30 @@ body{
     margin-left: 265px;
     width: 535px;
     max-height: 110px;
-    padding-top: 2px;
+/*    padding-top: 2px;*/
+    padding-top: 10px;
     padding-left: 40px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     font-size: 16px;
-    line-height: 36px;
+/*    line-height: 36px;*/
     font-weight: 700;
     overflow: hidden;
 }
 .b-filename{
     display: inline-block;
 }
-.b-filename .fa-check{
-    color: #35bb00;
+.b-filename .fa{
     margin-left: 5px;
     margin-right: 12px;
+}
+.b-filename .fa-check{
+    color: #35bb00;
+}
+.b-filename .fa-times-circle-o{
+    color: #ff4128;
+    cursor: pointer;
 }
 
 .b-bg_mailbox{
@@ -2484,3 +2493,119 @@ body{
     width: 600px;
 }
 /* - END ThankYou page */
+
+/* - preloader */
+.b-container_preloader{
+    position: absolute;
+    top: 0;right: 0;bottom: 0;left: 0;
+    z-index: 100;
+    text-align: center;
+    background-color: #f5f5f5;
+}
+/*
+.b-container_preloader:before{
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+*/
+.b-wrap_preloader{
+    padding-top: 100px;
+/*    display: inline-block;*/
+/*    vertical-align: middle;*/
+}
+
+.md-preloader {
+    font-size: 0;
+    display: inline-block;
+    -webkit-animation: outer 6600ms linear infinite;
+    animation: outer 6600ms linear infinite
+}
+
+.md-preloader svg {
+    -webkit-animation: inner 1320ms linear infinite;
+    animation: inner 1320ms linear infinite
+}
+
+.md-preloader svg circle {
+    fill: none;
+    stroke: #6f37a1;
+    stroke-linecap: round;
+    -webkit-animation: arc 1320ms cubic-bezier(.8, 0, .4, .8) infinite;
+    animation: arc 1320ms cubic-bezier(.8, 0, .4, .8) infinite
+}
+
+@-webkit-keyframes outer {
+    0% {
+        -webkit-transform: rotate(0);
+        transform: rotate(0)
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg)
+    }
+}
+
+@keyframes outer {
+    0% {
+        -webkit-transform: rotate(0);
+        transform: rotate(0)
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg)
+    }
+}
+
+@-webkit-keyframes inner {
+    0% {
+        -webkit-transform: rotate(-100.8deg);
+        transform: rotate(-100.8deg)
+    }
+    100% {
+        -webkit-transform: rotate(0);
+        transform: rotate(0)
+    }
+}
+
+@keyframes inner {
+    0% {
+        -webkit-transform: rotate(-100.8deg);
+        transform: rotate(-100.8deg)
+    }
+    100% {
+        -webkit-transform: rotate(0);
+        transform: rotate(0)
+    }
+}
+
+@-webkit-keyframes arc {
+    0% {
+        stroke-dasharray: 1 210.48670779px;
+        stroke-dashoffset: 0
+    }
+    40% {
+        stroke-dasharray: 151.55042961px, 210.48670779px;
+        stroke-dashoffset: 0
+    }
+    100% {
+        stroke-dasharray: 1 210.48670779px;
+        stroke-dashoffset: -151.55042961px
+    }
+}
+
+@keyframes arc {
+    0% {
+        stroke-dasharray: 1 210.48670779px;
+        stroke-dashoffset: 0
+    }
+    40% {
+        stroke-dasharray: 151.55042961px, 210.48670779px;
+        stroke-dashoffset: 0
+    }
+    100% {
+        stroke-dasharray: 1 210.48670779px;
+        stroke-dashoffset: -151.55042961px
+    }
+}

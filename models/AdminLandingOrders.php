@@ -31,7 +31,7 @@ class admin_landing_orders
         $this->fld[] = new Field("payment", "Тип оплаты", 1);
         $this->fld[] = new Field("comment", "Комментарий", 16);
         $this->fld[] = new Field("done", "Оформление заказа завершено", 6);
-        $this->fld[] = new Field("files", "Названия файлов", 16);
+        $this->fld[] = new Field("files_links", "Названия файлов", 5);
 //        $this->fld[] = new Field("last_stage", "Последний активный шаг", 1);
         $this->fld[] = new Field("last_active", "Время последней активности по заказу", 13);
     }
@@ -40,5 +40,36 @@ class admin_landing_orders
     {
        return;
     }
+    
+    function show_files_links($row) 
+    {
+        $result = '';
+        if(!empty($row['files']))
+        {
+            $files = explode(';', $row['files']);
+            array_pop($files);
+            
+            foreach ($files as $file)
+            {
+                $result .= '<a href="'.$this->url_origin().$file.'" target="_blank" >'.$this->url_origin().$file.'</a><br>';
+            }
+        }
+//        var_dump($row['files']);
+        return $result.'<br>';
+//        return date("d.m.Y H:i" , $row['creation_time']);
+    }
 
+    protected function url_origin( $use_forwarded_host = false )
+    {
+        $s        = $_SERVER;
+        $ssl      = ( ! empty( $s['HTTPS'] ) && $s['HTTPS'] == 'on' );
+        $sp       = strtolower( $s['SERVER_PROTOCOL'] );
+        $protocol = substr( $sp, 0, strpos( $sp, '/' ) ) . ( ( $ssl ) ? 's' : '' );
+        $port     = $s['SERVER_PORT'];
+        $port     = ( ( ! $ssl && $port=='80' ) || ( $ssl && $port=='443' ) ) ? '' : ':'.$port;
+        $host     = ( $use_forwarded_host && isset( $s['HTTP_X_FORWARDED_HOST'] ) ) ? $s['HTTP_X_FORWARDED_HOST'] : ( isset( $s['HTTP_HOST'] ) ? $s['HTTP_HOST'] : null );
+        $host     = isset( $host ) ? $host : $s['SERVER_NAME'] . $port;
+        return $protocol . '://' . $host;
+    }
+    
 };
