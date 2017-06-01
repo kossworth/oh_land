@@ -86,10 +86,10 @@ class BaseController extends \yii\web\Controller
         
         $this->view->params['feedbacks'] = LandingFeedbacks::find()->published()->orderBy('crtdate DESC')->asArray()->all();
         
-        Yii::$app->view->registerMetaTag([
-            'name'    => 'robots',
-            'content' => 'NOINDEX, NOFOLLOW'
-        ]);
+//        Yii::$app->view->registerMetaTag([
+//            'name'    => 'robots',
+//            'content' => 'NOINDEX, NOFOLLOW'
+//        ]);
  
     }
 

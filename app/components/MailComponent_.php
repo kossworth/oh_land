@@ -49,9 +49,7 @@ class MailComponent
     public static function unisenderMailsend($template_name = '', $email_to = '', $data = [])
     {
         $api_key    = "6pgjgyo3tec6xdosusk1mhpa7kcbo8cs7bxpppio";
-		
-		mail('alex@bunke.com.ua, kudrinskiy.y@vuso.ua','OH.UA mail test', print_r($data, true));
-		
+
         $template = MailNotice::find()->where([MailNotice::tableName().'.key' => $template_name])->limit(1)->one();
         if(is_null($template))
         {
@@ -94,12 +92,7 @@ class MailComponent
 
         if ($result)
         {
-            
-            
             $jsonObj = json_decode($result);
-            
-            mail('alex@bunke.com.ua, kudrinskiy.y@vuso.ua','OH.UA unisender report', print_r($jsonObj, true));
-            
             if (null === $jsonObj)
             {
                 return 'Invalid JSON';

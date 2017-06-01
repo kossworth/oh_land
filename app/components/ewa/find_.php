@@ -147,16 +147,10 @@ class find
             $options['salePoint'] = $auth['user']['salePoint']['id'];
         }
 
-        $ans = request::execute([
+        return request::execute([
             'action' => 'tariff/choose/policy',
             'get' => $options
         ]);
-        
-       /* mail('alex@bunke.com.ua', 'OH search4', print_r($options, true) .'
-        -------
-        '. print_r($ans, true));*/
-        
-        return $ans;
     }
 
     /*

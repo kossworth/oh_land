@@ -74,7 +74,6 @@
                                 </span>
                                 <div class="b-propos__details">
                                     <ul class="b-details__list js-content_readmore">
-                                        <li>франшиза {{franchise}} грн</li>
                                         {% set bonuses = prop.company.osago.landing_bonuses | split('\n') %}
                                         {% if not bonuses[0] is empty %}
                                             {% for bonus in bonuses %}

@@ -2,4 +2,5 @@
 /userfiles
 /.idea
 /app/config/db.php
+/app/runtime
 /images

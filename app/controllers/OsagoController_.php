@@ -79,7 +79,7 @@ class OsagoController extends \app\components\BaseController
             'driveExp'              => false,
         ];
         $propositions = ewa\find::osago($tariff_options);
-			
+
         $tariff_options['city'] = ['id' => $get['city'], 'zone' => $get['zone'], 'name' => $get['cityName']];
 
         if($session->has('osago_search_data'))
@@ -109,7 +109,6 @@ class OsagoController extends \app\components\BaseController
                 if($comp->ewa_id == $prop['tariff']['insurer']['id'])
                 {
                     $prop['company'] = $comp;
-                    //$prop['franchise'] = $comp;
                     $prop['discount_sum'] = round($discount * $prop['payment']);
                     $prop['payment'] = round($prop['payment'] - $prop['discount_sum']);
                     array_push($result_propositions, $prop);
@@ -122,7 +121,6 @@ class OsagoController extends \app\components\BaseController
         return $this->renderPartial('osago_propositions.twig', [
             'propositions'  => $result_propositions,
             'auto_category' => $auto_category,
-            'franchise'     => $get['franshiza'] ? (int)$get['franshiza'] : 0,
             'city_name'     => $get['cityName'],
         ]);
     }
@@ -235,7 +233,7 @@ class OsagoController extends \app\components\BaseController
         if($order->save(false))
         {
             MailComponent::unisenderMailsend('thanks_landing_order', $order->email, ['order_id' => $order->id]);
-            MailComponent::unisenderMailsend('landing_order_manager', 'oh.ua.insurance1@gmail.com', [
+            MailComponent::unisenderMailsend('landing_order_manager', 'kudrinskiy.y@vuso.ua', [
 //            MailComponent::unisenderMailsend('landing_order_manager', 'kossworth@gmail.com', [
                 'user_name' => $order->name,
                 'user_phone' => $order->phone,
@@ -290,7 +288,7 @@ class OsagoController extends \app\components\BaseController
         if($order->save(false))
         {
             Yii::$app->session->destroy();
-            MailComponent::unisenderMailsend('landing_order_manager', 'oh.ua.insurance1@gmail.com', [
+            MailComponent::unisenderMailsend('landing_order_manager', 'kudrinskiy.y@vuso.ua', [
 //            MailComponent::unisenderMailsend('landing_order_manager', 'kossworth@gmail.com', [
                 'user_name' => $order->name,
                 'user_phone' => $order->phone,
@@ -397,7 +395,7 @@ class OsagoController extends \app\components\BaseController
         {
             MailComponent::unisenderMailsend('thanks_landing_order', $order->email, ['order_id' => $order->id]);
 //            MailComponent::unisenderMailsend('landing_order_manager', 'kossworth@gmail.com', [
-            MailComponent::unisenderMailsend('landing_order_manager', 'oh.ua.insurance1@gmail.com', [
+            MailComponent::unisenderMailsend('landing_order_manager', 'kudrinskiy.y@vuso.ua', [
                 'user_name' => $order->name,
                 'user_phone' => $order->phone,
                 'user_email' => $order->email,
@@ -509,8 +507,6 @@ class OsagoController extends \app\components\BaseController
                 ->joinWith(['osago'], true)
                 ->all();
         
-       // mail('alex@bunke.com.ua', 'OH search', print_r($companies, true));
-        
         $result_propositions = [];
         
         foreach ($propositions as $prop)
@@ -530,7 +526,7 @@ class OsagoController extends \app\components\BaseController
                 }
             }
         }
-		
+
         return $this->renderPartial('osago_propositions.twig', [
             'propositions'  => $result_propositions,
             'auto_category' => $auto_category,
