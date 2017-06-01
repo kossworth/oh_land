@@ -43,23 +43,22 @@ class OsagoController extends \app\components\BaseController
 
     public function actionSendRequest()
     {
-        $request = Yii::$app->request;
-//        if(!$request->isAjax)
+//        if(!Yii::$app->request->isAjax)
 //        {
 //            throw new \yii\web\BadRequestHttpException('Wrong request!', 400);
 //        }
-        $session = Yii::$app->session;
-        $get = $request->get();
-       
-        $category_id = $get['type'] ? (int)$get['type'] : 1;
+        $session        = Yii::$app->session;
+        $get            = Yii::$app->request->get();
+        $view           = 'osago_propositions.twig';
+        $category_id    = $get['type'] ? (int)$get['type'] : 1;
         
-        $auto_category = AutoCategories::find()->select([
-                AutoCategories::tableName().'.auto_code',
-                AutoCategories::tableName().'.name_object_rus',
-                AutoCategories::tableName().'.name_param_rus',
-            ])->andFilterWhere([AutoCategories::tableName().'.id' => $category_id])
-                ->asArray()
-                ->limit(1)->one();
+        $auto_category  = AutoCategories::find()->select([
+                            AutoCategories::tableName().'.auto_code',
+                            AutoCategories::tableName().'.name_object_rus',
+                            AutoCategories::tableName().'.name_param_rus',
+                        ])->andFilterWhere([AutoCategories::tableName().'.id' => $category_id])
+                            ->asArray()
+                            ->limit(1)->one();
         
         if(is_null($auto_category))
         {
@@ -78,8 +77,17 @@ class OsagoController extends \app\components\BaseController
             'usageMonths'           => 0,
             'driveExp'              => false,
         ];
+        
         $propositions = ewa\find::osago($tariff_options);
-			
+		
+        // если предложений не найдено - ищем предложение с теми же параметрами, но нулевой франшизой
+        if(empty($propositions))
+        {
+            $tariff_options['franchise'] = 0;
+            $propositions   = ewa\find::osago($tariff_options);
+            $view           = 'osago_propositions_empty.twig';
+        }
+        
         $tariff_options['city'] = ['id' => $get['city'], 'zone' => $get['zone'], 'name' => $get['cityName']];
 
         if($session->has('osago_search_data'))
@@ -102,16 +110,16 @@ class OsagoController extends \app\components\BaseController
         
         foreach ($propositions as $prop)
         {
-            $prop['company'] = null;
-            $discount = isset($prop['tariff']['brokerDiscount']) ? $prop['tariff']['brokerDiscount'] : 0;
+            $prop['company']    = null;
+            $discount           = isset($prop['tariff']['brokerDiscount']) ? $prop['tariff']['brokerDiscount'] : 0;
             foreach ($companies as $key => $comp)
             {
                 if($comp->ewa_id == $prop['tariff']['insurer']['id'])
                 {
-                    $prop['company'] = $comp;
-                    //$prop['franchise'] = $comp;
-                    $prop['discount_sum'] = round($discount * $prop['payment']);
-                    $prop['payment'] = round($prop['payment'] - $prop['discount_sum']);
+                    $prop['company']        = $comp;
+                    $prop['full_sum']       = $prop['payment'];
+                    $prop['discount_sum']   = round($discount * $prop['payment']);
+                    $prop['payment']        = round($prop['payment'] - $prop['discount_sum']);
                     array_push($result_propositions, $prop);
                     unset($companies[$key]); // удаляем из массива компанию, которую добавили в массив предложений
                     break;
@@ -119,10 +127,9 @@ class OsagoController extends \app\components\BaseController
             }
         }
 
-        return $this->renderPartial('osago_propositions.twig', [
+        return $this->renderPartial($view, [
             'propositions'  => $result_propositions,
             'auto_category' => $auto_category,
-            'franchise'     => $get['franshiza'] ? (int)$get['franshiza'] : 0,
             'city_name'     => $get['cityName'],
         ]);
     }
@@ -133,25 +140,25 @@ class OsagoController extends \app\components\BaseController
 //        {
 //            throw new \yii\web\BadRequestHttpException('Wrong request!', 400);
 //        }
-        $session = Yii::$app->session;
-        $counter = Yii::$app->request->post('counter') ? (int)Yii::$app->request->post('counter') : 0;
-        $order = Orders::getCurrent('osago');
+        $session            = Yii::$app->session;
+        $counter            = Yii::$app->request->post('counter') ? (int)Yii::$app->request->post('counter') : 0;
+        $order              = Orders::getCurrent('osago');
         if(!is_object($order))
         {
             throw new \yii\base\Exception('Havent order!');
         }
-        $search_data = $session->get('osago_search_data') ? $session->get('osago_search_data') : '';
-        $propositions = ewa\find::osago(json_decode($search_data, true));
+        $search_data        = $session->get('osago_search_data') ? $session->get('osago_search_data') : '';
+        $propositions       = ewa\find::osago(json_decode($search_data, true));
         
-        $order->search  = $search_data;
-        $order->offer   = $propositions[$counter] ? json_encode($propositions[$counter], JSON_UNESCAPED_UNICODE) : null;
-        $order->last_stage = 'select_proposition';
+        $order->search      = $search_data;
+        $order->offer       = $propositions[$counter] ? json_encode($propositions[$counter], JSON_UNESCAPED_UNICODE) : null;
+        $order->last_stage  = 'select_proposition';
         if($order->save(false))
         {
             $regions = NpCities::find()->where(['parent_id' => -1])
                     ->orderBy(NpCities::tableName().'.name_1 ASC')->asArray()->all();
             return $this->renderAjax('form_order.twig', [
-                'regions' => $regions
+                'regions' => $regions,
             ]);
         }
         else
@@ -197,8 +204,8 @@ class OsagoController extends \app\components\BaseController
             'start_date'    => isset($post['date']) ? strip_tags(trim($post['date'])) : 0,
         ];
         
-        $order->info = json_encode($order_info, JSON_UNESCAPED_UNICODE);
-        $delivery_type = isset($post['deliveryMode']) ? strip_tags(trim($post['deliveryMode'])) : '';
+        $order->info        = json_encode($order_info, JSON_UNESCAPED_UNICODE);
+        $delivery_type      = isset($post['deliveryMode']) ? strip_tags(trim($post['deliveryMode'])) : '';
         
         switch ($delivery_type)
         {
@@ -219,30 +226,30 @@ class OsagoController extends \app\components\BaseController
                 $delivery = ['type' => 'Самовывоз', 'city' => '', 'address' => ''];
         }
         
-        $fname = isset($post['firstName']) ? strip_tags(trim($post['firstName'])) : '';
-        $lname = isset($post['lastName']) ? strip_tags(trim($post['lastName'])) : '';
-        $order->name = $lname.' '.$fname;
-        $order->phone = isset($post['phone']) ? strip_tags(trim($post['phone'])) : '';
-        $order->email = isset($post['email']) ? strip_tags(trim($post['email'])) : '';
-        $order->payment = isset($post['pay']) ? strip_tags(trim($post['pay'])) : '';
-        $order->comment = isset($post['comment']) ? strip_tags(trim($post['comment'])) : '';
-        $order->delivery = json_encode($delivery, JSON_UNESCAPED_UNICODE);
-        $order->last_stage = 'save_self_order';
-        $order->done = 1;
-        $ewa_status = ewa\save::osago($order);
-        $order->result = json_encode($ewa_status, JSON_UNESCAPED_UNICODE);
+        $fname              = isset($post['firstName']) ? strip_tags(trim($post['firstName'])) : '';
+        $lname              = isset($post['lastName']) ? strip_tags(trim($post['lastName'])) : '';
+        $order->name        = $lname.' '.$fname;
+        $order->phone       = isset($post['phone']) ? strip_tags(trim($post['phone'])) : '';
+        $order->email       = isset($post['email']) ? strip_tags(trim($post['email'])) : '';
+        $order->payment     = isset($post['pay']) ? strip_tags(trim($post['pay'])) : '';
+        $order->comment     = isset($post['comment']) ? strip_tags(trim($post['comment'])) : '';
+        $order->delivery    = json_encode($delivery, JSON_UNESCAPED_UNICODE);
+        $order->last_stage  = 'save_self_order';
+        $order->done        = 1;
+        $ewa_status         = ewa\save::osago($order);
+        $order->result      = json_encode($ewa_status, JSON_UNESCAPED_UNICODE);
         
         if($order->save(false))
         {
             MailComponent::unisenderMailsend('thanks_landing_order', $order->email, ['order_id' => $order->id]);
             MailComponent::unisenderMailsend('landing_order_manager', 'oh.ua.insurance1@gmail.com', [
 //            MailComponent::unisenderMailsend('landing_order_manager', 'kossworth@gmail.com', [
-                'user_name' => $order->name,
-                'user_phone' => $order->phone,
-                'user_email' => $order->email,
-                'type' => $order->type,
-                'info' => $order->getTaskData(),
-                'date' => $order->last_active,
+                'user_name'         => $order->name,
+                'user_phone'        => $order->phone,
+                'user_email'        => $order->email,
+                'type'              => $order->type,
+                'info'              => $order->getTaskData(),
+                'date'              => $order->last_active,
             ]);
             Yii::$app->session->destroy();
             $offer = json_decode($order->offer);
@@ -251,17 +258,18 @@ class OsagoController extends \app\components\BaseController
             // если оплата онлайн - тогда гененрим параметры Liqpay
             if($order->payment === 'card'){
                 $liqpay_params = [
-                    'currency' => 'UAH',
-                    'amount' => $offer->discountedPayment,
-                    'order_id' => (string)$order->id,
-                    'action' => 'pay',
-                    'description' => 'OSAGO landing pay'
+                    'currency'      => 'UAH',
+                    'amount'        => $offer->discountedPayment,
+                    'order_id'      => (string)$order->id,
+                    'action'        => 'pay',
+                    'description'   => 'OSAGO landing pay'
                 ];
-                $liqpay_button = Yii::$app->liqpay->cnb_form($liqpay_params);    
+                $liqpay_button      = Yii::$app->liqpay->cnb_form($liqpay_params);    
             }
 
             return $this->renderAjax('thanks.twig', [
                 'order'             => $order,
+                'offer'             => $offer,
                 'delivery'          => $delivery,
                 'price'             => round($offer->discountedPayment),
                 'liqpay_button'     => $liqpay_button,
@@ -279,43 +287,44 @@ class OsagoController extends \app\components\BaseController
 //        {
 //            throw new \yii\web\BadRequestHttpException('Wrong request!', 400);
 //        }
-        $post   = Yii::$app->request->post();
-        $order  = Orders::getCurrent('osago');
-        $fname = isset($post['firstName']) ? strip_tags(trim($post['firstName'])) : '';
-        $lname = isset($post['lastName']) ? strip_tags(trim($post['lastName'])) : '';
-        $order->name = $lname.' '.$fname;
-        $order->phone = isset($post['phone']) ? strip_tags(trim($post['phone'])) : '';
-        $order->last_stage = 'save_phone_order';
-        $order->done = 1;
+        $post               = Yii::$app->request->post();
+        $order              = Orders::getCurrent('osago');
+        $fname              = isset($post['firstName']) ? strip_tags(trim($post['firstName'])) : '';
+        $lname              = isset($post['lastName']) ? strip_tags(trim($post['lastName'])) : '';
+        $order->name        = $lname.' '.$fname;
+        $order->phone       = isset($post['phone']) ? strip_tags(trim($post['phone'])) : '';
+        $order->last_stage  = 'save_phone_order';
+        $order->done        = 1;
         if($order->save(false))
         {
             Yii::$app->session->destroy();
             MailComponent::unisenderMailsend('landing_order_manager', 'oh.ua.insurance1@gmail.com', [
 //            MailComponent::unisenderMailsend('landing_order_manager', 'kossworth@gmail.com', [
-                'user_name' => $order->name,
-                'user_phone' => $order->phone,
-                'user_email' => $order->email,
-                'type' => $order->type,
-                'info' => $order->getTaskData(),
-                'date' => $order->last_active,
+                'user_name'     => $order->name,
+                'user_phone'    => $order->phone,
+                'user_email'    => $order->email,
+                'type'          => $order->type,
+                'info'          => $order->getTaskData(),
+                'date'          => $order->last_active,
             ]);
-            $offer = json_decode($order->offer);
+            $offer              = json_decode($order->offer);
             
-            $liqpay_button = '';
+            $liqpay_button      = '';
             // если оплата онлайн - тогда гененрим параметры Liqpay
             if($order->payment == 'card'){
                 $liqpay_params = [
-                    'currency' => 'UAH',
-                    'amount' => $offer->discountedPayment,
-                    'order_id' => (string)$order->id,
-                    'action' => 'pay',
-                    'description' => 'OSAGO landing pay'
+                    'currency'      => 'UAH',
+                    'amount'        => $offer->discountedPayment,
+                    'order_id'      => (string)$order->id,
+                    'action'        => 'pay',
+                    'description'   => 'OSAGO landing pay'
                 ];
                 $liqpay_button = Yii::$app->liqpay->cnb_form($liqpay_params);    
             }
             
             return $this->renderAjax('thanks.twig', [
                 'order'             => $order,
+                'offer'             => $offer,
                 'price'             => round($offer->discountedPayment),
                 'liqpay_button'     => $liqpay_button,                
             ]);
@@ -328,9 +337,9 @@ class OsagoController extends \app\components\BaseController
 
     public function actionOsagoDocOrder()
     {
-        $post   = Yii::$app->request->post();
-        $order  = Orders::getCurrent('osago');
-        $delivery_type = isset($post['deliveryMode']) ? strip_tags(trim($post['deliveryMode'])) : '';
+        $post           = Yii::$app->request->post();
+        $order          = Orders::getCurrent('osago');
+        $delivery_type  = isset($post['deliveryMode']) ? strip_tags(trim($post['deliveryMode'])) : '';
         
         switch ($delivery_type)
         {
@@ -338,28 +347,28 @@ class OsagoController extends \app\components\BaseController
                 $delivery = ['type' => 'Самовывоз', 'city' => '', 'address' => ''];
                 break;
             case 'byCourier':
-                $delivery_city = isset($post['delivCityName']) ? strip_tags(trim($post['delivCityName'])) : '';
-                $delivery_address = isset($post['deliveryAddr']) ? strip_tags(trim($post['deliveryAddr'])) : '';
+                $delivery_city      = isset($post['delivCityName']) ? strip_tags(trim($post['delivCityName'])) : '';
+                $delivery_address   = isset($post['deliveryAddr']) ? strip_tags(trim($post['deliveryAddr'])) : '';
                 $delivery = ['type' => 'Доставка курьером', 'city' => $delivery_city, 'address' => $delivery_address];
                 break;
             case 'byNP':
-                $delivery_city = isset($post['delivCityNp']) ? strip_tags(trim($post['delivCityNp'])) : '';
-                $delivery_address = isset($post['delivDivisionIdNP']) ? strip_tags(trim($post['delivDivisionIdNP'])) : '';
+                $delivery_city      = isset($post['delivCityNp']) ? strip_tags(trim($post['delivCityNp'])) : '';
+                $delivery_address   = isset($post['delivDivisionIdNP']) ? strip_tags(trim($post['delivDivisionIdNP'])) : '';
                 $delivery = ['type' => 'Доставка Новой Почтой', 'city' => $delivery_city, 'address' => $delivery_address];
                 break;
             default :
                 $delivery = ['type' => 'Самовывоз', 'city' => '', 'address' => ''];
         }
                
-        $order->name = isset($post['firstName']) ? strip_tags(trim($post['firstName'])) : '';
-        $order->phone = isset($post['phone']) ? strip_tags(trim($post['phone'])) : '';
-        $order->email = isset($post['email']) ? strip_tags(trim($post['email'])) : '';
-        $order->payment = isset($post['pay']) ? strip_tags(trim($post['pay'])) : '';
-        $order->comment = isset($post['comment']) ? strip_tags(trim($post['comment'])) : '';
-        $order->delivery = json_encode($delivery, JSON_UNESCAPED_UNICODE);
-        $order->last_stage = 'save_docs_order';
-        $order->done = 1;
-        $upload_imgs = '';
+        $order->name            = isset($post['firstName']) ? strip_tags(trim($post['firstName'])) : '';
+        $order->phone           = isset($post['phone']) ? strip_tags(trim($post['phone'])) : '';
+        $order->email           = isset($post['email']) ? strip_tags(trim($post['email'])) : '';
+        $order->payment         = isset($post['pay']) ? strip_tags(trim($post['pay'])) : '';
+        $order->comment         = isset($post['comment']) ? strip_tags(trim($post['comment'])) : '';
+        $order->delivery        = json_encode($delivery, JSON_UNESCAPED_UNICODE);
+        $order->last_stage      = 'save_docs_order';
+        $order->done            = 1;
+        $upload_imgs            = '';
         if($_FILES['docScan']['error'][0] != 4 ) 
         {
             $count_files = count($_FILES['docScan']['name']);
@@ -398,31 +407,32 @@ class OsagoController extends \app\components\BaseController
             MailComponent::unisenderMailsend('thanks_landing_order', $order->email, ['order_id' => $order->id]);
 //            MailComponent::unisenderMailsend('landing_order_manager', 'kossworth@gmail.com', [
             MailComponent::unisenderMailsend('landing_order_manager', 'oh.ua.insurance1@gmail.com', [
-                'user_name' => $order->name,
-                'user_phone' => $order->phone,
-                'user_email' => $order->email,
-                'type' => $order->type,
-                'info' => $order->getTaskData(),
-                'date' => $order->last_active,
+                'user_name'     => $order->name,
+                'user_phone'    => $order->phone,
+                'user_email'    => $order->email,
+                'type'          => $order->type,
+                'info'          => $order->getTaskData(),
+                'date'          => $order->last_active,
             ]);            
             Yii::$app->session->destroy();
-            $offer = json_decode($order->offer);
+            $offer              = json_decode($order->offer);
             
-            $liqpay_button = '';
+            $liqpay_button      = '';
             // если оплата онлайн - тогда гененрим параметры Liqpay
-            if($order->payment == 'card'){
-                $liqpay_params = [
-                    'currency' => 'UAH',
-                    'amount' => $offer->discountedPayment,
-                    'order_id' => (string)$order->id,
-                    'action' => 'pay',
-                    'description' => 'OSAGO landing pay'
+            if($order->payment  == 'card'){
+                $liqpay_params  = [
+                    'currency'      => 'UAH',
+                    'amount'        => $offer->discountedPayment,
+                    'order_id'      => (string)$order->id,
+                    'action'        => 'pay',
+                    'description'   => 'OSAGO landing pay'
                 ];
                 $liqpay_button = Yii::$app->liqpay->cnb_form($liqpay_params);    
             }
             
             return $this->renderAjax('thanks.twig', [
                 'order'             => $order,
+                'offer'             => $offer,
                 'delivery'          => $delivery,
                 'price'             => round($offer->payment),
                 'liqpay_button'     => $liqpay_button,
@@ -444,8 +454,8 @@ class OsagoController extends \app\components\BaseController
         {
             $search_data = $session['osago_search_data'];
         }
-        $data = json_decode($search_data);
-        $auto_categories = AutoCategories::find()->select([
+        $data               = json_decode($search_data);
+        $auto_categories    = AutoCategories::find()->select([
                 AutoCategories::tableName().'.id_auto_kind',
                 AutoCategories::tableName().'.auto_code',
                 AutoCategories::tableName().'.name_object_rus',
@@ -453,8 +463,8 @@ class OsagoController extends \app\components\BaseController
             ])->asArray()->all();
         
         return $this->renderAjax('change_data.twig', [
-            'data' => $data,
-            'auto_categories' => $auto_categories,
+            'data'              => $data,
+            'auto_categories'   => $auto_categories,
         ]);
     } 
     
@@ -503,27 +513,25 @@ class OsagoController extends \app\components\BaseController
             'driveExp'              => false,
         ];
         
-        $propositions = ewa\find::osago($tariff_options);
+        $propositions   = ewa\find::osago($tariff_options);
         
-        $companies = Company::find()
-                ->joinWith(['osago'], true)
-                ->all();
-        
-       // mail('alex@bunke.com.ua', 'OH search', print_r($companies, true));
+        $companies      = Company::find()
+                            ->joinWith(['osago'], true)
+                            ->all();
         
         $result_propositions = [];
         
         foreach ($propositions as $prop)
         {
-            $prop['company'] = null;
-            $discount = isset($prop['tariff']['brokerDiscount']) ? $prop['tariff']['brokerDiscount'] : 0;
+            $prop['company']    = null;
+            $discount           = isset($prop['tariff']['brokerDiscount']) ? $prop['tariff']['brokerDiscount'] : 0;
             foreach ($companies as $key => $comp)
             {
                 if($comp->ewa_id == $prop['tariff']['insurer']['id'])
                 {
-                    $prop['company'] = $comp;
-                    $prop['discount_sum'] = round($discount * $prop['payment']);
-                    $prop['payment'] = round($prop['payment'] - $prop['discount_sum']);
+                    $prop['company']        = $comp;
+                    $prop['discount_sum']   = round($discount * $prop['payment']);
+                    $prop['payment']        = round($prop['payment'] - $prop['discount_sum']);
                     array_push($result_propositions, $prop);
                     unset($companies[$key]); // удаляем из массива компанию, которую добавили в массив предложений
                     break;

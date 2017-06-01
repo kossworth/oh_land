@@ -128,3 +128,19 @@
         </div>
     </div>
 </div>
+                    
+<script>
+    dataLayer.push({
+        'transactionId': {{ order.id }},  
+        'transactionTotal': {{ offer.payment }},
+        'transactionProducts': [{
+            'sku': {{ offer.tariff.id }}, 
+            'name': '{{ offer.tariff.name }} {{ offer.insurer.name }}', 
+            'brand' : '{{ offer.insurer.name }}', 
+            'category': "Страховка",
+            'price': {{ offer.payment }}, 
+            'quantity': 1
+        }],
+        'event': 'transactionComplete'
+    });
+</script>

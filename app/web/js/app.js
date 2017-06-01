@@ -111,35 +111,35 @@ $(document).ready(function(){
 		$btnsReadMore.click(function(){	// show-hide details text on "Подробнее" click
 			// $(this).hide();
 			var  $toggleList = $(this).siblings(".js-content_readmore")
-				// ,$listItems = $toggleList().children()
-				,$toggleListItems = $toggleList.children().filter("li:nth-child(3)~li")
-				,$proposition = $toggleList.parents(".b-proposition")
-				;
+                            // ,$listItems = $toggleList().children()
+                            ,$toggleListItems = $toggleList.children().filter("li:nth-child(3)~li")
+                            ,$proposition = $toggleList.parents(".b-proposition")
+                            ;
 				
 			if ($toggleList.hasClass("js-opened")){
-				$toggleListItems.slideUp(200, function(){
-					$proposition.css("z-index","0");
-					$toggleList.removeClass("js-opened");
-				});
+                            $toggleListItems.slideUp(200, function(){
+                                $proposition.css("z-index","0");
+                                $toggleList.removeClass("js-opened");
+                            });
 			} else {
-				$proposition.css("z-index","1");
-				$toggleListItems.slideDown(200, function(){
-					$toggleList.addClass("js-opened");
-				});
+                            $proposition.css("z-index","1");
+                            $toggleListItems.slideDown(200, function(){
+                                $toggleList.addClass("js-opened");
+                            });
 			}
 		})
 
 		// hide-show additional propositions by click on "Посмотреть еще предложения"
 		var  $propositionsCalc = $containerAjax.find(".b-calculator_propos")
-			,$proposStrings = $propositionsCalc.find(".b-propositions__string")
-			,$hiddenProposStrings = $proposStrings.filter(".b-propositions__string_hidden")
-			,$moreProposBtn = $propositionsCalc.find("#morePropositions")
-			;
+                    ,$proposStrings = $propositionsCalc.find(".b-propositions__string")
+                    ,$hiddenProposStrings = $proposStrings.filter(".b-propositions__string_hidden")
+                    ,$moreProposBtn = $propositionsCalc.find("#morePropositions")
+                    ;
 		$moreProposBtn.click(function(){
-			if (!$hiddenProposStrings.is(":animated")){
-				$hiddenProposStrings.slideToggle();
-				$moreProposBtn.find(".fa").toggleClass("fa-angle-down").toggleClass("fa-angle-up");
-			}
+                    if (!$hiddenProposStrings.is(":animated")){
+                        $hiddenProposStrings.slideToggle();
+                        $moreProposBtn.find(".fa").toggleClass("fa-angle-down").toggleClass("fa-angle-up");
+                    }
 		});
 		
 		//	Повертаємось до вибора тз при кліку на "Изменить данные"
@@ -149,9 +149,14 @@ $(document).ready(function(){
 		var  $buyBtns = $("#propositions").find(".b-proposition__buy");	// кнопки купівлі
 
 		$buyBtns.click(function(){
-			var proposNum = $(this).attr("data-proposition");	// номер пропозиції для підвантаження потрібної пропозиції
+                    // GTM variables
+                    var  nameOfCompany = $(this).siblings(".b-company__name").text()
+                        ,price = $(this).find(".b-text_btn").attr("data-fullprice")
+                        ;
+                    dataLayer.push({'event': 'buySC', 'eventCategory': 'buyOsagoLanding', 'eventAction': nameOfCompany, 'eventLabel': price});	// GTM
 
-			showOrderBlock(proposNum, $containerAjax);
+                    var proposNum = $(this).attr("data-proposition");	// номер пропозиції для підвантаження потрібної пропозиції
+                    showOrderBlock(proposNum, $containerAjax);
 		});
 	};
 	
@@ -408,7 +413,10 @@ $(document).ready(function(){
                                     processData: false,
                                     cache: false,
                                     success: function(response) {
-                                        $containerAjax.html(response);
+                                        // GTM
+	                            	dataLayer.push({'event': 'GAevent', 'eventCategory': 'formSentOsagoLanding', 'eventAction': 'document'});
+
+	                                $containerAjax.html(response);	// вставляємо сенкю
                                     },
                                     error: function(){
                                         alert('ERROR at PHP side!!');
@@ -416,7 +424,7 @@ $(document).ready(function(){
                                     complete: function(){
                                         showContainerAjax($containerAjax);
                                         $containerAjax.dequeue("ajax");
-                                        $(".b-container_preloader").fadeOut();	// ховаємо лоадер
+                                        $(".b-container_preloader").fadeOut();
                                     }
                                 });
                             } else {
@@ -425,6 +433,13 @@ $(document).ready(function(){
                                     type: form.method,
                                     data: $(form).serialize(),
                                     success: function(response){
+                                        // GTM
+	                            	if (form.id == 'formBySelf'){
+                                            dataLayer.push({'event': 'GAevent', 'eventCategory': 'formSentOsagoLanding', 'eventAction': 'form'});
+	                            	} else if(form.id == 'formByPhone'){
+                                            dataLayer.push({'event': 'GAevent', 'eventCategory': 'formSentOsagoLanding', 'eventAction': 'by phone'});
+	                            	}
+                                        
                                         $containerAjax.html(response);
                                     },
                                     complete: function(){
@@ -799,14 +814,14 @@ $(document).ready(function(){
 //- Delivery fields END -------------------------
 	
 		$("#formBySelf, #formByUpload").submit(function(event){
-			 event.preventDefault();
-			$(".js-autocomplete").each(function(){
-				if (!$(this).prop("disabled")){
-					$(this).focus().blur();
-				}
-			});
-			$(".js-autocomplete_pre").focus();
-		});
+                    event.preventDefault();
+                    $(".js-autocomplete").each(function(){
+                        if (!$(this).prop("disabled")){
+                            $(this).focus().blur();
+                        }
+                    });
+                    $(".js-autocomplete_pre").focus();
+               });
 	}
 	
 	// show thanks page
