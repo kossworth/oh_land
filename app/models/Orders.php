@@ -151,41 +151,41 @@ class Orders extends ActiveRecord
             'Номер заказа на сайте' => $this->id,
 //            'Способ оформления' => ArrayHelper::getValue($auth, 'type') == 'phone' ? 'По телефону' : 'На сайте',
             'Параметры поиска' => [
-                'Категория ТС' => ArrayHelper::getValue($search, 'autoCategory'),
-                'Город регистрации' => ArrayHelper::getValue($search, 'city.name'),
-                'Используется как такси' => (ArrayHelper::getValue($search, 'taxi') == false) ? 'Нет' : 'Да',
+                'Категория ТС'              => ArrayHelper::getValue($search, 'autoCategory'),
+                'Город регистрации'         => ArrayHelper::getValue($search, 'city.name'),
+                'Используется как такси'    => (ArrayHelper::getValue($search, 'taxi') == false) ? 'Нет' : 'Да',
             ],
             'Пакет страхования' => [
-                'Идентификатор' => ArrayHelper::getValue($offer, 'tariff.id'),
-                'Название' => ArrayHelper::getValue($offer, 'tariff.name'),
-                'Стоимость' => ArrayHelper::getValue($offer, 'discountedPayment'),
+                'Идентификатор'             => ArrayHelper::getValue($offer, 'tariff.id'),
+                'Название'                  => ArrayHelper::getValue($offer, 'tariff.name'),
+                'Стоимость'                 => ArrayHelper::getValue($offer, 'discountedPayment'),
             ],
             'Клиент' => [
-                'Фамилия' => ArrayHelper::getValue($info, 'customer.name_last'),
-                'Имя' => ArrayHelper::getValue($info, 'customer.name_first'),
-                'ИНН' => ArrayHelper::getValue($info, 'customer.code'),
-                'Телефон' => ArrayHelper::getValue($info, 'customer.phone'),
-                'E-mail' => ArrayHelper::getValue($info, 'customer.email'),
-                'Адрес проживания' => ArrayHelper::getValue($info, 'customer.address'),
+                'Фамилия'                   => ArrayHelper::getValue($info, 'customer.name_last'),
+                'Имя'                       => ArrayHelper::getValue($info, 'customer.name_first'),
+                'ИНН'                       => ArrayHelper::getValue($info, 'customer.code'),
+                'Телефон'                   => ArrayHelper::getValue($info, 'customer.phone'),
+                'E-mail'                    => ArrayHelper::getValue($info, 'customer.email'),
+                'Адрес проживания'          => ArrayHelper::getValue($info, 'customer.address'),
             ],
             'ТС' => [
-                'Марка' => ArrayHelper::getValue($info, 'transport.vendor'),
-                'Модель' => ArrayHelper::getValue($info, 'transport.model'),
-                'Год выпуска' => ArrayHelper::getValue($info, 'transport.year'),
-                'Номер кузова VIN' => ArrayHelper::getValue($info, 'transport.vin_number'),
-                'Номерной знак' => ArrayHelper::getValue($info, 'transport.gov_number'),
+                'Марка'                     => ArrayHelper::getValue($info, 'transport.vendor'),
+                'Модель'                    => ArrayHelper::getValue($info, 'transport.model'),
+                'Год выпуска'               => ArrayHelper::getValue($info, 'transport.year'),
+                'Номер кузова VIN'          => ArrayHelper::getValue($info, 'transport.vin_number'),
+                'Номерной знак'             => ArrayHelper::getValue($info, 'transport.gov_number'),
             ],
             'Договор' => [
-                'Дата начала действия' => ArrayHelper::getValue($info, 'contract.start_date'),
-                'Комментаий к заказу' => ArrayHelper::getValue($info, 'contract.comment'),
+                'Дата начала действия'      => ArrayHelper::getValue($info, 'contract.start_date'),
+                'Комментаий к заказу'       => ArrayHelper::getValue($info, 'contract.comment'),
             ],
             'Оплата' => [
-                'Способ оплаты' => $payment == 'card' ? 'Оплата онлайн' : 'Наличными в момент получения',
+                'Способ оплаты'             => $payment == 'card' ? 'Оплата онлайн' : 'Наличными в момент получения',
             ],
             'Доставка' => [
-                'Способ доставки' => ArrayHelper::getValue($delivery, 'type'),
-                'Город' => ArrayHelper::getValue($delivery, 'city'),
-                'Адрес доставки' => ArrayHelper::getValue($delivery, 'address'),
+                'Способ доставки'           => ArrayHelper::getValue($delivery, 'type'),
+                'Город'                     => ArrayHelper::getValue($delivery, 'city'),
+                'Адрес доставки'            => ArrayHelper::getValue($delivery, 'address'),
 //                'Отделение НП' => ArrayHelper::getValue($delivery, 'filial'),
             ]
         ];
@@ -256,5 +256,16 @@ class Orders extends ActiveRecord
         }
         $result = implode('<br>', $result);
         return $result;
+    }
+    
+    public function acceptFilesTypes()
+    {
+        return [
+            'image/jpeg',
+            'image/pjpeg',
+            'image/png',
+            'image/tiff',
+            'image/webp',
+        ];
     }
 }

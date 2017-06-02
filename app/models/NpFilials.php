@@ -89,7 +89,7 @@ class NpFilials extends \yii\db\ActiveRecord
         $filials = [];
         foreach ($search_result as $res)
         {
-            $filials[] = ['name' => $res['address'], 'id' => $res['id']];
+            $filials[] = ['name' => $res['address'], 'id' => $res['address']];
         }
         return $filials;
     }

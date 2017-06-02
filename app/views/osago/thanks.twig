@@ -96,7 +96,7 @@
                             <li class="b-obtain__stage">
                                 <span class="b-stage__content">
                                     Не забудьте оценить нашу работу и <span class="bold">оставить отзыв</span> о сервисе СК ВУСО на официальной странице
-                                    <a href="https://www.facebook.com/" target="_blank" class="b-stage__link">Facebook.</a>
+                                    <a href="https://www.facebook.com/ohua.online/" target="_blank" class="b-stage__link">Facebook.</a>
                                 </span>
                             </li>
                         </ol>
@@ -135,10 +135,10 @@
         'transactionTotal': {{ offer.payment }},
         'transactionProducts': [{
             'sku': {{ offer.tariff.id }}, 
-            'name': '{{ offer.tariff.name }} {{ offer.insurer.name }}', 
+            'name': 'osago - {{ offer.insurer.name }}', 
             'brand' : '{{ offer.insurer.name }}', 
             'category': "Страховка",
-            'price': {{ offer.payment }}, 
+            'price': {{ price }}, 
             'quantity': 1
         }],
         'event': 'transactionComplete'

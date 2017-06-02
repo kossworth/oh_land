@@ -49,7 +49,7 @@ class FeedbacksController extends \app\components\BaseController
         
         if($feedback->save())
         {
-            MailComponent::unisenderMailsend('feedback_landing', 'kudrinskiy.y@vuso.ua', [
+            MailComponent::unisenderMailsend('feedback_landing', 'oh.ua.insurance1@gmail.com', null, [
                 'name'  => $feedback->username,
                 'phone' => $feedback->userphone,
                 'text'  => $feedback->text,
@@ -78,7 +78,7 @@ class FeedbacksController extends \app\components\BaseController
         
         if($callback->save())
         {
-            MailComponent::unisenderMailsend('callback_landing', 'kudrinskiy.y@vuso.ua', [
+            MailComponent::unisenderMailsend('callback_landing', 'oh.ua.insurance1@gmail.com', 'Заказан обратный звонок по ОСАГО на лендинге', [
                 'phone' => $callback->phone,
             ]);
             return ['status' => true, 'msg' => true];

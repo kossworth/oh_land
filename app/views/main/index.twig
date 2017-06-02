@@ -1,4 +1,4 @@
-<section class="b-section_calculator">
+<section class="b-section_calculator" id="calculator">
     <div class="b-container_preloader" style="display:none">
         <div class="b-wrap_preloader">
            <div class="md-preloader"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="75" width="75" viewbox="0 0 75 75"><circle cx="37.5" cy="37.5" r="33.5" stroke-width="8"/></svg></div>
@@ -98,9 +98,9 @@
                     <span class="b-calculator__heading b-calculator__heading_registration">Регистрация и эксплуатация</span>
                     <div class="b-block_select b-selectBlock_registration">
                         <label for="regCity" class="b-label_registration">Место регистрации транспортного средства</label>
-                        <input type="text" class="b-autocomplete b-autocomplete_vehicle selectric" id="regCity" title="Введите и выберите город" name="regCity">
-                        <input type="hidden" class="hidden" name="regCityId" id="cityId" >
-                        <input type="hidden" class="hidden" name="zoneId" id="zoneId">
+                        <input type="text" class="b-autocomplete b-autocomplete_vehicle selectric" id="regCity" title="Введите и выберите город" name="regCity" value="г. Киев, Украина">
+                        <input type="hidden" class="hidden" name="regCityId" id="cityId" value="1">
+                        <input type="hidden" class="hidden" name="zoneId" id="zoneId" value="1">
                         <div class="autocomplete-suggestions b-precomplete_brand js-precomplete">
                             <div class="autocomplete-suggestion" data-id="1" data-zone="1">Киев (г.), Киевская обл.</div>
                             <div class="autocomplete-suggestion" data-id="9" data-zone="3">Харьков (г.), Харьковская обл.</div>
@@ -128,7 +128,7 @@
                         </select>
                     </div>
                     <label class="b-block_checkbox">
-                       <input type="checkbox" class="sr-only" id="notTaxi" value="true" name="notTaxi" checked>
+                       <input type="checkbox" class="sr-only" id="notTaxi" value="true" name="notTaxi" checked disabled>
                        <span class="fa fa-check-square-o" aria-hidden="true"></span> 
                        <span class="fa fa-square-o" aria-hidden="true"></span> 
                        Не используется как такси
@@ -334,7 +334,7 @@
                     <tr>
                         <th></th>
                         <td>
-                            <a href="#" class="b-link_mtsbu">Посмотреть на сайте МТСБУ<span class="fa fa-angle-right" aria-hidden="true"></span></a>
+                            <a href="http://www.mtsbu.ua/ua/" class="b-link_mtsbu" target="_blank">Посмотреть на сайте МТСБУ<span class="fa fa-angle-right" aria-hidden="true"></span></a>
                         </td>
                         <td>
                             <a href="#calculator" class="b-form__submit_vehicle b-anchor_calculator">
@@ -497,7 +497,7 @@
                         <div class="b-slide__side b-slide__side_back">
                             <div class="b-slide__wrap b-slide__wrap_back">
                             <div class="b-slide__heading b-slide__heading_back">Что вы о нас думаете</div>
-                               <form action="" class="b-form_feedback js-form_feedback">
+                               <form class="b-form_feedback js-form_feedback">
                                     <div class="row">
                                         <div class="col-l">
                                             <label for="name1" class="b-label_registration">Ваше Имя</label>
@@ -514,7 +514,6 @@
                                             <textarea class="b-comment" name="feedback" id="feedback1" required></textarea>
                                         </div>
                                     </div>
-                                    <input type="hidden" name="{{ app.request.csrfParam }}" value="{{ app.request.csrfToken }}"> 
                                     <button type="submit" class="b-form__submit_feedback b-form__submit_vehicle">
                                         <span class="b-text_btn">Оставить отзыв</span><span class="fa fa-comments" aria-hidden="true"></span>
                                     </button>

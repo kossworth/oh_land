@@ -22,7 +22,6 @@
             </div>
             <div class="b-data__part">
                 <div>{{ auto_category.name_param_rus | raw }}</div>
-{#                <div class="bold">{{ auto_category.name_param_rus }}</div>#}
             </div>
             <div class="b-data__part">
                 <div>Место регистрации транспортного средства</div>
@@ -65,7 +64,7 @@
 
                                 <img src="{{ prop.company.logo | raw }}" alt="{{ prop.tariff.insurer.namePrint }}" class="b-proposition__logo">
                                 <span class="b-company__name">{{ prop.tariff.insurer.namePrint }}</span>
-                                <span class="b-company__rating b-company__rating_propos" data-rating="{{ prop.company.rating | round }}">
+                                <span class="b-company__rating b-company__rating_propos" data-rating="{{ prop.company.rating | round(0, 'ceil') }}">
                                     <span class="fa fa-star-o" aria-hidden="true"></span>
                                     <span class="fa fa-star-o" aria-hidden="true"></span>
                                     <span class="fa fa-star-o" aria-hidden="true"></span>
@@ -97,10 +96,10 @@
                                     {% endif %}
                                 </div>
                                 <button type="button" class="b-form__submit_vehicle b-proposition__buy" data-proposition="{{ loop.index0 }}">
-                                    <span class="b-text_btn" data-fullprice="{{ prop.full_sum }}">Купить за {{ prop.payment | round }} грн </span><span class="fa fa-angle-right" aria-hidden="true"></span>
+                                    <span class="b-text_btn" data-fullprice="{{ prop.full_sum }}">Купить за {{ prop.payment | round(0, 'ceil') }} грн </span><span class="fa fa-angle-right" aria-hidden="true"></span>
                                 </button>
                                 {% if prop.tariff.brokerDiscount > 0 %}
-                                    <span class="b-proposition__gain">Экономия {{ prop.discount_sum }} грн</span>
+                                    <span class="b-proposition__gain">Экономия {{ prop.discount_sum | round(0, 'ceil') }} грн</span>
                                 {% endif %}
                                 
                             </div>

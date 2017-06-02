@@ -79,11 +79,11 @@ class OsagoController extends \app\components\BaseController
         ];
         
         $propositions = ewa\find::osago($tariff_options);
-		
-        // если предложений не найдено - ищем предложение с теми же параметрами, но нулевой франшизой
+
+        // если предложений не найдено - ищем предложение с теми же параметрами, но без установленной франшизы
         if(empty($propositions))
         {
-            $tariff_options['franchise'] = 0;
+            unset($tariff_options['franchise']);
             $propositions   = ewa\find::osago($tariff_options);
             $view           = 'osago_propositions_empty.twig';
         }
@@ -118,8 +118,8 @@ class OsagoController extends \app\components\BaseController
                 {
                     $prop['company']        = $comp;
                     $prop['full_sum']       = $prop['payment'];
-                    $prop['discount_sum']   = round($discount * $prop['payment']);
-                    $prop['payment']        = round($prop['payment'] - $prop['discount_sum']);
+                    $prop['discount_sum']   = round($discount * $prop['payment'], PHP_ROUND_HALF_UP);
+                    $prop['payment']        = round($prop['payment'] - $prop['discount_sum'], PHP_ROUND_HALF_UP);
                     array_push($result_propositions, $prop);
                     unset($companies[$key]); // удаляем из массива компанию, которую добавили в массив предложений
                     break;
@@ -213,7 +213,7 @@ class OsagoController extends \app\components\BaseController
                 $delivery = ['type' => 'Самовывоз', 'city' => '', 'address' => ''];
                 break;
             case 'byCourier':
-                $delivery_city = isset($post['delivCityName']) ? strip_tags(trim($post['delivCityName'])) : '';
+                $delivery_city = isset($post['deliveryCity']) ? strip_tags(trim($post['deliveryCity'])) : '';
                 $delivery_address = isset($post['deliveryAddr']) ? strip_tags(trim($post['deliveryAddr'])) : '';
                 $delivery = ['type' => 'Доставка курьером', 'city' => $delivery_city, 'address' => $delivery_address];
                 break;
@@ -241,9 +241,8 @@ class OsagoController extends \app\components\BaseController
         
         if($order->save(false))
         {
-            MailComponent::unisenderMailsend('thanks_landing_order', $order->email, ['order_id' => $order->id]);
-            MailComponent::unisenderMailsend('landing_order_manager', 'oh.ua.insurance1@gmail.com', [
-//            MailComponent::unisenderMailsend('landing_order_manager', 'kossworth@gmail.com', [
+            MailComponent::unisenderMailsend('thanks_landing_order', $order->email, null, ['order_id' => $order->id]);
+            MailComponent::unisenderMailsend('landing_order_manager', 'oh.ua.insurance1@gmail.com', 'Новый заказ ОСАГО на лендинге Oh.UA',[
                 'user_name'         => $order->name,
                 'user_phone'        => $order->phone,
                 'user_email'        => $order->email,
@@ -271,7 +270,7 @@ class OsagoController extends \app\components\BaseController
                 'order'             => $order,
                 'offer'             => $offer,
                 'delivery'          => $delivery,
-                'price'             => round($offer->discountedPayment),
+                'price'             => round($offer->discountedPayment, PHP_ROUND_HALF_UP),
                 'liqpay_button'     => $liqpay_button,
             ]);
         } 
@@ -298,8 +297,7 @@ class OsagoController extends \app\components\BaseController
         if($order->save(false))
         {
             Yii::$app->session->destroy();
-            MailComponent::unisenderMailsend('landing_order_manager', 'oh.ua.insurance1@gmail.com', [
-//            MailComponent::unisenderMailsend('landing_order_manager', 'kossworth@gmail.com', [
+            MailComponent::unisenderMailsend('landing_order_manager', 'oh.ua.insurance1@gmail.com', 'Новый заказ с лендинга ОСАГО на Oh.UA по телефону',[
                 'user_name'     => $order->name,
                 'user_phone'    => $order->phone,
                 'user_email'    => $order->email,
@@ -325,7 +323,7 @@ class OsagoController extends \app\components\BaseController
             return $this->renderAjax('thanks.twig', [
                 'order'             => $order,
                 'offer'             => $offer,
-                'price'             => round($offer->discountedPayment),
+                'price'             => round($offer->discountedPayment, PHP_ROUND_HALF_UP),
                 'liqpay_button'     => $liqpay_button,                
             ]);
         }
@@ -349,7 +347,7 @@ class OsagoController extends \app\components\BaseController
             case 'byCourier':
                 $delivery_city      = isset($post['delivCityName']) ? strip_tags(trim($post['delivCityName'])) : '';
                 $delivery_address   = isset($post['deliveryAddr']) ? strip_tags(trim($post['deliveryAddr'])) : '';
-                $delivery = ['type' => 'Доставка курьером', 'city' => $delivery_city, 'address' => $delivery_address];
+                $delivery           = ['type' => 'Доставка курьером', 'city' => $delivery_city, 'address' => $delivery_address];
                 break;
             case 'byNP':
                 $delivery_city      = isset($post['delivCityNp']) ? strip_tags(trim($post['delivCityNp'])) : '';
@@ -359,7 +357,7 @@ class OsagoController extends \app\components\BaseController
             default :
                 $delivery = ['type' => 'Самовывоз', 'city' => '', 'address' => ''];
         }
-               
+        
         $order->name            = isset($post['firstName']) ? strip_tags(trim($post['firstName'])) : '';
         $order->phone           = isset($post['phone']) ? strip_tags(trim($post['phone'])) : '';
         $order->email           = isset($post['email']) ? strip_tags(trim($post['email'])) : '';
@@ -374,10 +372,14 @@ class OsagoController extends \app\components\BaseController
             $count_files = count($_FILES['docScan']['name']);
             for($i = 0; $i < $count_files; $i++){
 
-//                    $mime = $_FILES['docsScans']['type'][$i];
-                // првоеряем mime-тип файлов
-//                    if($mime == 'image/jpeg' || $mime == 'image/pjpeg' )
-//                    {
+                $mime = $_FILES['docScan']['type'][$i];
+                if($mime == '' || is_null($mime))
+                {
+                    break;
+                }
+                // проверяем mime-тип файлов
+                if(in_array($mime, $order->acceptFilesTypes()))
+                {
                     // если тип файлов подходящий - играем дальше. если нет - exception
                     $upload_dir = '../../../userfiles/landing_docs/';
                     $ext = pathinfo($_FILES['docScan']['name'][$i], PATHINFO_EXTENSION);
@@ -390,13 +392,13 @@ class OsagoController extends \app\components\BaseController
                     } 
                     else 
                     {
-//                        throw new \yii\base\Exception('Cant move file!');
+                        throw new \yii\base\Exception('Cant move file!');
                     }
-//                    } 
-//                    else 
-//                    {
-//                        throw new \yii\base\Exception('Недопустимый тип файла!');
-//                    }
+                } 
+                else 
+                {
+                    throw new \yii\base\Exception('Недопустимый тип файла!');
+                }
             }
 
             $order->files = $upload_imgs;
@@ -404,9 +406,9 @@ class OsagoController extends \app\components\BaseController
             
         if ($order->save(false))  
         {
-            MailComponent::unisenderMailsend('thanks_landing_order', $order->email, ['order_id' => $order->id]);
-//            MailComponent::unisenderMailsend('landing_order_manager', 'kossworth@gmail.com', [
-            MailComponent::unisenderMailsend('landing_order_manager', 'oh.ua.insurance1@gmail.com', [
+            MailComponent::unisenderMailsend('thanks_landing_order', $order->email, null, ['order_id' => $order->id]);
+
+            MailComponent::unisenderMailsend('landing_order_manager', 'oh.ua.insurance1@gmail.com', 'Новый заказ ОСАГО с фото на лендинге Oh.UA',[
                 'user_name'     => $order->name,
                 'user_phone'    => $order->phone,
                 'user_email'    => $order->email,
@@ -434,7 +436,7 @@ class OsagoController extends \app\components\BaseController
                 'order'             => $order,
                 'offer'             => $offer,
                 'delivery'          => $delivery,
-                'price'             => round($offer->payment),
+                'price'             => round($offer->payment, PHP_ROUND_HALF_UP),
                 'liqpay_button'     => $liqpay_button,
             ]);
         } else {
@@ -470,8 +472,7 @@ class OsagoController extends \app\components\BaseController
     
     public function actionOsagoShowPropositions()
     {
-//        $request = Yii::$app->request;
-//        if(!$request->isAjax)
+//        if(!Yii::$app->request->isAjax)
 //        {
 //            throw new \yii\web\BadRequestHttpException('Wrong request!', 400);
 //        }
@@ -530,8 +531,8 @@ class OsagoController extends \app\components\BaseController
                 if($comp->ewa_id == $prop['tariff']['insurer']['id'])
                 {
                     $prop['company']        = $comp;
-                    $prop['discount_sum']   = round($discount * $prop['payment']);
-                    $prop['payment']        = round($prop['payment'] - $prop['discount_sum']);
+                    $prop['discount_sum']   = round($discount * $prop['payment'], PHP_ROUND_HALF_UP);
+                    $prop['payment']        = round($prop['payment'] - $prop['discount_sum'], PHP_ROUND_HALF_UP);
                     array_push($result_propositions, $prop);
                     unset($companies[$key]); // удаляем из массива компанию, которую добавили в массив предложений
                     break;
