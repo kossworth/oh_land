@@ -2609,3 +2609,42 @@ body{
         stroke-dashoffset: -151.55042961px
     }
 }
+
+/* IE10-11 styles*/
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+   /* стили только для IE10 IE11 */
+    .svg-vehicle{
+/*        top: 0;*/
+        height: 47px;
+    }
+    .b-form_vehicle .radio:not(checked) + label {
+        margin-right: 0px;
+    }
+    .b-data_your .b-form__submit_vehicle span.b-text_btn {
+        padding-left: 7px;
+        padding-right: 7px;
+    }
+    .svg-method{
+        height: 66px;
+    }
+    .b-sides_flip, .b-slide_rotated {
+        -ms-transform: none;
+        transform: none;
+    }
+    .b-trash__side, b-slide__side,
+    .b-slide_rotated .b-slide__side{
+        -ms-transition: -ms-transform 400ms;
+        transition: transform 400ms;
+    }
+    .b-sides_flip .b-trash__side_front,
+    .b-slide_rotated .b-slide__side_front{  
+        -ms-transform: rotateY(180deg);
+        transform: rotateY(180deg);
+    }
+    .b-sides_flip .b-trash__side_back,
+    .b-slide_rotated .b-slide__side_back{  
+        -ms-transform: rotateY(0deg);
+        transform: rotateY(0deg);
+    }
+    
+}
