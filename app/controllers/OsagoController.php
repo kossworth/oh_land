@@ -73,9 +73,11 @@ class OsagoController extends \app\components\BaseController
             'dateFrom'              => date('Y-m-d', strtotime('+1 day')),
             'dateTo'                => date('Y-m-d', strtotime('+1 year')),
             'zone'                  => $get['zone'] ? (int)$get['zone'] : 1,
-            'taxi'                  => ($get['notTaxi'] == 1) ? false : true,
+            'taxi'                  => false,
+//            'taxi'                  => ($get['notTaxi'] == 1) ? false : true,
             'usageMonths'           => 0,
             'driveExp'              => false,
+            'additionalLimit'       => false,
         ];
         
         $propositions = ewa\find::osago($tariff_options);

@@ -135,10 +135,10 @@
         'transactionTotal': {{ offer.payment }},
         'transactionProducts': [{
             'sku': {{ offer.tariff.id }}, 
-            'name': 'osago - {{ offer.insurer.name }}', 
-            'brand' : '{{ offer.insurer.name }}', 
+            'name': 'osago - {{ offer.tariff.insurer.name }}', 
+            'brand' : '{{ offer.tariff.insurer.name }}', 
             'category': "Страховка",
-            'price': {{ price }}, 
+            'price': {{ offer.payment }}, 
             'quantity': 1
         }],
         'event': 'transactionComplete'

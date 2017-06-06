@@ -1,3 +1,22 @@
+// Determines if the passed element is overflowing its bounds,
+// either vertically or horizontally.
+// Will temporarily modify the "overflow" style to detect this
+// if necessary.
+function checkOverflow(el)
+{
+   var curOverflow = el.style.overflow;
+
+   if ( !curOverflow || curOverflow === "visible" )
+      el.style.overflow = "hidden";
+
+   var isOverflowing = el.clientWidth < el.scrollWidth 
+      || el.clientHeight < el.scrollHeight;
+
+   el.style.overflow = curOverflow;
+
+   return isOverflowing;
+}
+
 // pickadate plugin defaults
 jQuery.extend(jQuery.fn.pickadate.defaults, {
     monthsFull: ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'],
@@ -71,7 +90,7 @@ $(document).ready(function () {
             // place for Ajax sending
             $.ajax({
                 type: "get",
-                url: "/osago-online/osago/send-request",
+                url: "/ohproject/osago/send-request",
                 data: {type: type, notTaxi: notTaxi,
                     franshiza: franshiza, city: city, cityName: cityName, zone: zone},
                 error: function () {
@@ -91,43 +110,75 @@ $(document).ready(function () {
 
         $containerAjax.dequeue("ajax");	// запустимо чергу
     };
-    var propositionsInit = function ($containerAjax) {	// ф-я ініціалізації js-функціоналу на підвантаженому блоці пропозицій
-        var $ratings = $(".b-company__rating_propos");
+	var propositionsInit = function($containerAjax){	// ф-я ініціалізації js-функціоналу на підвантаженому блоці пропозицій
+		// зафарбуємо необхідну к-ть зірочок рейтингу компанії в кожній пропозиції
+            var $ratings = $(".b-company__rating_propos");	// контейнер із зірочками
 
-        $ratings.each(function () {
-            var starsNum = $(this).attr("data-rating")
-                    , $stars = $(this).children("span.fa")
-                    , i
+            $ratings.each(function(){
+                var  starsNum = $(this).attr("data-rating")	// к-ть зірочок для зафарбування в атрибуті "data-rating" контейнера
+                    ,$stars = $(this).children("span.fa")
+                    ,i
                     ;
 
-            for (i = 0; i < starsNum; ++i) {
-                $stars.eq(i).removeClass("fa-star-o").addClass("fa-star");
-            }
-        });
+                for (i=0; i<starsNum; ++i){
+                    $stars.eq(i).removeClass("fa-star-o").addClass("fa-star");
+                }
+            });
 
-        var $btnsReadMore = $(".js-btn_readmore");
-        // hide-show details  by click on "Подробнее"
-        // show:
-        $btnsReadMore.click(function () {	// show-hide details text on "Подробнее" click
-            // $(this).hide();
-            var $toggleList = $(this).siblings(".js-content_readmore")
-                    // ,$listItems = $toggleList().children()
-                    , $toggleListItems = $toggleList.children().filter("li:nth-child(3)~li")
-                    , $proposition = $toggleList.parents(".b-proposition")
+            var  $btnsReadMore = $(".js-btn_readmore")
+                ,detailsMaxHeight = $btnsReadMore.eq(0).siblings(".js-content_readmore").css("max-height")	// save max-height from styles.css
+                ;
+            // покажемо кнопку readMore там де вона треба
+            $btnsReadMore.each(function(){
+                var $detailsList = $(this).siblings(".js-content_readmore");
+                if (checkOverflow($detailsList[0]) || ($detailsList.children().length > 3)){
+                    $(this).css("display", "block");
+                }
+            });
+            // hide-show details  by click on "Подробнее"
+            // show:
+            $btnsReadMore.click(function(){	// show-hide details text on "Подробнее" click
+                var  $toggleList = $(this).siblings(".js-content_readmore")
+                    ,$toggleListItems = $toggleList.children().filter("li:nth-child(3)~li")
+                    ,$proposition = $toggleList.parents(".b-proposition")
                     ;
 
-            if ($toggleList.hasClass("js-opened")) {
-                $toggleListItems.slideUp(200, function () {
-                    $proposition.css("z-index", "0");
-                    $toggleList.removeClass("js-opened");
-                });
-            } else {
-                $proposition.css("z-index", "1");
-                $toggleListItems.slideDown(200, function () {
-                    $toggleList.addClass("js-opened");
-                });
-            }
-        })
+                var closeContent = function(){
+                    var callBack = function(){
+                        $proposition.css("z-index","0");
+                        $toggleList.css("overflow", "hidden")
+                                           .css("max-height", detailsMaxHeight);
+                        $toggleList.removeClass("js-opened");
+                    };
+
+                    if ($toggleListItems.length){
+                        $toggleListItems.slideUp(200, callBack);
+                    }else{
+                        callBack();
+                    }
+                };
+
+                var openContent = function(){
+                    var callBack = function(){
+                        $proposition.css("z-index","1");
+                        $toggleList.css("overflow", "visible")
+                                           .css("max-height", "none");
+                        $toggleList.addClass("js-opened");
+                    };
+                        callBack();
+                        $toggleListItems.slideDown(200);
+                };
+
+                var toggleContent = function(){
+                    if ($toggleList.hasClass("js-opened")){
+                        closeContent();
+                    } else {
+                        openContent()
+                    }
+                };
+
+                toggleContent();
+            })
 
         // hide-show additional propositions by click on "Посмотреть еще предложения"
         var $propositionsCalc = $containerAjax.find(".b-calculator_propos")
@@ -170,7 +221,7 @@ $(document).ready(function () {
             // place for Ajax sending
             $.ajax({
                 type: "post",
-                url: "/osago-online/osago/create-osago-order",
+                url: "/ohproject/osago/create-osago-order",
                 data: {counter: proposNum},
                 error: function () {
                     alert('error');
@@ -411,7 +462,7 @@ $(document).ready(function () {
                         if (form.id == 'formByUpload') {
                             var formData = new FormData($('#formByUpload')[0]);
                             $.ajax({
-                                url: "/osago-online/osago/osago-doc-order",
+                                url: "/ohproject/osago/osago-doc-order",
                                 type: 'POST',
                                 data: formData,
                                 contentType: false,
@@ -419,7 +470,7 @@ $(document).ready(function () {
                                 cache: false,
                                 success: function (response) {
                                     // GTM
-                                    dataLayer.push({'event': 'GAevent', 'eventCategory': 'formSentOsagoLanding', 'eventAction': 'GAeventDocument'});
+                                    dataLayer.push({'event': 'GAeventDocument', 'eventCategory': 'formSentOsagoLanding', 'eventAction': 'GAeventDocument'});
 
                                     $containerAjax.html(response);	// вставляємо сенкю
                                 },
@@ -440,9 +491,9 @@ $(document).ready(function () {
                                 success: function (response) {
                                     // GTM
                                     if (form.id == 'formBySelf') {
-                                        dataLayer.push({'event': 'GAevent', 'eventCategory': 'formSentOsagoLanding', 'eventAction': 'GAeventForm'});
+                                        dataLayer.push({'event': 'GAeventForm', 'eventCategory': 'formSentOsagoLanding', 'eventAction': 'GAeventForm'});
                                     } else if (form.id == 'formByPhone') {
-                                        dataLayer.push({'event': 'GAevent', 'eventCategory': 'formSentOsagoLanding', 'eventAction': 'GAeventByPhone'});
+                                        dataLayer.push({'event': 'GAeventByPhone', 'eventCategory': 'formSentOsagoLanding', 'eventAction': 'GAeventByPhone'});
                                     }
 
                                     $containerAjax.html(response);
@@ -645,10 +696,10 @@ $(document).ready(function () {
         });
 
         // autocomplete для полів:
-        fieldAutocomplete(2, $("input[name = 'brandId']").prev(), "/osago-online/vehicles/ewa-brand", null, function () {
+        fieldAutocomplete(2, $("input[name = 'brandId']").prev(), "/ohproject/vehicles/ewa-brand", null, function () {
             $model.prop("disabled", false);
         });
-        fieldAutocomplete(2, $("input[name = 'modelId']").prev(), "/osago-online/vehicles/ewa-model", $brand.next(), function () {});
+        fieldAutocomplete(2, $("input[name = 'modelId']").prev(), "/ohproject/vehicles/ewa-model", $brand.next(), function () {});
 // - Delivery fields -------------------------
         // delivery selects stylization
         // delivery method select
@@ -796,10 +847,10 @@ $(document).ready(function () {
 
         //delivery autocompletes...
         // місто доставки (із областю для кур’єра) delivRegionIdNP
-        fieldAutocomplete(2, $courierCity, "/osago-online/cities/np-city");
+        fieldAutocomplete(2, $courierCity, "/ohproject/cities/np-city");
         // НП:
         // місто
-        fieldAutocomplete(2, $newPostCity, "/osago-online/cities/np-city", $newPostRegion, function () {
+        fieldAutocomplete(2, $newPostCity, "/ohproject/cities/np-city", $newPostRegion, function () {
             $newPostDivision.each(function (index) {
                 var t = this;
                 $(t).val("");
@@ -807,7 +858,7 @@ $(document).ready(function () {
                 $.ajax({
                     type: "get",
                     data: {cityId: $newPostCity.next().val()},
-                    url: "/osago-online/cities/np-filial",
+                    url: "/ohproject/cities/np-filial",
                     error: function () {
                         alert('error');
                     },
@@ -885,7 +936,7 @@ $(document).ready(function () {
             // place for Ajax sending
             $.ajax({
                 type: "get",
-                url: "/osago-online/osago/osago-change-data",
+                url: "/ohproject/osago/osago-change-data",
                 error: function () {
                     alert('error');
                 },
@@ -951,7 +1002,7 @@ $(document).ready(function () {
         precomplete(2, $("#regCity"));
 
         //ajax registration city autocomplete
-        fieldAutocomplete(3, $("#regCity"), "/osago-online/cities/ewa-city") // EWA віддає результат, починаючи з 3х символів
+        fieldAutocomplete(3, $("#regCity"), "/ohproject/cities/ewa-city") // EWA віддає результат, починаючи з 3х символів
 
         // валідація
         var $vehicleForm = $("#vehicleForm")
@@ -1142,7 +1193,7 @@ $(document).ready(function () {
                 $containerAjax.queue("ajax", function () {
                     $.ajax({
                         type: "get",
-                        url: "/osago-online/osago/osago-show-propositions",
+                        url: "/ohproject/osago/osago-show-propositions",
                         error: function () {
                             alert('error');
                         },
@@ -1469,7 +1520,7 @@ $(document).ready(function () {
         var data = $(this).serialize();
         $.ajax({
             type: 'post',
-            url: '/osago-online/feedbacks/create-feedback',
+            url: '/ohproject/feedbacks/create-feedback',
             data: data,
             cache: false,
             success: function (response) {
@@ -1527,7 +1578,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: 'post',
-            url: '/osago-online/feedbacks/create-callback',
+            url: '/ohproject/feedbacks/create-callback',
             data: data,
             cache: false,
             success: function (response) {

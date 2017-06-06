@@ -31,6 +31,7 @@ class admin_company
             new Field("active_greencard","ЗК",6,1,1),
             new Field("description_1","Описание РУС",2),
             new Field("description_2","Описание УКР",2),
+            new Field("landing_description","Описание компании на лендинге ОСАГО",16),
             new Field("ewa_id","EWA ID",0,1,1),
             new Field("rating","Рейтинг",0,1,1),
             new Field("background_file","Файл фона для шапки",11),

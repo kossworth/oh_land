@@ -84,22 +84,22 @@
                                                     </ul>
                                                 {% endif %}
                                             {% endfor %}
-                                        {% if bonuses|length > 3 %}
+{#                                        {% if bonuses|length > 3 %}#}
                                             <button class="b-details__btn_readmore js-btn_readmore">Подробнее</button>
-                                        {% endif %}
+{#                                        {% endif %}#}
                                     {% endif %}
                                 </div>
                                 <div class="b-discont">
                                     {% if prop.tariff.brokerDiscount > 0%}
-                                    <span class="b-discont__num">{{ prop.tariff.brokerDiscount * 100 | raw }}%</span>
-                                     скидка от Oh.ua
+                                        <span class="b-discont__num">{{ prop.tariff.brokerDiscount * 100 | raw }}%</span>
+                                         скидка от Oh.ua
                                     {% endif %}
                                 </div>
                                 <button type="button" class="b-form__submit_vehicle b-proposition__buy" data-proposition="{{ loop.index0 }}">
                                     <span class="b-text_btn" data-fullprice="{{ prop.full_sum }}">Купить за {{ prop.payment | round(0, 'ceil') }} грн </span><span class="fa fa-angle-right" aria-hidden="true"></span>
                                 </button>
                                 {% if prop.tariff.brokerDiscount > 0 %}
-                                    <span class="b-proposition__gain">Экономия {{ prop.discount_sum | round(0, 'ceil') }} грн</span>
+                                    <span class="b-proposition__gain">Напрямую у страховой {{ prop.full_sum | round(0, 'ceil') }} грн</span>
                                 {% endif %}
                                 
                             </div>
@@ -108,9 +108,9 @@
                             </div>
                         {% endif %}
                     {% endfor %}
-{#                {% if propositions|length > 4 %}#}
+                {% if propositions|length > 4 %}
                     </div>
-{#                {% endif %}#}
+                {% endif %}
             </div>
             <div class="b-propos__guaranties">
                 <div class="b-guaranties__heading">Гарантия лучшей цены</div>
@@ -145,4 +145,7 @@
             <div class="b-notch"></div>
         </div>
     </div>
+    {% if propositions|length < 5 %}
+        </div>
+    {% endif %}
 </div>
