@@ -69,14 +69,14 @@ class MailComponent
         {
             $subject = $template->theme_1;
         }
-        
+      
         /*
          *Preparing email for sending by Unisender sendEmail method
          */
         $email_from_name        = 'Oh.UA';
         $email_from_email       = 'sales@oh.ua';
         $list_id                = 5034770;
-
+        
         $request = [
            'api_key'               => $api_key,
            'email'                 => $email_to,
@@ -86,7 +86,19 @@ class MailComponent
            'body'                  => $body,
            'list_id'               => $list_id
         ];
-
+        
+        // проверяем, если пришло несколько емейлов (перечисленных через запятую)
+        // тогда отдельно генерим параметры для UniSender
+        if(mb_stripos($email_to, ',')) {
+            $emails = explode(',', $email_to);
+            foreach ($emails as $key => $email)
+            {
+                $request['email['.$key.']'] = $email;
+            }
+        } else {
+            $request['email'] = $email_to;
+        }
+        
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, 1);
@@ -109,7 +121,8 @@ class MailComponent
             }
             else
             {
-                return 'Email message is sent. Message id ' . $jsonObj->result->email_id;
+//                return 'Email message is sent. Message id ' . $jsonObj->result->email_id;
+                return 'Email message is sent.';
             }
         }
         else

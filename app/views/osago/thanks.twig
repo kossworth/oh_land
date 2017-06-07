@@ -21,7 +21,7 @@
                         </tr>
                         <tr>
                             <th>Стоимость</th>
-                            <td>{{ price }} грн.</td>
+                            <td>{{ price | round(0, 'ceil') }} грн.</td>
                         </tr>
                         <tr>
                             <th>ФИО</th>
@@ -132,13 +132,13 @@
 <script>
     dataLayer.push({
         'transactionId': {{ order.id }},  
-        'transactionTotal': {{ offer.payment }},
+        'transactionTotal': {{ price }},
         'transactionProducts': [{
             'sku': {{ offer.tariff.id }}, 
             'name': 'osago - {{ offer.tariff.insurer.name }}', 
             'brand' : '{{ offer.tariff.insurer.name }}', 
             'category': "Страховка",
-            'price': {{ offer.payment }}, 
+            'price': {{ price }}, 
             'quantity': 1
         }],
         'event': 'transactionComplete'

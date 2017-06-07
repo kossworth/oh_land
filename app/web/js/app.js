@@ -111,7 +111,7 @@ $(document).ready(function () {
         $containerAjax.dequeue("ajax");	// запустимо чергу
     };
 	var propositionsInit = function($containerAjax){	// ф-я ініціалізації js-функціоналу на підвантаженому блоці пропозицій
-		// зафарбуємо необхідну к-ть зірочок рейтингу компанії в кожній пропозиції
+            // зафарбуємо необхідну к-ть зірочок рейтингу компанії в кожній пропозиції
             var $ratings = $(".b-company__rating_propos");	// контейнер із зірочками
 
             $ratings.each(function(){
@@ -126,15 +126,22 @@ $(document).ready(function () {
             });
 
             var  $btnsReadMore = $(".js-btn_readmore")
+                ,detailsLineHeight = $btnsReadMore.eq(0).siblings(".js-content_readmore").css("line-height")	// save line height from styles.css
+                ,detailsHeight = $btnsReadMore.eq(0).siblings(".js-content_readmore").css("height")	// save height from styles.css
                 ,detailsMaxHeight = $btnsReadMore.eq(0).siblings(".js-content_readmore").css("max-height")	// save max-height from styles.css
                 ;
-            // покажемо кнопку readMore там де вона треба
-            $btnsReadMore.each(function(){
+
+            var initBtnsReadMore = function(){	// визначає чи показувати кнопку ReadMore
                 var $detailsList = $(this).siblings(".js-content_readmore");
-                if (checkOverflow($detailsList[0]) || ($detailsList.children().length > 3)){
-                    $(this).css("display", "block");
+
+                if (checkOverflow($detailsList[0])){
+                    $(this).css("visibility", "visible");
                 }
-            });
+            }
+
+            // покажемо кнопку readMore там де вона треба
+            $btnsReadMore.each(initBtnsReadMore);
+
             // hide-show details  by click on "Подробнее"
             // show:
             $btnsReadMore.click(function(){	// show-hide details text on "Подробнее" click
@@ -144,29 +151,21 @@ $(document).ready(function () {
                     ;
 
                 var closeContent = function(){
-                    var callBack = function(){
-                        $proposition.css("z-index","0");
-                        $toggleList.css("overflow", "hidden")
-                                           .css("max-height", detailsMaxHeight);
-                        $toggleList.removeClass("js-opened");
-                    };
-
-                    if ($toggleListItems.length){
-                        $toggleListItems.slideUp(200, callBack);
-                    }else{
-                        callBack();
-                    }
-                };
+                    $toggleList.animate({
+                            height: detailsHeight
+                    }, 400);
+                    $proposition.css("z-index","0");
+                    $toggleList.removeClass("js-opened");
+                }
 
                 var openContent = function(){
-                    var callBack = function(){
-                        $proposition.css("z-index","1");
-                        $toggleList.css("overflow", "visible")
-                                           .css("max-height", "none");
-                        $toggleList.addClass("js-opened");
-                    };
-                        callBack();
-                        $toggleListItems.slideDown(200);
+                    $proposition.css("z-index","1");
+                    // $toggleList.css("height", "none");
+                    $toggleList.animate({
+                            height: detailsMaxHeight
+                    }, 400);
+                    $toggleList.addClass("js-opened");
+
                 };
 
                 var toggleContent = function(){
@@ -180,18 +179,20 @@ $(document).ready(function () {
                 toggleContent();
             })
 
-        // hide-show additional propositions by click on "Посмотреть еще предложения"
-        var $propositionsCalc = $containerAjax.find(".b-calculator_propos")
-                , $proposStrings = $propositionsCalc.find(".b-propositions__string")
-                , $hiddenProposStrings = $proposStrings.filter(".b-propositions__string_hidden")
-                , $moreProposBtn = $propositionsCalc.find("#morePropositions")
+            // hide-show additional propositions by click on "Посмотреть еще предложения"
+            var  $propositionsCalc = $containerAjax.find(".b-calculator_propos")
+                ,$proposStrings = $propositionsCalc.find(".b-propositions__string")
+                ,$hiddenProposStrings = $proposStrings.filter(".b-propositions__string_hidden")
+                ,$moreProposBtn = $propositionsCalc.find("#morePropositions")
                 ;
-        $moreProposBtn.click(function () {
-            if (!$hiddenProposStrings.is(":animated")) {
-                $hiddenProposStrings.slideToggle();
-                $moreProposBtn.find(".fa").toggleClass("fa-angle-down").toggleClass("fa-angle-up");
-            }
-        });
+            $moreProposBtn.click(function(){
+                if (!$hiddenProposStrings.is(":animated")){
+                    $hiddenProposStrings.slideToggle();
+                    $moreProposBtn.find(".fa").toggleClass("fa-angle-down").toggleClass("fa-angle-up");
+                }
+                // покажемо кнопку readMore там де вона треба
+                $btnsReadMore.each(initBtnsReadMore);
+            });
 
         //	Повертаємось до вибора тз при кліку на "Изменить данные"
         $("#vehicleEdit").click(function () {
@@ -1118,6 +1119,7 @@ $(document).ready(function () {
                         success: function (data) {
                             items = []; // масив елементів
                             itemIds = [];	// масив id елементів
+                            itemOtherIds = [];	// масив додаткових id елементів
                             oJS = data;	//відповідний JSоб'єкт до JSON об'єкту AJAX відповіді
                             propertiesLength = 0;
                             var i;

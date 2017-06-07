@@ -1651,7 +1651,7 @@ body{
     float: left;
     position: relative;
     width: 227px;
-    height: 318px;
+    height: 320px;
 /*    height: 380px;*/
 /*    width: 245px;*/
 /*    height: 293px;*/
@@ -1723,18 +1723,20 @@ body{
     
     font-size: 14px;
     line-height: 1.15; /* 14*1.15=16.1px */
-    max-height: 48.3px; /* 3 рядки текста  (3*16.1px)*/
+    height: 48.3px; /* 3 рядки текста  (4*16.1px)*/
+    max-height: 177.1px; /* 11 рядків текста (11*16.1px)*/
     overflow: hidden;
     
     font-weight: 300;
     color: #fff;
 }
 .b-details__list>li:nth-child(3)~li{
-    display: none;
+/*    display: none;*/
 }
 .b-details__btn_readmore{
 /*    margin-bottom: 20px;*/
-    display: none;
+/*    display: none;*/
+    visibility: hidden;
     border: none;
     padding: 0;
     background-color: transparent;

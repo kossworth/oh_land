@@ -49,11 +49,15 @@ class FeedbacksController extends \app\components\BaseController
         
         if($feedback->save())
         {
-            MailComponent::unisenderMailsend('feedback_landing', 'oh.ua.insurance1@gmail.com', null, [
-                'name'  => $feedback->username,
-                'phone' => $feedback->userphone,
-                'text'  => $feedback->text,
-            ]);
+            if(isset($this->partner) && is_object($this->partner))
+            {               
+                MailComponent::unisenderMailsend('feedback_landing', $this->partner->task_email, null, [
+                    'name'  => $feedback->username,
+                    'phone' => $feedback->userphone,
+                    'text'  => $feedback->text,
+                ]);    
+            }
+            
             return ['status' => true, 'msg' => true];
         }
         else
@@ -78,9 +82,12 @@ class FeedbacksController extends \app\components\BaseController
         
         if($callback->save())
         {
-            MailComponent::unisenderMailsend('callback_landing', 'oh.ua.insurance1@gmail.com', 'Заказан обратный звонок по ОСАГО на лендинге', [
-                'phone' => $callback->phone,
-            ]);
+            if(isset($this->partner) && is_object($this->partner))
+            { 
+                MailComponent::unisenderMailsend('callback_landing', $this->partner->task_email, 'Заказан обратный звонок по ОСАГО на лендинге', [
+                    'phone' => $callback->phone,
+                ]);
+            }
             return ['status' => true, 'msg' => true];
         }
         else

@@ -165,7 +165,7 @@ class Orders extends ActiveRecord
                 'Имя'                       => ArrayHelper::getValue($info, 'customer.name_first'),
                 'ИНН'                       => ArrayHelper::getValue($info, 'customer.code'),
                 'Телефон'                   => ArrayHelper::getValue($info, 'customer.phone'),
-                'E-mail'                    => ArrayHelper::getValue($info, 'customer.email'),
+                'E-mail'                    => $this->email,
                 'Адрес проживания'          => ArrayHelper::getValue($info, 'customer.address'),
             ],
             'ТС' => [
@@ -216,8 +216,11 @@ class Orders extends ActiveRecord
             unset($result['Договор']);
             unset($result['ТС']);
             unset($result['Клиент']['ИНН']);
-            unset($result['Клиент']['E-mail']);
             unset($result['Клиент']['Адрес проживания']);
+        }
+        if(empty($this->email) || is_null($this->email))
+        {
+            unset($result['Клиент']['E-mail']);
         }
 
         if(count($files))

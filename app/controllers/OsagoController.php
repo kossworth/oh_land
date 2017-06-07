@@ -244,14 +244,17 @@ class OsagoController extends \app\components\BaseController
         if($order->save(false))
         {
             MailComponent::unisenderMailsend('thanks_landing_order', $order->email, null, ['order_id' => $order->id]);
-            MailComponent::unisenderMailsend('landing_order_manager', 'oh.ua.insurance1@gmail.com', 'Новый заказ ОСАГО на лендинге Oh.UA',[
-                'user_name'         => $order->name,
-                'user_phone'        => $order->phone,
-                'user_email'        => $order->email,
-                'type'              => $order->type,
-                'info'              => $order->getTaskData(),
-                'date'              => $order->last_active,
-            ]);
+            if(isset($this->partner) && is_object($this->partner))
+            {               
+                MailComponent::unisenderMailsend('landing_order_manager', $this->partner->task_email, 'Новый заказ ОСАГО на лендинге Oh.UA',[
+                    'user_name'         => $order->name,
+                    'user_phone'        => $order->phone,
+                    'user_email'        => $order->email,
+                    'type'              => $order->type,
+                    'info'              => $order->getTaskData(),
+                    'date'              => $order->last_active,
+                ]);
+            }
             Yii::$app->session->destroy();
             $offer = json_decode($order->offer);
             
@@ -299,14 +302,17 @@ class OsagoController extends \app\components\BaseController
         if($order->save(false))
         {
             Yii::$app->session->destroy();
-            MailComponent::unisenderMailsend('landing_order_manager', 'oh.ua.insurance1@gmail.com', 'Новый заказ с лендинга ОСАГО на Oh.UA по телефону',[
-                'user_name'     => $order->name,
-                'user_phone'    => $order->phone,
-                'user_email'    => $order->email,
-                'type'          => $order->type,
-                'info'          => $order->getTaskData(),
-                'date'          => $order->last_active,
-            ]);
+            if(isset($this->partner) && is_object($this->partner))
+            {               
+                MailComponent::unisenderMailsend('landing_order_manager', $this->partner->task_email, 'Новый заказ с лендинга ОСАГО на Oh.UA по телефону',[
+                    'user_name'     => $order->name,
+                    'user_phone'    => $order->phone,
+                    'user_email'    => $order->email,
+                    'type'          => $order->type,
+                    'info'          => $order->getTaskData(),
+                    'date'          => $order->last_active,
+                ]);
+            }
             $offer              = json_decode($order->offer);
             
             $liqpay_button      = '';
@@ -410,14 +416,17 @@ class OsagoController extends \app\components\BaseController
         {
             MailComponent::unisenderMailsend('thanks_landing_order', $order->email, null, ['order_id' => $order->id]);
 
-            MailComponent::unisenderMailsend('landing_order_manager', 'oh.ua.insurance1@gmail.com', 'Новый заказ ОСАГО с фото на лендинге Oh.UA',[
-                'user_name'     => $order->name,
-                'user_phone'    => $order->phone,
-                'user_email'    => $order->email,
-                'type'          => $order->type,
-                'info'          => $order->getTaskData(),
-                'date'          => $order->last_active,
-            ]);            
+            if(isset($this->partner) && is_object($this->partner))
+            {               
+                MailComponent::unisenderMailsend('landing_order_manager', $this->partner->task_email, 'Новый заказ ОСАГО с фото на лендинге Oh.UA',[
+                    'user_name'     => $order->name,
+                    'user_phone'    => $order->phone,
+                    'user_email'    => $order->email,
+                    'type'          => $order->type,
+                    'info'          => $order->getTaskData(),
+                    'date'          => $order->last_active,
+                ]);            
+            }
             Yii::$app->session->destroy();
             $offer              = json_decode($order->offer);
             

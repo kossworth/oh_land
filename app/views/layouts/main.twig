@@ -40,13 +40,14 @@
         <div class="b-container_wide b-container_header">
             <img src="{{ Url.to('app/web/img/logo.svg') }}" alt="OH.UA лого" class="b-logo">
             <span class="b-header__address">Украина, г. Киев, ул. Пушкинская, 9</span>
-            <a href="tel:0442903669" class="b-header__link b-header__link_phone">
+            <a href="tel:{{ this.params.partner_phone | replace({' ' : '', '(' : '', ')' : '', '-' : ''}) }}" 
+               class="b-header__link b-header__link_phone">
                 <span class="b-icon_phone"></span>
-                &nbsp;&nbsp;(044) 290 36 69
+                &nbsp;&nbsp; {{ this.params.partner_phone }}
             </a>
-            <a href="mailto:sales@oh.ua" class="b-header__link b-header__link_email">
+            <a href="mailto:{{ this.params.partner_email }}" class="b-header__link b-header__link_email">
                 <span class="fa fa-envelope-open-o" aria-hidden="true"></span>
-                &nbsp;&nbsp;sales@oh.ua
+                &nbsp;&nbsp;{{ this.params.partner_email }}
             </a>
             <button class="b-header__btn" id="callbackBtn">Обратный звонок</button>
         </div>
