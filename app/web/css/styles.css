@@ -1987,6 +1987,7 @@ body{
     background-color: #f2c916;
     color: #000;
     z-index: 5;
+    cursor: default;
 }
 .b-trash__sides{
     height: 100%;
@@ -2027,10 +2028,10 @@ body{
     transform-style: preserve-3d;
 }
 .b-trash__side_front{
-    background-image: url(../img/macho.png);
+    background-image: url(../img/diva.png);
 }
 .b-trash__side_back{
-    background-image: url(../img/diva.png);
+    background-image: url(../img/macho.png);
     -webkit-transform: rotateY(180deg);
     -ms-transform: rotateY(180deg);
     -o-transform: rotateY(180deg);
