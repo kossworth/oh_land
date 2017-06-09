@@ -110,113 +110,119 @@ $(document).ready(function () {
 
         $containerAjax.dequeue("ajax");	// запустимо чергу
     };
-	var propositionsInit = function($containerAjax){	// ф-я ініціалізації js-функціоналу на підвантаженому блоці пропозицій
-            // зафарбуємо необхідну к-ть зірочок рейтингу компанії в кожній пропозиції
-            var $ratings = $(".b-company__rating_propos");	// контейнер із зірочками
-
-            $ratings.each(function(){
-                var  starsNum = $(this).attr("data-rating")	// к-ть зірочок для зафарбування в атрибуті "data-rating" контейнера
-                    ,$stars = $(this).children("span.fa")
-                    ,i
-                    ;
-
-                for (i=0; i<starsNum; ++i){
-                    $stars.eq(i).removeClass("fa-star-o").addClass("fa-star");
-                }
-            });
-
-            var  $btnsReadMore = $(".js-btn_readmore")
-                ,detailsLineHeight = $btnsReadMore.eq(0).siblings(".js-content_readmore").css("line-height")	// save line height from styles.css
-                ,detailsHeight = $btnsReadMore.eq(0).siblings(".js-content_readmore").css("height")	// save height from styles.css
-                ,detailsMaxHeight = $btnsReadMore.eq(0).siblings(".js-content_readmore").css("max-height")	// save max-height from styles.css
-                ;
-
-            var initBtnsReadMore = function(){	// визначає чи показувати кнопку ReadMore
-                var $detailsList = $(this).siblings(".js-content_readmore");
-
-                if (checkOverflow($detailsList[0])){
-                    $(this).css("visibility", "visible");
-                }
-            }
-
-            // покажемо кнопку readMore там де вона треба
-            $btnsReadMore.each(initBtnsReadMore);
-
-            // hide-show details  by click on "Подробнее"
-            // show:
-            $btnsReadMore.click(function(){	// show-hide details text on "Подробнее" click
-                var  $toggleList = $(this).siblings(".js-content_readmore")
-                    ,$toggleListItems = $toggleList.children().filter("li:nth-child(3)~li")
-                    ,$proposition = $toggleList.parents(".b-proposition")
-                    ;
-
-                var closeContent = function(){
-                    $toggleList.animate({
-                            height: detailsHeight
-                    }, 400);
-                    $proposition.css("z-index","0");
-                    $toggleList.removeClass("js-opened");
-                }
-
-                var openContent = function(){
-                    $proposition.css("z-index","1");
-                    // $toggleList.css("height", "none");
-                    $toggleList.animate({
-                            height: detailsMaxHeight
-                    }, 400);
-                    $toggleList.addClass("js-opened");
-
-                };
-
-                var toggleContent = function(){
-                    if ($toggleList.hasClass("js-opened")){
-                        closeContent();
-                    } else {
-                        openContent()
-                    }
-                };
-
-                toggleContent();
-            })
-
-            // hide-show additional propositions by click on "Посмотреть еще предложения"
-            var  $propositionsCalc = $containerAjax.find(".b-calculator_propos")
-                ,$proposStrings = $propositionsCalc.find(".b-propositions__string")
-                ,$hiddenProposStrings = $proposStrings.filter(".b-propositions__string_hidden")
-                ,$moreProposBtn = $propositionsCalc.find("#morePropositions")
-                ;
-            $moreProposBtn.click(function(){
-                if (!$hiddenProposStrings.is(":animated")){
-                    $hiddenProposStrings.slideToggle();
-                    $moreProposBtn.find(".fa").toggleClass("fa-angle-down").toggleClass("fa-angle-up");
-                }
-                // покажемо кнопку readMore там де вона треба
-                $btnsReadMore.each(initBtnsReadMore);
-            });
-
-        //	Повертаємось до вибора тз при кліку на "Изменить данные"
-        $("#vehicleEdit").click(function () {
-            showVehicleCalc($containerAjax)
-        });
+    
+    	var fillStar = function(){	// ф-я для зафарбовування зірочок для кожного контейнера $("РейтингКонтейнер").each(fillStar)
+		var  starsNum = $(this).attr("data-rating")	// к-ть зірочок для зафарбування в атрибуті "data-rating" контейнера
+			,$stars = $(this).children("span.fa")
+			,i
+			;
+		// 	fa-star-o контур зірочки
+		// 	fa-star зафарбований контур зірочки
+		for (i=0; i<starsNum; ++i){
+			$stars.eq(i).removeClass("fa-star-o").addClass("fa-star");
+		}
+	};
+	var fillAllStars = function(sSelector){	// sSelector - селектор контейнера із зрочками
+		var $ratings = $(sSelector);	// контейнер із зірочками
+                $ratings.each(fillStar);
+	}
         
-        $(".b-logo__link").click(function () {
-            showVehicleCalc($containerAjax)
-        });
+	var propositionsInit = function($containerAjax){	// ф-я ініціалізації js-функціоналу на підвантаженому блоці пропозицій
+		// зафарбуємо необхідну к-ть зірочок рейтингу компанії
+		fillAllStars(".b-company__rating");
 
-        // підванатажимо блок оформлення при кліку на "Купить"
-        var $buyBtns = $("#propositions").find(".b-proposition__buy");	// кнопки купівлі
-
-        $buyBtns.click(function () {
-            // GTM variables
-            var nameOfCompany = $(this).siblings(".b-company__name").text()
-                    , price = $(this).find(".b-text_btn").attr("data-fullprice")
+		var  $btnsReadMore = $(".js-btn_readmore")
+                    ,detailsLineHeight = $btnsReadMore.eq(0).siblings(".js-content_readmore").css("line-height")	// save line height from styles.css
+                    ,detailsHeight = $btnsReadMore.eq(0).siblings(".js-content_readmore").css("height")	// save height from styles.css
+                    ,detailsMaxHeight = $btnsReadMore.eq(0).siblings(".js-content_readmore").css("max-height")	// save max-height from styles.css
                     ;
-            dataLayer.push({'event': 'buySC', 'eventCategory': 'buyOsagoLanding', 'eventAction': nameOfCompany, 'eventLabel': price});	// GTM
 
-            var proposNum = $(this).attr("data-proposition");	// номер пропозиції для підвантаження потрібної пропозиції
-            showOrderBlock(proposNum, $containerAjax);
-        });
-    };
+		var initBtnsReadMore = function(){	// визначає чи показувати кнопку ReadMore
+                    var $detailsList = $(this).siblings(".js-content_readmore");
+
+                    if (checkOverflow($detailsList[0])){
+                        $(this).css("visibility", "visible");
+                    }
+		}
+
+		// покажемо кнопку readMore там де вона треба
+		$btnsReadMore.each(initBtnsReadMore);
+
+		// hide-show details  by click on "Подробнее"
+			// show:
+		$btnsReadMore.click(function(){	// show-hide details text on "Подробнее" click
+			var  $toggleList = $(this).siblings(".js-content_readmore")
+                            ,$proposition = $toggleList.parents(".b-proposition")
+                            ;
+
+			var closeContent = function(){
+                            $toggleList.animate({
+                                    height: detailsHeight
+                            }, 400);
+                            $proposition.css("z-index","0");
+                            $toggleList.removeClass("js-opened");
+				
+			};
+
+			var openContent = function(){
+					$proposition.css("z-index","1");
+					// $toggleList.css("height", "none");
+					$toggleList.animate({
+						height: detailsMaxHeight
+					}, 400);
+					$toggleList.addClass("js-opened");
+				
+			};
+
+			var toggleContent = function(){
+				if ($toggleList.hasClass("js-opened")){
+					closeContent();
+				} else {
+					openContent()
+				}
+			};
+
+			toggleContent();
+		})
+
+		// hide-show additional propositions by click on "Посмотреть еще предложения"
+		var  $propositionsCalc = $containerAjax.find(".b-calculator_propos")
+			,$proposStrings = $propositionsCalc.find(".b-propositions__string")
+			,$hiddenProposStrings = $proposStrings.filter(".b-propositions__string_hidden")
+			,$moreProposBtn = $propositionsCalc.find("#morePropositions")
+			;
+		$moreProposBtn.click(function(){
+			if (!$hiddenProposStrings.is(":animated")){
+				$hiddenProposStrings.slideToggle();
+				$moreProposBtn.find(".fa").toggleClass("fa-angle-down").toggleClass("fa-angle-up");
+			}
+			// покажемо кнопку readMore там де вона треба
+			$btnsReadMore.each(initBtnsReadMore);
+		});
+		
+		//	Повертаємось до вибора тз при кліку на "Изменить данные"
+		$("#vehicleEdit").click(function(){showVehicleCalc($containerAjax)});
+
+		//	Повертаємось до вибора тз при кліку на лого Oh.ua
+		$(".b-logo__link").click(function(e){
+			e.preventDefault();	// не перевантажуємо сторінку
+			showVehicleCalc($containerAjax)
+		});
+
+		// підванатажимо блок оформлення при кліку на "Купить"
+		var  $buyBtns = $("#propositions").find(".b-proposition__buy");	// кнопки купівлі
+
+		$buyBtns.click(function(){
+			// GTM variables
+			var  nameOfCompany = $(this).siblings(".b-company__name").text()
+				,price = $(this).find(".b-text_btn").attr("data-fullprice")
+				;
+			dataLayer.push({'event': 'buySC', 'eventCategory': 'buyOsagoLanding', 'eventAction': nameOfCompany, 'eventLabel': price});	// GTM
+
+			var proposNum = $(this).attr("data-proposition");	// номер пропозиції для підвантаження потрібної пропозиції
+			showOrderBlock(proposNum, $containerAjax);
+		});
+	};
 
     // order block
     var showOrderBlock = function (proposNum, $containerAjax) {
@@ -278,78 +284,77 @@ $(document).ready(function () {
                 $(element.form).find("label[for=" + element.id + "]").parent('.b-form__cell').removeClass('b-cell_' + errorClass).addClass('b-cell_' + validClass);
             },
             ignore: ".js-ignoreValidate",
-            rules: {
-                lastName: {
-                    required: true,
-                    minlength: 2,
-                    maxlength: 100,
-                    pattern: /^[A-Za-zА-Яа-яЁёІіЇї\-\s]+$/
+        	rules: {
+                    lastName: {
+                        required: true,
+                        minlength: 2,
+                        maxlength: 100,
+                        pattern: /^[A-Za-zА-Яа-яЁёІіЇї\-\s]+$/
+                    },
+                    firstName:{
+                        required: true,
+                        minlength: 2,
+                        maxlength: 75,
+                        pattern: /^[A-Za-zА-Яа-яЁёІіЇї\-\s]+$/
+                    },
+                    email:    {
+                        required: true,
+                        minlength: 5,
+                        maxlength: 50,
+                        email: true,
+                        pattern: /^(\S+)@([a-z0-9-]+)(\.)([a-z]{2,4})(\.?)([a-z]{0,4})+$/
+                    },
+                    inn:      {
+                        required: true,
+                        minlength: 1,
+                        maxlength: 10,
+                        pattern: /^[0-9]+$/
+                    },
+                    phone:    {
+                        required: true,
+                        pattern: /^\+38[0-9]{10}$/
+                    },
+                    address:  {
+                        required: true,
+                        minlength: 2,
+                        maxlength: 255,
+                        pattern: /^[A-Za-zА-Яа-яЁёІіЇї\-\s\,\.\/0-9]+$/
+                    },
+                    deliveryAddr:  {
+                        required: true,
+                        minlength: 2,
+                        maxlength: 255,
+                        pattern: /^[A-Za-zА-Яа-яЁёІіЇї\-\s\,\.\/0-9]+$/
+                    },
+                    year:  {
+                        required: true,
+                        number: true,
+                        min: 1960,
+                        max: 2018
+                    },
+                    chassis:  {
+                        required: true,
+                        minlength: 2,
+                        maxlength: 17,
+                        pattern: /^[A-Za-z]*\d+[A-Za-z]*$/
+                    },
+                    plateNum: {
+                        required: true,
+                        minlength: 2,
+                        maxlength: 10,
+                        pattern: /^[A-Za-zА-Яа-яЁёІіЇї\-0-9]+$/
+                    },
+                    date: {
+                        required: true,
+                        pattern: /^[0-9\.]+$/
+                    },
+                    regionNP:{
+                        required: true
+                    },
+                    delivDivisionIdNP:{
+                        required: true
+                    }
                 },
-                firstName: {
-                    required: true,
-                    minlength: 2,
-                    maxlength: 75,
-                    pattern: /^[A-Za-zА-Яа-яЁёІіЇї\-\s]+$/
-                },
-                email: {
-                    required: true,
-                    minlength: 5,
-                    maxlength: 50,
-                    email: true,
-                    pattern: /^(\S+)@([a-z0-9-]+)(\.)([a-z]{2,4})(\.?)([a-z]{0,4})+$/
-                },
-                inn: {
-                    required: true,
-                    minlength: 1,
-                    maxlength: 10,
-                    pattern: /^[0-9]+$/
-                },
-                phone: {
-                    required: true,
-                    pattern: /^\+38[0-9]{10}$/
-                },
-                address: {
-                    required: true,
-                    minlength: 2,
-                    maxlength: 255,
-                    pattern: /^[A-Za-zА-Яа-яЁёІіЇї\-\s\,\.\/0-9]+$/
-                },
-                deliveryAddr: {
-                    required: true,
-                    minlength: 2,
-                    maxlength: 255,
-                    pattern: /^[A-Za-zА-Яа-яЁёІіЇї\-\s\,\.\/0-9]+$/
-                },
-                year: {
-                    required: true,
-                    number: true,
-                    min: 1960,
-                    max: 2018
-                            //pattern: /[0-9]{4}/
-                },
-                chassis: {
-                    required: true,
-                    minlength: 2,
-                    maxlength: 17,
-                    pattern: /^[A-Za-zА-Яа-яЁёІіЇї\-0-9]+$/
-                },
-                plateNum: {
-                    required: true,
-                    minlength: 2,
-                    maxlength: 10,
-                    pattern: /^[A-Za-zА-Яа-яЁёІіЇї\-0-9]+$/
-                },
-                date: {
-                    required: true,
-                    pattern: /^[0-9\.]+$/
-                },
-                regionNP: {
-                    required: true
-                },
-                delivDivisionIdNP: {
-                    required: true
-                }
-            },
             messages: {
                 lastName: {
                     required: "Поле обязательно для заполнения!",
@@ -397,11 +402,11 @@ $(document).ready(function () {
                     max: "не позднее 2018 года выпуска",
                     //pattern: "1999 например"
                 },
-                chassis: {
+                chassis:  {
                     required: "Поле обязательно для заполнения!",
                     minlength: "не менее 2х символов",
                     maxlength: "не более 17 символов",
-                    pattern: "латинница, кириллица, дефис, цифры"
+                    pattern: "латинница, минимум одна цифра"
                 },
                 plateNum: {
                     required: "Поле обязательно для заполнения!",
@@ -1243,6 +1248,9 @@ $(document).ready(function () {
         event.preventDefault();
         $sliderReasons.slick("slickNext");
     });
+
+// зафарбуємо необхідну к-ть зірочок рейтингу компанії в (РЕЙТИНГ КЛИЕНТОВ OH.UA)
+	fillAllStars(".b-company__rating");
 
 // clientsRating/mtsb switch
     var $ratingBtns = $(".b-section_rating .b-rating__btn")

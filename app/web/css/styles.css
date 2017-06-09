@@ -1656,6 +1656,7 @@ body{
     clear: both;
 }
 .b-propositions__string_hidden{
+    margin-top: 60px;
     display: none;
 }
 .b-proposition__wrap{

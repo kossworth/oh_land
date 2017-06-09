@@ -275,7 +275,7 @@
                                 <div class="b-rating__content">
                                     <div class="b-rating__description">
                                         <img src="{{ company.logo | raw }}" alt="{{ company.name_1 }}" class="b-company__logo">
-                                        <span class="b-company__rating">
+                                        <span class="b-company__rating" data-rating="{{ company.rating | round(0, 'ceil') }}">
                                             <span class="fa fa-star-o" aria-hidden="true"></span>
                                             <span class="fa fa-star-o" aria-hidden="true"></span>
                                             <span class="fa fa-star-o" aria-hidden="true"></span>

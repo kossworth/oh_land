@@ -41,14 +41,23 @@
         </div>
     </div>
     <div class="b-calculator b-calculator_propos">
-            <div class="b-calculator__heading b-calculator__heading_propos">Здравствуйте, к сожалению, по данному региону нет предложений с выбранной франшизой. Выберите другое предложение:</div>
+            <div class="b-calculator__heading b-calculator__heading_propos">По данному региону <span class="bold">нет предложений</span> с выбранной франшизой. <span class="bold">Выберите другое предложение:</span></div>
             <div class="b-propositions">
                 <div class="b-propositions__string">
                     {% for prop in propositions %}
 
-                        {% if loop.index%4 == 1 and not loop.first and propositions|length > 4 %}
-                            <div class="b-propositions__string b-propositions__string_hidden">
+                        {% if loop.index%4 == 1 and not loop.first %}
+                            {% if loop.index < 6 %}
+                                <div class="b-propos__guaranties">
+                                    <div class="b-guaranties__heading">Гарантия лучшей цены</div>
+                                    <p>Мы гарантируем самые низкие цены. Не дороже, чем напрямую в страховой компании. Если вы нашли цену ниже, мы компенсируем вам эту разницу.</p>
+                                </div>
+                            {% endif %}
+                            {% if propositions|length > 4 %}
+                                <div class="b-propositions__string b-propositions__string_hidden">
+                            {% endif %}
                         {% endif %}
+                        
                         <div class="b-proposition__wrap">
                             <div class="b-proposition b-gradient_bg">
                                 {% if prop.company.osago.landing_top %}
@@ -109,11 +118,14 @@
                 {% if propositions|length > 4 %}
                     </div>
                 {% endif %}
+                {% if propositions|length < 5 %}
+                    <div class="b-propos__guaranties">
+                        <div class="b-guaranties__heading">Гарантия лучшей цены</div>
+                        <p>Мы гарантируем самые низкие цены. Не дороже, чем напрямую в страховой компании. Если вы нашли цену ниже, мы компенсируем вам эту разницу.</p>
+                    </div>
+                {% endif %}
             </div>
-            <div class="b-propos__guaranties">
-                <div class="b-guaranties__heading">Гарантия лучшей цены</div>
-                <p>Мы гарантируем самые низкие цены. Не дороже, чем напрямую в страховой компании. Если вы нашли цену ниже, мы компенсируем вам эту разницу.</p>
-            </div>
+     
             {% if propositions|length > 4 %}
                 <button type="button" class="b-form__submit_vehicle" id="morePropositions">
                     <span class="b-text_btn">Посмотреть еще предложения</span><span class="fa fa-angle-down" aria-hidden="true"></span>
