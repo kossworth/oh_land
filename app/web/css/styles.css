@@ -89,6 +89,10 @@ body{
     font-size: 14px;
     font-weight: 500;
 }
+.b-logo__link{
+    padding-top: 0;
+    cursor: pointer;
+}
 .b-logo{
     padding-top: 0;
     height: auto;
@@ -501,8 +505,15 @@ body{
     color: #000;
     background-color: #f2c916;
     cursor: pointer;
-    -webkit-box-shadow: 0 0 30px 7px rgba(0,0,0,0.08);
-    box-shadow: 0 0 30px 7px rgba(0,0,0,0.08);
+    -webkit-box-shadow: 0 0 30px 7px rgba(0,0,0,0);
+    box-shadow: 0 0 30px 7px rgba(0,0,0,0);
+    -webkit-transition: -webkit-box-shadow 200ms;
+    -o-transition: -o-box-shadow 200ms;
+    transition: box-shadow 200ms;
+}
+.b-form__submit_vehicle:hover{
+    -webkit-box-shadow: 0 0 35px 7px rgba(0,0,0,0.15);
+    box-shadow: 0 0 35px 7px rgba(0,0,0,0.15);
 }
 .b-form__submit_vehicle span.b-text_btn{
     display: inline-block;
@@ -1651,8 +1662,8 @@ body{
     float: left;
     position: relative;
     width: 227px;
-    height: 320px;
-/*    height: 380px;*/
+/*    height: 320px;*/
+    height: 334px;
 /*    width: 245px;*/
 /*    height: 293px;*/
 }
@@ -1666,7 +1677,7 @@ body{
     top: 0;
     left: 0;
     width: 245px;
-    min-height: 320px;
+    min-height: 334px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -1723,8 +1734,8 @@ body{
     
     font-size: 14px;
     line-height: 1.15; /* 14*1.15=16.1px */
-    height: 48.3px; /* 3 рядки текста  (4*16.1px)*/
-    max-height: 177.1px; /* 11 рядків текста (11*16.1px)*/
+    height: 64.4px; /* 4 рядки текста  (4*16.1px)*/
+    max-height: 128.8px; /* 8 рядків текста (11*16.1px)*/
     overflow: hidden;
     
     font-weight: 300;

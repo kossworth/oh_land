@@ -38,7 +38,9 @@
     
 	<header class="b-header" id="header">
         <div class="b-container_wide b-container_header">
-            <img src="{{ Url.to('app/web/img/logo.svg') }}" alt="OH.UA лого" class="b-logo">
+            <a class="b-logo__link">
+                <img src="{{ Url.to('app/web/img/logo.svg') }}" alt="OH.UA лого" class="b-logo">
+            </a>
             <span class="b-header__address">Украина, г. Киев, ул. Пушкинская, 9</span>
             <a href="tel:{{ this.params.partner_phone | replace({' ' : '', '(' : '', ')' : '', '-' : ''}) }}" 
                class="b-header__link b-header__link_phone">

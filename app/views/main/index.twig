@@ -122,9 +122,9 @@
                     <div class="b-block_select b-selectBlock_franshiza">
                         <label for="franshiza" class="b-label_registration">Франшиза</label>
                         <select name="franshiza" class="js-selectric" id="franshiza">
-                            <option value="0" selected>0 грн</option>
+                            <option value="0">0 грн</option>
                             <option value="1000">1 000 грн</option>
-                            <option value="2000">2 000 грн</option>
+                            <option value="2000" selected>2 000 грн</option>
                         </select>
                     </div>
                     <label class="b-block_checkbox">
@@ -288,21 +288,12 @@
                                     <div class="b-rating__bonuses">
                                         {% if bonuses | length > 0 %}
                                             {% for bonus in bonuses%}
-                                            <span class="b-rating__bonus">
-                                                <span class="fa fa-gift" aria-hidden="true"></span>
-                                                {{ bonus }}
-                                            </span>
+                                                <span class="b-rating__bonus">
+                                                    <span class="fa fa-gift" aria-hidden="true"></span>
+                                                    {{ bonus }}
+                                                </span>
                                             {% endfor %}
                                         {% endif %}
-                                        
-    {#                                    <span class="b-rating__bonus">
-                                            <span class="fa fa-check-circle-o" aria-hidden="true"></span>
-                                            Выбор выбор Клиентов
-                                        </span>
-                                        <span class="b-rating__bonus">
-                                            <span class="fa fa-refresh" aria-hidden="true"></span>
-                                            Прямое урегулирование
-                                        </span>#}
                                     </div>
                                 </div>
                             </div>
@@ -348,7 +339,7 @@
                     <tr>
                         <th>ДОМИНАНТА</th>
                         <td class="b-tlight_green"></td>
-                        <td class="b-tlight_yellow"></td>
+                        <td class="b-tlight_green"></td>
                         <td class="b-tlight_green"></td>
                     </tr>
                     <tr>
@@ -373,7 +364,7 @@
                         <th>АЛЬФА СТРАХОВАНИЕ</th>
                         <td class="b-tlight_green"></td>
                         <td class="b-tlight_yellow"></td>
-                        <td class="b-tlight_green"></td>
+                        <td class="b-tlight_yellow"></td>
                     </tr>
                     <tr>
                         <th>КНЯЖА</th>
@@ -390,13 +381,13 @@
                     <tr>
                         <th>ПРОСТО-СТРАХОВАНИЕ</th>
                         <td class="b-tlight_green"></td>
-                        <td class="b-tlight_yellow"></td>
+                        <td class="b-tlight_green"></td>
                         <td class="b-tlight_green"></td>
                     </tr>
                     <tr>
                         <th>ИНГО УКРАИНА</th>
                         <td class="b-tlight_green"></td>
-                        <td class="b-tlight_yellow"></td>
+                        <td class="b-tlight_green"></td>
                         <td class="b-tlight_green"></td>
                     </tr>
                     <tr>

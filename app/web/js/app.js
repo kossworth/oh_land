@@ -198,6 +198,10 @@ $(document).ready(function () {
         $("#vehicleEdit").click(function () {
             showVehicleCalc($containerAjax)
         });
+        
+        $(".b-logo__link").click(function () {
+            showVehicleCalc($containerAjax)
+        });
 
         // підванатажимо блок оформлення при кліку на "Купить"
         var $buyBtns = $("#propositions").find(".b-proposition__buy");	// кнопки купівлі

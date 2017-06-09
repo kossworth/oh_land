@@ -89,7 +89,7 @@ class OsagoController extends \app\components\BaseController
             $propositions   = ewa\find::osago($tariff_options);
             $view           = 'osago_propositions_empty.twig';
         }
-        
+               
         $tariff_options['city'] = ['id' => $get['city'], 'zone' => $get['zone'], 'name' => $get['cityName']];
 
         if($session->has('osago_search_data'))
@@ -128,7 +128,10 @@ class OsagoController extends \app\components\BaseController
                 }
             }
         }
-
+        // сортируем предложения по цене
+        usort($result_propositions, function($a, $b){
+            return ($a['payment'] - $b['payment']);
+        });
         return $this->renderPartial($view, [
             'propositions'  => $result_propositions,
             'auto_category' => $auto_category,
