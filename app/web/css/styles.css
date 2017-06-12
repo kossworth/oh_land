@@ -1647,8 +1647,11 @@ body{
 .b-propositions__string{
     margin-bottom: 60px;
 }
+.b-propositions__string:first-child{
+    margin-bottom: 40px;
+}
 .b-propositions__string:last-child{
-    margin-bottom: 0;
+    margin-bottom: 30px;
 }
 .b-propositions__string:after{
     content: '';
