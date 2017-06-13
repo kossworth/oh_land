@@ -85,7 +85,7 @@ class OsagoController extends \app\components\BaseController
         // если предложений не найдено - ищем предложение с теми же параметрами, но без установленной франшизы
         if(empty($propositions))
         {
-            unset($tariff_options['franchise']);
+            $tariff_options['franchise'] = null;
             $propositions   = ewa\find::osago($tariff_options);
             $view           = 'osago_propositions_empty.twig';
         }
@@ -514,7 +514,7 @@ class OsagoController extends \app\components\BaseController
         {
             throw new \yii\db\Exception('Unknown category!');
         }
-        
+
         $tariff_options = [
             'autoCategory'          => $auto_category['auto_code'],
             'bonusMalus'            => 0.8,
