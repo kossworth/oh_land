@@ -43,6 +43,7 @@ class FeedbacksController extends \app\components\BaseController
         $feedback->username     = isset($post['name']) ? strip_tags(trim($post['name'])) : '';
         $feedback->userphone    = isset($post['phone']) ? strip_tags(trim($post['phone'])) : '';
         $feedback->text         = isset($post['feedback']) ? strip_tags(trim($post['feedback'])) : '';
+        $feedback->rating       = isset($post['rating']) ? strip_tags(trim($post['rating'])) : 5;
         $feedback->processed    = 0;
         $feedback->published    = 0;
         $feedback->crtdate      = date('U');

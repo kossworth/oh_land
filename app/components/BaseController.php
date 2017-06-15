@@ -8,8 +8,8 @@ use app\models\Partners;
 
 class BaseController extends \yii\web\Controller
 {
-    public $default_content;
-    protected $partner = null;
+    public      $default_content;
+    protected   $partner = null;
     
     public function init()
     {
@@ -33,13 +33,11 @@ class BaseController extends \yii\web\Controller
             $this->view->params['partner_phone'] = $partner->phone;
             $this->view->params['partner_email'] = $partner->admin_email;
         }
-        
-        
+ 
 //        Yii::$app->view->registerMetaTag([
 //            'name'    => 'robots',
-//            'content' => 'NOINDEX, NOFOLLOW'
+//            'content' => 'NOINDEX, FOLLOW'
 //        ]);
- 
     }
 
     /**

@@ -355,7 +355,7 @@ $(document).ready(function () {
                         required: true,
                         minlength: 2,
                         maxlength: 17,
-                        pattern: /^[A-Za-z]*\d+[A-Za-z]*$/
+                        pattern: /^[A-Za-z]+[A-Za-z0-9]*$/
                     },
                     plateNum: {
                         required: true,
@@ -612,6 +612,13 @@ $(document).ready(function () {
         $methods.find("input[name='year']").mask("?9999");
         // дати початку дії поліса
         $methods.find("input[name='date']").mask("?99.99.9999");
+
+        // заборонимо вводити пробіл в поле номерного знаку
+        $("#plateNum").on("keypress", function(e){
+            if (e.which == 32){
+                return false;
+            }
+        })
 
         // pickadate initialization
         var pickadayOptions = {

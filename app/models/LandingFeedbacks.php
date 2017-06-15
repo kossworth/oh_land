@@ -35,8 +35,8 @@ class LandingFeedbacks extends \yii\db\ActiveRecord
     {
         return [
             [['username', 'userphone', 'text', 'crtdate'], 'required'],
-            [['username', 'text'], 'string'],
-            [['level_companies', 'level_service', 'level_price', 'processed', 'published', 'crtdate'], 'integer'],
+            [['username', 'text', 'facebook_link'], 'string'],
+            [['rating','level_companies', 'level_service', 'level_price', 'processed', 'published', 'crtdate'], 'integer'],
             [['userphone'], 'string', 'max' => 20],
         ];
     }
@@ -47,16 +47,18 @@ class LandingFeedbacks extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'username' => Yii::t('app', 'Username'),
-            'userphone' => Yii::t('app', 'Userphone'),
-            'text' => Yii::t('app', 'Text'),
-            'level_companies' => Yii::t('app', 'Выбор компаний'),
-            'level_service' => Yii::t('app', 'Качество сервиса'),
-            'level_price' => Yii::t('app', 'Уровень цен'),
-            'processed' => Yii::t('app', 'Обработан'),
-            'published' => Yii::t('app', 'Опубликован'),
-            'crtdate' => Yii::t('app', 'Crtdate'),
+            'id'                        => Yii::t('app', 'ID'),
+            'username'                  => Yii::t('app', 'Username'),
+            'userphone'                 => Yii::t('app', 'Userphone'),
+            'text'                      => Yii::t('app', 'Text'),
+            'rating'                    => Yii::t('app', 'Rating'),
+            'facebook_link'             => Yii::t('app', 'Facebook Link'),
+            'level_companies'           => Yii::t('app', 'Выбор компаний'),
+            'level_service'             => Yii::t('app', 'Качество сервиса'),
+            'level_price'               => Yii::t('app', 'Уровень цен'),
+            'processed'                 => Yii::t('app', 'Обработан'),
+            'published'                 => Yii::t('app', 'Опубликован'),
+            'crtdate'                   => Yii::t('app', 'Crtdate'),
         ];
     }
 

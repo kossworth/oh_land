@@ -95,7 +95,7 @@
                             <label for="motorcycle">более 300 см<sup>3</sup></label>
                         </div>
                     </div>
-                    <span class="b-calculator__heading b-calculator__heading_registration">Регистрация и эксплуатация</span>
+                    <span class="b-calculator__heading b-calculator__heading_registration">Место регистрации авто <span class="fa fa-question-circle" aria-hidden="true" title="Введите несколько букв названия населенного пункта, затем выберете населенный пункт из списка. Место регистрации вашего ТС необходимо указывать согласно технического паспорта. (Не путать с местом жительства или прописки)"></span></span>
                     <div class="b-block_select b-selectBlock_registration">
                         <label for="regCity" class="b-label_registration">Место регистрации транспортного средства</label>
                         <input type="text" class="b-autocomplete b-autocomplete_vehicle selectric" id="regCity" title="Введите и выберите город" name="regCity" value="г. Киев, Украина">
@@ -173,10 +173,42 @@
     </div>
 </section>
 
+<section class="b-section_video">
+    <div class="b-container">
+        <div class="b-card b-card_video">
+            <iframe width="625" height="440" src="https://www.youtube.com/embed/SLO1p4JzVHs" frameborder="0" allowfullscreen></iframe>
+            {#<div class="b-video__overlay">
+                <div class="b-overlay__btn b-btn_play">
+                    <span class="fa fa-circle" aria-hidden="true"></span>
+                    <span class="fa fa-play-circle" aria-hidden="true"></span>
+                </div>
+            </div>#}
+        </div>
+        <div class="b-videohelp">
+            <div class="b-heading_videohelp">Видео<br>Помощник<br>Oh.ua</div>
+            <p class="b-descr_videohelp">Вы зашли на сайт сервиса сравнения цен и подбора страховок № 1 в Украине - Oh.ua.</p>
+            <ol class="b-stages_videohelp">
+                <li>
+                    <div class="b-stage_videohelp"><span class="g-bold">Вверху страницы выберите тип транспортного средства и место регистрации авто,</span></div>
+                </li>
+                <li>
+                    <div class="b-stage_videohelp">затем <span class="g-bold">нажмите кнопку</span><span class="g-bold g-highlited"> “Узнать стоимость ОСАГО”</span>.</div>
+                </li>
+                <li>
+                    <div class="b-stage_videohelp"><span class="g-bold">Выберите предложение по страховке,</span> которое вам понравилось,</div>
+                </li>
+                <li>
+                    <div class="b-stage_videohelp"><span class="g-bold">нажмите кнопку “Купить”</span> и оформите удобным способом.</div>
+                </li>
+            </ol>
+        </div>
+    </div>
+</section>
+
 <section class="b-section_reasons">
     <div class="b-container">
             <span class="b-section__heading">
-           <span class="b-header__num">{{ reasons|length }}</span> причин купить ОСАГО на Oh.ua<br>
+           <span class="b-header__num">{{ reasons | length }}</span> причин купить ОСАГО на Oh.ua<br>
            <span class="b-subHeader">и сэкономить время и деньги!</span>
         </span>
         <div class="b-reasons__container_slider">
@@ -204,6 +236,20 @@
     </div>
 </section>
 
+<section class="b-section_map">
+    <div class="b-container b-container_map">
+        <div class="b-card b-card_contacts">
+            <div class="b-map__header">Мы находимся по адресу</div>
+            <p class="b-map__address">01032, Украина,<br>г. Киев, ул. Пушкинская, 9</p>
+            <p class="b-map__address"><span>Звоните нам:</span>(044) 290 36 71</p>
+            <p class="b-map__address"><span>Или пишите:</span>sales@oh.ua</p>
+        </div>
+        <div class="b-card b-card_map">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2540.715301864317!2d30.51680831566454!3d50.446403395537665!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d4cef476aeabf7%3A0x7a1e66ef15f87549!2z0KHRgtGA0LDRhdC-0LLQutCwINCe0KHQkNCT0J4g0LIg0JrQuNC10LLQtSwg0L7QvdC70LDQudC9INC60LDQu9GM0LrRg9C70Y_RgtC-0YAg0LDQstGC0L7RhtC40LLQuNC70LrQuCDigJQgT2guVUE!5e0!3m2!1suk!2sua!4v1497353903019" width="625" height="454" frameborder="0" style="border:0" allowfullscreen></iframe>
+        </div>
+    </div>
+</section>
+                
 <section class="b-section_howto">
     <div class="b-container">
             <span class="b-section__heading b-section__heading_howto">Как вы можете оформить полис ОСАГО на сайте Oh.ua?</span>
@@ -233,25 +279,28 @@
                     
 <section class="b-section_attention">
     <div class="b-container">
-            <span class="b-section__heading b-section__heading_howto">На что  вам следует обратить внимание при выборе ОСАГО?</span>
-            <div class="b-attention__factors">
-                <div class="b-attention__factor">
-                    <div class="b-factor__heading">Стоимость</div>
-                    <p>Цена не должна отличаться более чем на 15-20%</p>
-                </div>
-                <div class="b-attention__factor">
-                    <div class="b-factor__heading">Светофор МТСБУ</div>
-                    <p>Оценка деятельности страховщика государственным регулятором  МТСБУ</p>
-                </div>
-                <div class="b-attention__factor">
-                    <div class="b-factor__heading">Отзывы</div>
-                    <p>Отзывы клиентов о страховщике</p>
-                </div>
-                <div class="b-attention__factor">
-                    <div class="b-factor__heading">Франшиза</div>
-                    <p>сумма, которую выплачивает застрахованный самостоятельно, бывает 0, 1000, 2000 грн</p>
-                </div>
+        <span class="b-section__heading b-section__heading_howto">На что  вам следует обратить внимание при выборе ОСАГО?</span>
+        <div class="b-attention__factors">
+            <div class="b-attention__factor">
+                <div class="b-factor__heading">Стоимость</div>
+                <p>Цена не должна отличаться более чем на 15-20%</p>
             </div>
+            <div class="b-attention__factor">
+                <div class="b-factor__heading">Светофор МТСБУ</div>
+                <p>Оценка деятельности страховщика государственным регулятором  МТСБУ</p>
+            </div>
+            <div class="b-attention__factor">
+                <div class="b-factor__heading">Отзывы</div>
+                <p>Отзывы клиентов о страховщике</p>
+            </div>
+            <div class="b-attention__factor">
+                <div class="b-factor__heading">Франшиза</div>
+                <p>сумма, которую выплачивает застрахованный самостоятельно, бывает 0, 1000, 2000 грн</p>
+            </div>
+        </div>
+        <a href="#calculator" class="b-form__submit_vehicle b-anchor_calculator">
+            <span class="b-text_btn">Вернуться к калькулятору</span><span class="fa fa-angle-up" aria-hidden="true"></span>
+        </a>
     </div>
 </section>
                     
@@ -465,6 +514,19 @@
                                             <input type="tel" name="phone" id="phone1" required pattern="[0-9()\s+-]{19}">
                                         </div>
                                     </div>
+                                   <div class="b-feedbackForm__rating">
+                                        <input type="radio" id="star5" name="rating" value="5" class="sr-only" required>
+                                        <label class="fa" for="star5" title="восхитительно"></label>
+                                        <input type="radio" id="star4" name="rating" value="4" class="sr-only">
+                                        <label class="fa" for="star4" title="отлично"></label>
+                                        <input type="radio" id="star3" name="rating" value="3" class="sr-only">
+                                        <label class="fa" for="star3" title="хорошо"></label>
+                                        <input type="radio" id="star2" name="rating" value="2" class="sr-only">
+                                        <label class="fa" for="star2" title="удовлетворительно"></label>
+                                        <input type="radio" id="star1" name="rating" value="1" class="sr-only">
+                                        <label class="fa" for="star1" title="плохо"></label>
+                                        <span class="b-label_rating">Ваша оценка</span>
+                                    </div>
                                     <div class="row">
                                         <div class="col-l col-12">
                                             <label for="feedback1" class="b-label_registration">Ваш отзыв</label>
@@ -498,6 +560,19 @@
                                             <label for="phone1" class="b-label_registration">Ваш Телефон</label>
                                             <input type="tel" name="phone" id="phone1" required pattern="[0-9()\s+-]{19}">
                                         </div>
+                                    </div>
+                                    <div class="b-feedbackForm__rating">
+                                        <input type="radio" id="sstar5" name="rating" value="5" required>
+                                        <label class="fa" for="sstar5" title="восхитительно"></label>
+                                        <input type="radio" id="sstar4" name="rating" value="4">
+                                        <label class="fa" for="sstar4" title="отлично"></label>
+                                        <input type="radio" id="sstar3" name="rating" value="3">
+                                        <label class="fa" for="sstar3" title="хорошо"></label>
+                                        <input type="radio" id="sstar2" name="rating" value="2">
+                                        <label class="fa" for="sstar2" title="удовлетворительно"></label>
+                                        <input type="radio" id="sstar1" name="rating" value="1">
+                                        <label class="fa" for="sstar1" title="плохо"></label>
+                                        <span class="b-label_rating">Ваша оценка</span>
                                     </div>
                                     <div class="row">
                                         <div class="col-l col-12">

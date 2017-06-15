@@ -18,6 +18,8 @@ class admin_landing_feedbacks
         $this->fld[] = new Field("userphone", "Номер телефона пользователя", 1);
         $this->fld[] = new Field("published", "Опубликован", 6, ['showInList' => 1, 'editInList' => 1]);
         $this->fld[] = new Field("processed", "Обработан", 6, ['showInList' => 1, 'editInList' => 1]);
+        $this->fld[] = new Field("facebook_link", "Ссылка на отзыв из Facebook", 1);
+        $this->fld[] = new Field("rating", "Рейтинг", 1);
         $this->fld[] = new Field("text", "Текст отзыва", 16);
         $this->fld[] = new Field("crtdate", "Дата создания", 4);
         
@@ -25,7 +27,7 @@ class admin_landing_feedbacks
         $this->fld[] = new Field("level_service", "Уровень обслуживания", 1);
         $this->fld[] = new Field("level_price", "Уровень цен", 1);
         
-//        $this->fld[] = new Field("level_companies", "Выбор компаний", 10,
+//        $this->fld[] = new Field("rating", "Рейтинг", 10,
 //                ['showInList' => 0,
 //                    'values' => [
 //                        '1',

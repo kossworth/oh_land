@@ -59,16 +59,38 @@
     
     <footer class="b-footer">
         <div class="b-footer__toTop" id="toTop">
-            <span class="b-heading_toTop">Наверх&nbsp;</span>
+            <span class="b-heading_toTop">Вверх&nbsp;</span>
             <a href="#header" class="b-btn_toTop">
                 <span class="fa fa-arrow-up" aria-hidden="true"></span>
             </a>
+        </div>
+        <div class="b-container_wide b-container_header b-container_footer">
+            <a href="{{ Url.to(app.request.baseUrl) }}" class="b-logo__link">
+                <img src="{{ Url.to('app/web/img/logo.svg') }}" alt="OH.UA лого" class="b-logo">
+            </a>
+            <span class="b-header__address">Украина, г. Киев, ул. Пушкинская, 9</span>
+            <a href="tel:{{ this.params.partner_phone | replace({' ' : '', '(' : '', ')' : '', '-' : ''}) }}" class="b-header__link b-header__link_phone">
+                <span class="b-icon_phone"></span>
+                &nbsp;&nbsp;{{ this.params.partner_phone }}
+            </a>
+            <a href="mailto:{{ this.params.partner_email }}" class="b-header__link b-header__link_email">
+                <span class="fa fa-envelope-open-o" aria-hidden="true"></span>
+                &nbsp;&nbsp;{{ this.params.partner_email }}
+            </a>
+            <a href="viber://add?number={{ this.params.partner_phone | replace({' ' : '', '(' : '', ')' : '', '-' : ''}) }}" class="b-header__link b-header__link_phone">
+                <span class="b-icon_viber"></span>
+                &nbsp;&nbsp;{{ this.params.partner_phone }}
+            </a>
+            <a href="https://www.facebook.com/ohua.online/" class="b-header__link b-header__link_facebook b-header__link_email">
+                <span class="b-icon_fb"></span>oh.ua
+            </a>
+            <button class="b-header__btn" id="callbackBtn">Вам перезвонить?</button>
         </div>
         <div class="b-container">
             <div class="b-container_footer">
                 <img src="{{ Url.to('app/web/img/ewa.png') }}" alt="EWA" class="b-logo_ewa">
                 <p class="b-footer__pay">
-                   Мы принимаем:<br>
+                   Мы принимаем:
                    <span class="fa fa-cc-visa" aria-hidden="true"></span>
                    <span class="fa fa-cc-mastercard" aria-hidden="true"></span>
                    <span class="fa fa-cc-paypal" aria-hidden="true"></span>
@@ -123,7 +145,13 @@
             <div class="b-slide__wrap">
                 <div class="b-slide__heading">{{ feedback.username }}</div>
                 <div class="b-slide__content">
-                    <p class="b-slide__response">{{ feedback.text }}</p>
+                    <span class="b-company__rating b-company__rating_propos" data-rating="{{ feedback.rating }}">
+                        <span class="fa fa-star-o" aria-hidden="true"></span>
+                        <span class="fa fa-star-o" aria-hidden="true"></span>
+                        <span class="fa fa-star-o" aria-hidden="true"></span>
+                        <span class="fa fa-star-o" aria-hidden="true"></span>
+                        <span class="fa fa-star-o" aria-hidden="true"></span>
+                    </span>
                     <div class="b-slide__aside_marks">
                         <div class="b-mark__heading">Качество сервиса </div>
                         <div class="b-mark__num">{{ feedback.level_service }}/10</div>
@@ -132,6 +160,10 @@
                         <div class="b-mark__heading">Выбор компаний </div>
                         <div class="b-mark__num">{{ feedback.level_companies }}/10</div>
                     </div>
+                    <p class="b-slide__response">{{ feedback.text }}</p>
+                    {% if feedback.facebook_link %}
+                        <a href="{{ feedback.facebook_link }}" class="b-link_response g-bold">Смотреть на FACEBOOK<span  class="fa fa-chevron-right" aria-hidden="true"></span></a>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}
