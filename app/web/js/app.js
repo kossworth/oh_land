@@ -1605,6 +1605,11 @@ $(document).ready(function () {
         $modalOvl.fadeIn();
         $modalCallback.fadeIn();
     });
+
+    $("#callbackBtn_footer").click(function(){
+        $modalOvl.fadeIn();
+        $modalCallback.fadeIn();
+    });
     $modals.click(function(event){
         event.stopPropagation()
     })

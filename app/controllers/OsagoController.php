@@ -64,11 +64,12 @@ class OsagoController extends \app\components\BaseController
         {
             throw new \yii\db\Exception('Unknown category!');
         }
-        
+
         $tariff_options = [
             'autoCategory'          => $auto_category['auto_code'],
             'bonusMalus'            => 0.8,
-            'franchise'             => $get['franshiza'] ? (int)$get['franshiza'] : 0,
+//            'franchise'             => (isset($get['franshiza']) && is_numeric($get['franshiza'])) ? (int)$get['franshiza'] : null,
+            'franchise'             => null,
             'customerCategory'      => 'NATURAL',
             'dateFrom'              => date('Y-m-d', strtotime('+1 day')),
             'dateTo'                => date('Y-m-d', strtotime('+1 year')),
@@ -79,16 +80,16 @@ class OsagoController extends \app\components\BaseController
             'driveExp'              => false,
             'additionalLimit'       => false,
         ];
-        
+
         $propositions = ewa\find::osago($tariff_options);
 
         // если предложений не найдено - ищем предложение с теми же параметрами, но без установленной франшизы
-        if(empty($propositions))
-        {
-            $tariff_options['franchise'] = null;
-            $propositions   = ewa\find::osago($tariff_options);
-            $view           = 'osago_propositions_empty.twig';
-        }
+//        if(empty($propositions))
+//        {
+//            $tariff_options['franchise'] = null;
+//            $propositions   = ewa\find::osago($tariff_options);
+//            $view           = 'osago_propositions_empty.twig';
+//        }
                
         $tariff_options['city'] = ['id' => $get['city'], 'zone' => $get['zone'], 'name' => $get['cityName']];
 
@@ -104,9 +105,7 @@ class OsagoController extends \app\components\BaseController
         $session->set('osago_search_data', json_encode($tariff_options, JSON_UNESCAPED_UNICODE));
         $session->set('regCity', $get['cityName']);
         
-        $companies = Company::find()
-                ->joinWith(['osago'], true)
-                ->all();
+        $companies = Company::find()->joinWith(['osago'], true)->all();
         
         $result_propositions = [];
         

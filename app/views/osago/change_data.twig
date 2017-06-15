@@ -112,14 +112,15 @@
                 </div>                
             </div>
 
-            <div class="b-block_select b-selectBlock_franshiza">
+{#            <div class="b-block_select b-selectBlock_franshiza">
                 <label for="franshiza" class="b-label_registration">Франшиза</label>
                 <select name="franshiza" class="js-selectric" id="franshiza">
-                    <option value="0" {% if data.franchise == 0 %} selected {% endif %}>0 грн</option>
+                    <option value="" {% if data.franchise is null or data.franchise is empty %} selected {% endif %} >Выберите франшизу</option>
+                    <option value="0" {% if data.franchise == 0 and data.franchise is not null %} selected {% endif %}>0 грн</option>
                     <option value="1000" {% if data.franchise == 1000 %} selected {% endif %}>1 000 грн</option>
                     <option value="2000" {% if data.franchise == 2000 %} selected {% endif %}>2 000 грн</option>
                 </select>
-            </div>
+            </div>#}
             <label class="b-block_checkbox">
                <input type="checkbox" class="sr-only" id="notTaxi" value="true" name="notTaxi" checked disabled>
                <span class="fa fa-check-square-o" aria-hidden="true"></span> 
