@@ -1509,7 +1509,8 @@ body{
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     width: 564px;
-    padding: 70px 65px 60px 60px;
+/*    padding: 70px 65px 60px 60px;*/
+    padding: 55px 60px 60px;
     overflow: hidden;
 }
 .b-slide__wrap_back{
@@ -1527,7 +1528,8 @@ body{
 }
 .b-slide__content{
     height: 198px;
-    overflow: hidden;
+    height: 211px;
+    overflow: auto;
     font-family: 'Roboto Condensed', sans-serif;
 }
 .b-slide__content .b-company__rating{
@@ -1557,7 +1559,11 @@ body{
     float: left;
     clear: left;
     margin: 0;
-    width: 263px;
+/*    width: 263px;*/
+/*    width: 275px;*/
+    width: 290px;
+/*    max-height: 181px;*/
+/*    overflow: auto;*/
     color: #fff;
     line-height: 18px;
     font-weight: 300;
